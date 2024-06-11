@@ -1,0 +1,241 @@
+<!-- 
+Canvas Setup: The HTML <canvas> element is used for drawing points and the route.
+Event Listeners: Listens for clicks on the canvas to place points and on the button to calculate/reset the route.
+Drawing Functions:
+drawPoints(): Draws points on the canvas, with the first point in red.
+drawRoute(): Draws the calculated shortest route.
+TSP Calculation:
+findShortestRoute(): Implements a nearest neighbor heuristic to find a short route.
+distance(): Helper function to calculate the distance between two points.
+This implementation is simplified and uses a basic heuristic for educational purposes. For more accurate TSP solutions, more sophisticated algorithms like dynamic programming or genetic algorithms can be implemented. -->
+
+<html lang="en">
+
+<head>
+  <!-- Copyright Marc Sonne Dahl - 2024 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traveling Salesman Problem (TSP)</title>
+  <style>
+    html,
+    body {
+      user-select: none;
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      border: none;
+      background: grey;
+      width: 100%;
+      height: calc(100% - 50px);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    button {
+      width: 50%;
+      height: 50px;
+      background-color: darkgrey;
+      border: none;
+      box-shadow: 5px 10px #888888;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0;
+      border-shadow: black;
+      text-shadow: inset 0px 2px #474747;
+    }
+
+    button:hover {
+      background-color: grey;
+      box-shadow: inset 0px 1px 5px #474747;
+      text-shadow: 0px 2px #474747;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <canvas id="canvas"></canvas>
+    <div class="button-container">
+      <button id="routeBtn">Shortest route</button>
+      <button id="uploadBtn">Upload Background</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const routeBtn = document.getElementById('routeBtn');
+    const uploadBtn = document.getElementById('uploadBtn');
+    let backgroundImage = null;
+    let points = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight - routeBtn.offsetHeight;
+      drawCanvas();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    canvas.addEventListener('click', (event) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const clickedPointIndex = getClickedPointIndex(x, y);
+      if (clickedPointIndex !== -1) {
+        points.splice(clickedPointIndex, 1);
+        drawCanvas();
+      } else {
+        points.push({
+          x,
+          y
+        });
+        drawCanvas();
+      }
+    });
+    routeBtn.addEventListener('click', () => {
+      if (routeBtn.innerText === 'Shortest route') {
+        if (points.length > 1) {
+          const route = findShortestRoute(points);
+          drawRoute(route);
+        }
+        routeBtn.innerText = 'Reset';
+      } else {
+        points = [];
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBackground();
+        routeBtn.innerText = 'Shortest route';
+      }
+    });
+    uploadBtn.addEventListener('click', () => {
+      if (uploadBtn.innerText === 'Upload Background') {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = handleFileUpload;
+        input.click();
+      } else {
+        backgroundImage = null;
+        drawBackground();
+        uploadBtn.innerText = 'Upload Background';
+      }
+    });
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        backgroundImage = new Image();
+        backgroundImage.onload = function() {
+          drawBackground();
+          uploadBtn.innerText = 'Remove Background';
+        };
+        backgroundImage.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function drawCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawBackground();
+      drawPoints();
+    }
+
+    function drawPoints() {
+      points.forEach((point, index) => {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = index === 0 ? 'orange' : 'white';
+        ctx.fill();
+        ctx.closePath();
+      });
+    }
+
+    function drawRoute(route) {
+      ctx.beginPath();
+      ctx.moveTo(route[0].x, route[0].y);
+      for (let i = 1; i < route.length; i++) {
+        ctx.lineTo(route[i].x, route[i].y);
+      }
+      ctx.lineTo(route[0].x, route[0].y); // Return to home
+      ctx.strokeStyle = 'white';
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+function drawBackground() {
+  if (backgroundImage) {
+    ctx.globalAlpha = 0.6; // Set transparency level
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1; // Reset global alpha
+  } else {
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+    function findShortestRoute(points) {
+      const route = [points[0]];
+      const visited = new Set([0]);
+      while (route.length < points.length) {
+        let lastPoint = route[route.length - 1];
+        let nearestPoint = null;
+        let nearestIndex = -1;
+        let minDist = Infinity;
+        points.forEach((point, index) => {
+          if (!visited.has(index)) {
+            const dist = distance(lastPoint, point);
+            if (dist < minDist) {
+              minDist = dist;
+              nearestPoint = point;
+              nearestIndex = index;
+            }
+          }
+        });
+        route.push(nearestPoint);
+        visited.add(nearestIndex);
+      }
+      return route;
+    }
+
+    function distance(point1, point2) {
+      return Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2);
+    }
+
+    function getClickedPointIndex(x, y) {
+      for (let i = 0; i < points.length; i++) {
+        const point = points[i];
+        const distanceFromPoint = Math.sqrt((x - point.x) ** 2 + (y - point.y) ** 2);
+        if (distanceFromPoint <= 5) {
+          return i;
+        }
+      }
+      return -1; // No point clicked
+    }
+  </script>
+  <!-- Copyright Marc Sonne Dahl - 2024 -->
+</body>
+
+</html>
