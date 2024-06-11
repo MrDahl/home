@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Snake Nokia 3210</title>
+  <style>
+    /* CSS Styles */
+    html, body {
+      margin: 0;
+      display: flex;
+      align-items: top;
+      justify-content: center;
+      height: 100%;
+      background-color: none;
+    }
+
+    .container {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      background-color: none;
+      overflow: hidden;
+    }
+    
+    #game {
+      border: 2px solid lightgrey;
+    }
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      max-width: inherit;
+      height: inherit;
+      flex-grow: 1;
+      padding: 10px;
+      background-color: none;
+    }
+
+    .tile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 64px;
+      min-height: 64px;
+      max-width: 100%;
+      max-height: 100%;
+      margin: 5px;
+      background-color: #6eb46e;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 35px;
+      font-size: clamp(33px, 10vw, 45px);
+      transition: background-color 0.3s ease-in-out;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .tile:hover {
+      background-color: #f1f1f1;
+    }
+
+    .menu-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: inherit;
+      min-width: 56px;
+      max-height: 100%;
+      padding: 16px;
+      background-color: none;
+      margin: 0px;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      margin: 8px;
+      background-color: none;
+      font-size: 24px;
+      cursor: pointer;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s, background-color 0.3s;
+    }
+
+    .menu:hover {
+      background-color: #f1f1f1;
+      font-size: 35px;
+    }
+
+  </style>
+</head>
+<body>
+<canvas width="400" height="400" id="game"></canvas>
+<script>
+  var canvas = document.getElementById('game');
+  var context = canvas.getContext('2d');
+
+  var grid = 16;
+  var count = 0;
+
+  var snake = {
+    x: 160,
+    y: 160,
+    dx: grid,
+    dy: 0,
+    cells: [],
+    maxCells: 4
+  };
+
+  var apple = {
+    x: 320,
+    y: 320
+  };
+
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  var gameRunning = false;
+  var animationFrame;
+
+  var touchStartX, touchStartY;
+
+  canvas.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  });
+
+  canvas.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+    var touchEndX = e.changedTouches[0].clientX;
+    var touchEndY = e.changedTouches[0].clientY;
+    var dx = touchEndX - touchStartX;
+    var dy = touchEndY - touchStartY;
+
+    // Determine direction of swipe
+    if (Math.abs(dx) > Math.abs(dy)) {
+      // Swipe left or right
+      if (dx > 0 && snake.dx === 0) {
+        snake.dx = grid;
+        snake.dy = 0;
+      } else if (dx < 0 && snake.dx === 0) {
+        snake.dx = -grid;
+        snake.dy = 0;
+      }
+    } else {
+      // Swipe up or down
+      if (dy > 0 && snake.dy === 0) {
+        snake.dy = grid;
+        snake.dx = 0;
+      } else if (dy < 0 && snake.dy === 0) {
+        snake.dy = -grid;
+        snake.dx = 0;
+      }
+    }
+  });
+
+  canvas.addEventListener('click', function() {
+    if (!gameRunning) {
+      startGame();
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (!gameRunning) {
+      return;
+    }
+
+    if (e.which === 37 && snake.dx === 0) {
+      snake.dx = -grid;
+      snake.dy = 0;
+    } else if (e.which === 38 && snake.dy === 0) {
+      snake.dy = -grid;
+      snake.dx = 0;
+    } else if (e.which === 39 && snake.dx === 0) {
+      snake.dx = grid;
+      snake.dy = 0;
+    } else if (e.which === 40 && snake.dy === 0) {
+      snake.dy = grid;
+      snake.dx = 0;
+    }
+  });
+
+  function drawGrid() {
+    context.strokeStyle = 'rgba(0, 20, 0, 0.1)';
+    for (var x = 0; x < canvas.width; x += grid) {
+      context.beginPath();
+      context.moveTo(x, 0);
+      context.lineTo(x, canvas.height);
+      context.stroke();
+    }
+    for (var y = 0; y < canvas.height; y += grid) {
+      context.beginPath();
+      context.moveTo(0, y);
+      context.lineTo(canvas.width, y);
+      context.stroke();
+    }
+  }
+
+  function loop() {
+    if (!gameRunning) {
+      return;
+    }
+
+    animationFrame = requestAnimationFrame(loop);
+
+    if (++count < 6) {
+      return;
+    }
+
+    count = 0;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawGrid();
+
+    snake.x += snake.dx;
+    snake.y += snake.dy;
+
+    if (snake.x < 0) {
+      snake.x = canvas.width - grid;
+    } else if (snake.x >= canvas.width) {
+      snake.x = 0;
+    }
+
+    if (snake.y < 0) {
+      snake.y = canvas.height - grid;
+    } else if (snake.y >= canvas.height) {
+      snake.y = 0;
+    }
+
+    snake.cells.unshift({ x: snake.x, y: snake.y });
+
+    if (snake.cells.length > snake.maxCells) {
+      snake.cells.pop();
+    }
+
+    context.fillStyle = '#f0a51a';
+    context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+    snake.cells.forEach(function(cell, index) {
+      context.fillStyle = '#6eb46e';
+      context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+      if (cell.x === apple.x && cell.y === apple.y) {
+        snake.maxCells++;
+        apple.x = getRandomInt(0, canvas.width / grid) * grid;
+        apple.y = getRandomInt(0, canvas.height / grid) * grid;
+      }
+
+      // Check if the snake eats itself
+      for (var i = index + 1; i < snake.cells.length; i++) {
+        if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+          endGame();
+        }
+      }
+    });
+  }
+
+  function startGame() {
+    gameRunning = true;
+    snake.x = 160;
+    snake.y = 160;
+    snake.cells = [];
+    snake.maxCells = 4;
+    snake.dx = grid;
+    snake.dy = 0;
+    apple.x = getRandomInt(0, canvas.width / grid) * grid;
+    apple.y = getRandomInt(0, canvas.height / grid) * grid;
+    animationFrame = requestAnimationFrame(loop);
+  }
+
+  function endGame() {
+    gameRunning = false;
+    cancelAnimationFrame(animationFrame);
+  }
+
+  // Initial start of the game
+  startGame();
+</script>
+</body>
+</html>
