@@ -1,361 +1,190 @@
-<!-- CopyRighted to Marc Sonne Dahl 2024 -->
-
-<html>
+<html lang="en">
+<!-- Copyright Marc Sonne Dahl 2024 -->
 
 <head>
-  <title>ChoiceForge by Marc Sonne Dahl</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Reshuffler</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Concert+One">
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
-    @import url("https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap");
+    :root {
+      --card-height: 65vh;
+      --card-width: calc(var(--card-height) / 1.5);
+      --primary-color: #f5f5f5;
+      --on-primary-color: #212121;
+    }
 
     body {
-      font-family: "Roboto", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       margin: 0;
-      padding: 0;
+      font-family: "Concert One";
       background: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    /* Container to center content but align it to the top */
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      /* Align items at the top */
-      min-height: 100vh;
-      width: 100%;
-      /* Make sure container takes full width */
-      padding-top: 20px;
-      /* Optional: Add some padding at the top */
-    }
-
-    .container:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .logo {
-      font-family: "Indie Flower", cursive;
-      font-weight: 400;
-      font-style: normal;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 80px;
-      height: 80px;
-      border: 10px solid #007bff;
-      border-radius: 50%;
-      font-size: 50px;
-      font-weight: bold;
-      color: #007bff;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      color: #333;
-      font-weight: 700;
-      font-size: 28px;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    h2 {
-      margin: 0;
-      color: #777;
-      font-weight: 400;
-      font-size: 16px;
-      margin-bottom: 20px;
-      text-align: center;
-      padding-top: 20px;
-    }
-
-    h5 {
-      margin: 0;
-      color: #999;
-      font-weight: 400;
-      font-size: 14px;
-      margin-bottom: 25px;
-      text-align: left;
-      line-height: 1.5;
-    }
-
-    h5 span {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      min-width: 200px;
-      margin-bottom: 15px;
-    }
-
-    .input-field {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 15px;
-      font-size: 14px;
-      margin-right: 10px;
-      outline: none;
-      background: #f0f0f0;
-      box-shadow: inset 1px 1px 5px lightgrey, inset -1px -1px 5px #ffffff;
-    }
-
-    .add-btn {
-      padding: 10px 30px;
-      border: 3px;
-      border-color: #ffffff;
-      border-radius: 15px;
-      font-size: 14px;
-      cursor: pointer;
-      background-color: #46bc46;
-      color: #ffffff;
-      transition: background-color 0.3s, box-shadow 0.3s;
-      margin-right: 10px;
-    }
-
-    .add-btn:hover {
-      background-color: grey;
-      box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
-    }
-
-    .clear-btn {
-      padding: 10px 30px;
-      border: 3px;
-      border-color: #ffffff;
-      border-radius: 15px;
-      font-size: 14px;
-      cursor: pointer;
-      background-color: #ff5050;
-      color: #ffffff;
-      transition: background-color 0.3s, box-shadow 0.3s;
-    }
-
-    .clear-btn:hover {
-      background-color: grey;
-      box-shadow: 0 4px 8px rgba(255, 80, 80, 0.3);
-    }
-
-    #board {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      margin-top: 20px;
-    }
-
-    /* Adjusting the card container to fit 3 cards in a row */
-    .card-container {
-      display: flex;
-      flex-wrap: wrap;
-      /* Allow cards to wrap if the screen size is smaller */
-      justify-content: center;
-      /* Center the cards within the container */
-      gap: 20px;
-      /* Optional: Add space between cards */
-      max-width: 1200px;
-      /* Adjust based on your design requirements */
-      width: 100%;
     }
 
     .card {
+      background: #f4f4f4;
+      width: var(--card-width);
+      height: var(--card-height);
+      padding: 3px;
       position: relative;
-      min-width: 30%;
-      height: 80px;
-      background-color: #ffffff;
-      margin: 10px;
-      border-radius: 10px;
-      border: 1px solid #f0f0f0;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 4px 4px 8px #d9d9d9, -4px -4px 8px #ffffff;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
+      border-radius: 6px;
       justify-content: center;
-      padding: 10px;
+      align-items: center;
       text-align: center;
-      flex: 1 1 calc(33.33% - 20px);
-      /* 3 cards per row, accounting for gaps */
-      max-width: calc(33.33% - 20px);
-      /* Ensure cards do not exceed 1/3 of container width minus gaps */
-      box-sizing: border-box;
-      /* Include padding and border in element's total width and height */
-    }
-
-    .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .card.flip .back {
-      transform: rotateY(0deg);
-    }
-
-    .card.flip .front {
-      transform: rotateY(180deg);
-    }
-
-    .card .front,
-    .card .back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #333;
-      font-weight: bold;
-      font-size: 14px;
-      border-radius: 10px;
-      padding: 10px;
-      box-sizing: border-box;
+      font-size: calc(6.5em + 1vw);
+      color: var(--on-primary-color);
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 1px 3px 5px #000, inset 1px 1px 10px #fff;
+      line-height: 0.85;
     }
 
-    .card .front {
-      background-color: #EEEEEE;
-      transform: rotateY(0deg);
+    .card::before {
+      content: "";
+      width: 104%;
+      height: 102%;
+      border-radius: 8px;
+      position: absolute;
+      z-index: -1;
+      top: -1%;
+      left: -2%;
     }
 
-    .card .back {
-      background-color: #93C47D;
-      color: #fff;
-      transform: rotateY(180deg);
-      word-wrap: break-word;
-      overflow-wrap: break-word;
+    .card::after {
+      position: absolute;
+      content: "";
+      top: calc(var(--card-height) / 6);
+      left: 0;
+      right: 0;
+      z-index: -1;
+      height: 100%;
+      width: 100%;
+      margin: 0 auto;
     }
 
-    .instructions {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
+    .card .top-left-text,
+    .card .bottom-right-text {
+      position: absolute;
+      font-size: 60%;
+      color: #757575;
     }
 
-    .instructions li {
-      color: #999;
-      font-weight: 400;
-      font-size: 14px;
-      margin-bottom: 10px;
-      text-align: left;
-      line-height: 1.5;
+    .card .top-left-text {
+      top: 20px;
+      left: 20px;
     }
 
-    /* Optional: Add media query for responsive design */
-    @media (max-width: 768px) {
-      .card {
-        flex: 1 1 calc(50% - 20px);
-        /* Adjust to 2 cards per row on smaller screens */
-        max-width: calc(50% - 20px);
-      }
+    .card .bottom-right-text {
+      bottom: 20px;
+      right: 20px;
+      transform: rotate(180deg);
     }
 
-    @media (max-width: 480px) {
-      .card {
-        flex: 1 1 100%;
-        /* Single card per row on very small screens */
-        max-width: 100%;
-      }
+    .progress-container {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 16px;
+      background: linear-gradient(
+        0deg,
+        rgba(255, 0, 0, 1) 0%,
+        rgba(255, 154, 0, 1) 10%,
+        rgba(208, 222, 33, 1) 20%,
+        rgba(79, 220, 74, 1) 30%,
+        rgba(63, 218, 216, 1) 40%,
+        rgba(47, 201, 226, 1) 50%,
+        rgba(28, 127, 238, 1) 60%,
+        rgba(95, 21, 242, 1) 70%,
+        rgba(186, 12, 248, 1) 80%,
+        rgba(251, 7, 217, 1) 90%,
+        rgba(255, 0, 0, 1) 100%
+    );
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 0;
+      background: #F7F7F7;
+    }
+
+    a {
+      color: #212534;
+      text-decoration: none;
+      font-size: 3.5em;
+      margin-top: 2rem;
     }
   </style>
-
 </head>
 
 <body>
-  <div class="container">
-    <h1>ChoiceForge</h1>
-    <div class="logo">CF</div>
-    <h2>by Marc Sonne Dahl</h2>
-    <ul class="instructions">
-      <li>Enter your choices, separated by comma or by clicking on ADD.</li>
-      <li>Cards are shuffled automatically.</li>
-      <li>Choose one of the cards.</li>
-      <li>The choice is made.</li>
-    </ul>
-    <div class="input-wrapper">
-      <input type="text" id="inputField" class="input-field" placeholder="Enter topics here, use comma" required>
-      <button id="addBtn" class="add-btn">Add</button>
-      <button id="clearBtn" class="clear-btn">Clear</button>
+  <div id="deck" class="card" onclick="pickCard()">
+    <div class="card-content">
+      🃏<br>Start
     </div>
-    <div id="board"></div>
+    <div class="progress-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
   </div>
 
   <script>
-    const board = document.getElementById("board");
-    const inputField = document.getElementById("inputField");
-    const addBtn = document.getElementById("addBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const cards = [];
-    inputField.addEventListener("input", function() {
-      if (inputField.value.endsWith(",")) {
-        const topics = inputField.value
-          .split(",")
-          .map((topic) => topic.trim())
-          .filter((topic) => topic !== "");
-        topics.forEach((topic) => createCard(topic));
-        inputField.value = "";
-      }
-      shuffleCards();
-    });
-    addBtn.addEventListener("click", function() {
-      const newTopic = inputField.value.trim();
-      if (newTopic) {
-        createCard(newTopic);
-        shuffleCards();
-        inputField.value = "";
-      }
-    });
-    clearBtn.addEventListener("click", clearBoard);
+    var cards = ['A<br>♦', '2<br>♦', '3<br>♦', '4<br>♦', '5<br>♦', '6<br>♦', '7<br>♦', '8<br>♦', '9<br>♦', '10<br>♦', 'J<br>♦', 'Q<br>♦', 'K<br>♦', 'A<br>♣', '2<br>♣', '3<br>♣', '4<br>♣', '5<br>♣', '6<br>♣', '7<br>♣', '8<br>♣', '9<br>♣', '10<br>♣', 'J<br>♣', 'Q<br>♣', 'K<br>♣', 'A<br>♥', '2<br>♥', '3<br>♥', '4<br>♥', '5<br>♥', '6<br>♥', '7<br>♥', '8<br>♥', '9<br>♥', '10<br>♥', 'J<br>♥', 'Q<br>♥', 'K<br>♥', 'A<br>♠', '2<br>♠', '3<br>♠', '4<br>♠', '5<br>♠', '6<br>♠', '7<br>♠', '8<br>♠', '9<br>♠', '10<br>♠', 'J<br>♠', 'Q<br>♠', 'K<br>♠', 'J<br>O<br>K<br>E<br>R<br>⧓', 'J<br>O<br>K<br>E<br>R<br>⧗'];
+    var originalDeck = [...cards];
+    var deckElement = document.getElementById('deck');
+    var progressBar = document.getElementById('progress-bar');
 
-    function createCard(input) {
-      if (input) {
-        const card = document.createElement("div");
-        card.classList.add("card");
-        const front = document.createElement("div");
-        front.classList.add("front");
-        const back = document.createElement("div");
-        back.classList.add("back");
-        back.textContent = input;
-        card.appendChild(front);
-        card.appendChild(back);
-        card.addEventListener("click", function() {
-          flipCard(card);
-        });
-        board.appendChild(card);
-        cards.push(card);
-      }
+    function shuffleDeck() {
+      cards = cards.sort(() => Math.random() - 0.5);
     }
 
-    function shuffleCards() {
-      for (let i = cards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]];
-      }
-      cards.forEach((card) => board.appendChild(card));
+    function initializeGame() {
+      shuffleDeck();
+      deckElement.querySelector('.card-content').innerHTML = '🃏<br>Start';
+      deckElement.style.fontSize = 'calc(3.5em + 1vw)';
+      deckElement.style.cursor = 'pointer';
+      progressBar = document.getElementById('progress-bar');
+      progressBar.style.height = '0';
+      deckElement.onclick = pickCard;
     }
 
-    function flipCard(card) {
-      card.classList.toggle("flip");
-      card.querySelector(".front").style.visibility = "visible";
+    function pickCard() {
+      if (cards.length === 0) {
+        resetGame();
+        return;
+      }
+      if (cards.length === 1) {
+        resetGame();
+        return;
+      }
+      var index = Math.floor(Math.random() * cards.length);
+      var card = cards.splice(index, 1)[0];
+      var suit = card.slice(-1);
+      var suitColor = (suit === '♦' || suit === '♥') ? 'red' : 'black';
+      deckElement.querySelector('.card-content').innerHTML = `<span class="middle-suit" style="color: ${suitColor};">${suit}</span>`;
+      deckElement.querySelector('.card-content').innerHTML += `<span class="top-left-text">${card}</span><span class="bottom-right-text" style="transform: rotate(180deg);">${card}</span>`;
+      updateProgressBar();
     }
 
-    function clearBoard() {
-      while (board.firstChild) {
-        board.removeChild(board.firstChild);
-      }
-      cards.length = 0;
+    function resetGame() {
+      cards = [...originalDeck];
+      shuffleDeck();
+      deckElement.querySelector('.card-content').innerHTML = '🗘';
+      deckElement.style.cursor = 'pointer';
+      progressBar.style.height = '0';
     }
+
+    function updateProgressBar() {
+      var progress = ((originalDeck.length - cards.length) / originalDeck.length) * 100;
+      progressBar.style.height = progress + '%';
+    }
+
+    window.onload = initializeGame;
   </script>
 </body>
-<!-- CopyRighted to Marc Sonne Dahl 2024 -->
+<!-- Copyright Marc Sonne Dahl 2024 -->
 
 </html>
