@@ -1,0 +1,144 @@
+<!-- 
+Create a mesh, by connecting every point with every other point
+
+Simple visualization of a mesh network.
+-->
+
+<html lang="en">
+<head>
+  
+  <!-- Copyright Marc Sonne Dahl 2024 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesh Creation</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        canvas {
+            border: none;
+          background: #000;
+            width: 100%;
+            height: calc(100% - 50px); /* Adjusting for button height */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        .button-container {
+            display: flex;
+            width: 100%;
+        }
+        button {
+            height: 50px;
+            background-color: gold;
+          font-weight: bold;
+            border: none;
+            color: #000;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0;
+            padding: 10px;
+        }
+        button:hover {
+            background-color: #000;
+          color: gold;
+        }
+        .reset-btn {
+            width: 100%;
+        }
+        .line-count {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <canvas id="canvas"></canvas>
+        <div class="button-container">
+            <button id="clearBtn" class="reset-btn">Clear Canvas</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const clearBtn = document.getElementById('clearBtn');
+        let points = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - clearBtn.offsetHeight;
+            drawPoints();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        canvas.addEventListener('click', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            points.push({ x, y });
+            drawMesh();
+        });
+
+        clearBtn.addEventListener('click', () => {
+            points = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        function drawPoints() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            points.forEach((point) => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'gold';
+                ctx.fill();
+                ctx.closePath();
+            });
+        }
+
+        function drawMesh() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPoints();
+            ctx.strokeStyle = 'grey';
+            points.forEach((point1, index1) => {
+                points.forEach((point2, index2) => {
+                    if (index1 !== index2) {
+                        ctx.beginPath();
+                        ctx.moveTo(point1.x, point1.y);
+                        ctx.lineTo(point2.x, point2.y);
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+                });
+            });
+            updateLineCount();
+        }
+
+        function updateLineCount() {
+            const lineCount = points.length * (points.length - 1);
+            ctx.font = '14px Arial';
+            ctx.fillStyle = 'yellow';
+            ctx.fillText(`Lines: ${lineCount /2}`, canvas.width - 100, 20);
+        }
+    </script>
+</body>
+   <!-- Copyright Marc Sonne Dahl 2024 -->
+</html>
