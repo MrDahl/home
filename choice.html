@@ -10,245 +10,255 @@
     @import url("https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap");
 
     body {
-  font-family: "Roboto", sans-serif;
-  margin: 0;
-  padding: 0;
-  background: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: auto;
-}
+      font-family: "Roboto", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+    }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: auto;
-  width: 100%;
-  padding-top: 20px;
-}
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: auto;
+      width: 100%;
+      padding-top: 20px;
+    }
 
-.logo {
-  font-family: "Indie Flower", cursive;
-  font-weight: 400;
-  font-style: normal;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  height: 80px;
-  border: 10px solid #007bff;
-  border-radius: 50%;
-  font-size: 50px;
-  font-weight: bold;
-  color: #007bff;
-  text-transform: uppercase;
-}
+    .logo {
+      font-family: "Indie Flower", cursive;
+      font-weight: 400;
+      font-style: normal;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 80px;
+      border: 10px solid #007bff;
+      border-radius: 50%;
+      font-size: 50px;
+      font-weight: bold;
+      color: #007bff;
+      text-transform: uppercase;
+    }
 
-h1 {
-  margin: 0;
-  color: #333;
-  font-weight: 700;
-  font-size: 2em;
-  margin-bottom: 15px;
-  text-align: center;
-}
+    h1 {
+      margin: 0;
+      color: #333;
+      font-weight: 700;
+      font-size: 2em;
+      margin-bottom: 15px;
+      text-align: center;
+    }
 
-h2 {
-  margin: 0;
-  color: #777;
-  font-weight: 400;
-  font-size: 1.4em;
-  margin-bottom: 20px;
-  text-align: center;
-  padding-top: 20px;
-}
+    h2 {
+      margin: 0;
+      color: #777;
+      font-weight: 400;
+      font-size: 1.4em;
+      margin-bottom: 20px;
+      text-align: center;
+      padding-top: 20px;
+    }
 
-h5 {
-  margin: 0;
-  color: #999;
-  font-weight: 400;
-  font-size: 1em;
-  margin-bottom: 25px;
-  text-align: left;
-  line-height: 1.5;
-}
+    h5 {
+      margin: 0;
+      color: #999;
+      font-weight: 400;
+      font-size: 1em;
+      margin-bottom: 25px;
+      text-align: left;
+      line-height: 1.5;
+    }
 
-h5 span {
-  display: block;
-  margin-bottom: 9px;
-}
+    h5 span {
+      display: block;
+      margin-bottom: 9px;
+    }
 
-.input-wrapper {
-  display: flex;
-  align-items: center;
-  min-width: 200px;
-  margin-bottom: 15px;
-}
+    .input-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: inherit;
+      width: 600px;
+      max-width: 100vh;
+      margin-bottom: 15px;
+    }
 
-.input-field {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 15px;
-  font-size: 1em;
-  margin-right: 10px;
-  outline: none;
-  background: #f0f0f0;
-  box-shadow: inset 1px 1px 5px lightgrey, inset -1px -1px 5px #ffffff;
-}
+    .input-field {
+      flex: 1;
+      width: 61vh;
+      padding: 10px;
+      border: none;
+      border-radius: 15px;
+      font-size: 1em;
+      margin-bottom: 10px;
+      outline: none;
+      background: #f0f0f0;
+      box-shadow: inset 1px 1px 5px lightgrey, inset -1px -1px 5px #ffffff;
+    }
 
-.add-btn {
-  padding: 10px 30px;
-  border: 3px;
-  border-color: #ffffff;
-  border-radius: 15px;
-  font-size: 1em;
-  cursor: pointer;
-  background-color: #46bc46;
-  color: #ffffff;
-  transition: background-color 0.3s, box-shadow 0.3s;
-  margin-right: 10px;
-}
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      max-width: 90vh;
+    }
 
-.add-btn:hover {
-  background-color: grey;
-  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
-}
+    .add-btn,
+    .clear-btn {
+      padding: 10px 30px;
+      border: 3px;
+      width: 31vh;
+      border-color: #ffffff;
+      border-radius: 13px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
 
-.clear-btn {
-  padding: 10px 30px;
-  border: 3px;
-  border-color: #ffffff;
-  border-radius: 15px;
-  font-size: 1em;
-  cursor: pointer;
-  background-color: #ff5050;
-  color: #ffffff;
-  transition: background-color 0.3s, box-shadow 0.3s;
-}
+    .add-btn {
+      background-color: #46bc46;
+      color: #ffffff;
+      margin-right: 10px;
+    }
 
-.clear-btn:hover {
-  background-color: grey;
-  box-shadow: 0 4px 8px rgba(255, 80, 80, 0.3);
-}
+    .add-btn:hover {
+      background-color: grey;
+      box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+    }
 
-#board {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-top: 20px;
-}
+    .clear-btn {
+      background-color: #ff5050;
+      color: #ffffff;
+    }
 
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  max-width: 1200px;
-  width: 100%;
-}
+    .clear-btn:hover {
+      background-color: grey;
+      box-shadow: 0 4px 8px rgba(255, 80, 80, 0.3);
+    }
 
-.card {
-  position: relative;
-  min-width: 30%;
-  height: 80px;
-  background-color: #ffffff;
-  margin: 10px;
-  border-radius: 10px;
-  border: 1px solid #f0f0f0;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  box-shadow: 4px 4px 8px #d9d9d9, -4px -4px 8px #ffffff;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  text-align: center;
-  flex: 1 1 calc(33.33% - 20px);
-  max-width: calc(33.33% - 20px);
-  box-sizing: border-box;
-}
+    #board {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      width: 90vh;
+      margin-top: 20px;
+    }
 
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-}
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 100vh;
+      width: auto;
+    }
 
-.card.flip .back {
-  transform: rotateY(0deg);
-}
+    .card {
+      position: relative;
+      min-width: 25%;
+      height: 80px;
+      background-color: #ffffff;
+      margin: 10px;
+      border-radius: 10px;
+      border: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 4px 4px 8px #d9d9d9, -4px -4px 8px #ffffff;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      text-align: center;
+      flex: 1 1 calc(33.33% - 20px);
+      max-width: calc(33.33% - 20px);
+      box-sizing: border-box;
+    }
 
-.card.flip .front {
-  transform: rotateY(180deg);
-}
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
 
-.card .front,
-.card .back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #333;
-  font-weight: bold;
-  font-size: 14px;
-  border-radius: 10px;
-  padding: 10px;
-  box-sizing: border-box;
-}
+    .card.flip .back {
+      transform: rotateY(0deg);
+    }
 
-.card .front {
-  background-color: #eeeeee;
-  transform: rotateY(0deg);
-}
+    .card.flip .front {
+      transform: rotateY(180deg);
+    }
 
-.card .back {
-  background-color: #93c47d;
-  color: #fff;
-  transform: rotateY(180deg);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
+    .card .front,
+    .card .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+      font-weight: bold;
+      font-size: 14px;
+      border-radius: 10px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
 
-.instructions {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
+    .card .front {
+      background-color: #eeeeee;
+      transform: rotateY(0deg);
+    }
 
-.instructions li {
-  color: #999;
-  font-weight: 400;
-  font-size: 14px;
-  margin-bottom: 10px;
-  text-align: left;
-  line-height: 1.5;
-}
+    .card .back {
+      background-color: #93c47d;
+      color: #fff;
+      transform: rotateY(180deg);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
 
-@media (max-width: 768px) {
-  .card {
-    flex: 1 1 calc(50% - 20px);
-    max-width: calc(50% - 20px);
-  }
-}
+    .instructions {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
 
-@media (max-width: 480px) {
-  .card {
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
-  .container {
-    padding: 0 10px; /* Optional: add horizontal padding on very small screens */
-  }
-}
+    .instructions li {
+      color: #999;
+      font-weight: 400;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .card {
+        flex: 1 1 calc(50% - 20px);
+        max-width: calc(50% - 20px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
+
+      .container {
+        padding: 0 10px;
+        /* Optional: add horizontal padding on very small screens */
+      }
+    }
   </style>
 
 </head>
@@ -266,8 +276,10 @@ h5 span {
     </ul>
     <div class="input-wrapper">
       <input type="text" id="inputField" class="input-field" placeholder="Enter topics here, use comma" required>
-      <button id="addBtn" class="add-btn">Add</button>
-      <button id="clearBtn" class="clear-btn">Clear</button>
+      <div class="button-container">
+        <button id="addBtn" class="add-btn">Add</button>
+        <button id="clearBtn" class="clear-btn">Clear</button>
+      </div>
     </div>
     <div id="board"></div>
   </div>
