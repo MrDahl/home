@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Faktura Generator with Print</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -12,6 +13,30 @@
       background-color: #f1f2f3;
       padding: 20px;
       margin: 0;
+      user-select: none;
+    }
+
+    .material-symbols-rounded {
+      font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+    }
+
+    .header span {
+      margin-right: 10px;
+      color: black;
+    }
+
+    .header:hover span,
+    .header:hover h1 {
+      color: grey;
     }
 
     .invoice {
@@ -24,14 +49,8 @@
     }
 
     h1 {
-      text-align: center;
+      margin: 0;
       color: black;
-      margin-bottom: 40px;
-      text-align: left;
-    }
-
-    h1:hover {
-      color: lightgrey;
       cursor: pointer;
     }
 
@@ -46,7 +65,7 @@
     td {
       border-bottom: 1px solid #e0e0e0;
       padding: 16px;
-      text-align: center;
+      text-align: left;
     }
 
     th {
@@ -114,7 +133,7 @@
       margin-right: 5px;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 3px;
       cursor: pointer;
       font-size: 1em;
       transition: background-color 0.3s ease, transform 0.3s ease;
@@ -165,7 +184,7 @@
       width: 80px;
       margin-left: 5px;
     }
-    
+
     .tax {
       display: flex;
     }
@@ -174,7 +193,12 @@
 
 <body>
   <div class="invoice">
-    <h1 id="invoice-type" onclick="toggleInvoiceType()"><span class="material-icons"></span>Faktura</h1>
+    <div class="header">
+      <span class="material-symbols-rounded">
+        receipt_long
+      </span>
+      <h1 id="invoice-type" onclick="toggleInvoiceType()">Faktura</h1>
+    </div>
     <p><input type="text" id="from" placeholder="Firmaets informationer"></p>
     <p><input type="text" id="to" placeholder="Kundens informationer"></p>
 
@@ -190,7 +214,7 @@
       </thead>
       <tbody>
         <tr>
-          <td><input type="text" placeholder="Varebeskrivelse"></td>
+          <td><input type="text" placeholder="Beskrivelse"></td>
           <td><input type="number" placeholder="Antal" oninput="calculateTotal(this)"></td>
           <td><input type="number" placeholder="Pris" oninput="calculateTotal(this)"></td>
           <td class="total">0,00 DKK</td>
@@ -200,23 +224,39 @@
     </table>
 
     <div class="totals">
-      <button class="add-row-btn no-print" onclick="addRow()">Tilføj række</button>
-      <button class="rmw-row-btn no-print" onclick="removeLastRow()">Fjern række</button>
-      <button class="print-row-btn no-print" onclick="window.print()">Udskriv side</button>
+      <button class="add-row-btn no-print" onclick="addRow()"><span class="material-symbols-rounded">
+docs_add_on
+</span></button>
+      <button class="rmw-row-btn no-print" onclick="removeLastRow()"><span class="material-symbols-rounded">
+delete
+</span></button>
+      <button class="print-row-btn no-print" onclick="window.print()"><span class="material-symbols-rounded">
+print
+</span></button>
 
       <div class="tax-field">
-        <p><input type="number" id="tax" placeholder="Moms %" oninput="updateTotals()"></p>
+        <p><span style="vertical-align: middle; color: red; font-size: 2em;" class="material-symbols-rounded">
+arrow_drop_up
+</span><input type="number" id="tax" placeholder="Moms %" oninput="updateTotals()"></p>
       </div>
 
-      <p><strong>Subtotal:</strong> <span id="subtotal">0,00 DKK</span></p>
-      <p><strong>Moms:</strong> <span id="tax-amount">0,00 DKK</span></p>
-      <p><strong>Total:</strong> <span id="total">0,00 DKK</span></p>
+      <div class="tax-field">
+        <p><span style="vertical-align: middle; color: green; font-size: 2em;" class="material-symbols-rounded">
+arrow_drop_down
+</span><input type="number" id="discount" placeholder="Rabat %" oninput="updateTotals()"></p>
+      </div>
+
+      <p style="color: grey; font-size: 0.8em;"><strong>Subtotal:</strong> <span id="subtotal">0,00 DKK</span></p>
+      <p style="color: grey; font-size: 0.8em;"><strong>Moms udgør:</strong> <span id="tax-amount">0,00 DKK</span></p>
+      <p style="color: grey; font-size: 0.8em;"><strong>Besparelse:</strong> <span id="discount-amount">0,00 DKK</span></p>
+      <p style="color: darkblue; font-size: 1.3em; font-weight: bold;"><strong>Total:</strong> <span id="total">0,00 DKK</span></p>
     </div>
   </div>
 
   <div class="footer">
-    <p> Lavet af Marc Sonne Dahl (c) 2024</p>
-    <p>Modul 3.6 / 4.6 - Teknisk Entreprise og Projektstyring</p>
+    <p>Skabt af Marc Sonne Dahl <span style= "vertical-align: middle; font-size: 1.3em;" class="material-symbols-rounded">
+copyright
+</span> 2024</p>
   </div>
 
   <script>
@@ -232,7 +272,7 @@
     function addRow() {
       const table = document.getElementById('invoice-table').getElementsByTagName('tbody')[0];
       const newRow = document.createElement('tr');
-      newRow.innerHTML = `<td><input type="text" placeholder="Varebeskrivelse"></td>
+      newRow.innerHTML = `<td><input type="text" placeholder="Beskrivelse"></td>
                           <td><input type="number" placeholder="Antal" oninput="calculateTotal(this)"></td>
                           <td><input type="number" placeholder="Pris" oninput="calculateTotal(this)"></td>
                           <td class="total">0,00 DKK</td>
@@ -271,13 +311,16 @@
         subtotal += total;
       });
       const taxRate = document.getElementById('tax').value / 100;
+      const discountRate = document.getElementById('discount').value / 100;
       const taxAmount = subtotal * taxRate;
-      const totalAmount = subtotal + taxAmount;
+      const discountAmount = subtotal * discountRate;
+      const totalAmount = subtotal + taxAmount - discountAmount;
       document.getElementById('subtotal').innerText = `${subtotal.toFixed(2)} DKK`;
       document.getElementById('tax-amount').innerText = `${taxAmount.toFixed(2)} DKK`;
+      document.getElementById('discount-amount').innerText = `${discountAmount.toFixed(2)} DKK`;
       document.getElementById('total').innerText = `${totalAmount.toFixed(2)} DKK`;
     }
-  </script> 
+  </script>
 </body>
 
 </html>
