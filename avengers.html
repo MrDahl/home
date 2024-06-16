@@ -3,120 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
+    <title>Minimalist Image Gallery</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #f0f0f0;
-            overflow: hidden; /* Prevents the body from scrolling */
+            font-family: Arial, sans-serif;
         }
-
-        .gallery-container {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow: hidden;
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            width: 90%;
+            max-width: 1200px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .gallery img {
             width: 100%;
-            max-width: 1080px;
-            position: relative;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
         }
-
-        .card {
-            min-width: 100%;
-            transition: transform 0.5s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .card img {
-            width: 100%;
-            height: 100vh;
-            object-fit: cover; /* Ensures images cover the container without distortion */
-        }
-
-        .navigation {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-            z-index: 10; /* Ensures the navigation buttons are above the images */
-        }
-
-        .nav-btn {
-            background-color: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .nav-btn:hover {
-            background-color: rgba(0,0,0,0.8);
+        .gallery img:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-    <div class="gallery-container">
-        <div class="card" id="card1">
-            <img src="1.jpg" alt="Image 1">
-        </div>
-        <div class="card" id="card2">
-            <img src="2.jpg" alt="Image 2">
-        </div>
-        <div class="card" id="card3">
-            <img src="3.jpg" alt="Image 3">
-        </div>
-        <div class="card" id="card4">
-            <img src="4.jpg" alt="Image 4">
-        </div>
-        <div class="card" id="card5">
-            <img src="5.jpg" alt="Image 5">
-        </div>
-        <div class="card" id="card6">
-            <img src="6.jpg" alt="Image 6">
-        </div>
+    <div class="gallery">
+        <img src="1.jpg" alt="Image 1">
+        <img src="2.jpg" alt="Image 2">
+        <img src="3.jpg" alt="Image 3">
+        <img src="4.jpg" alt="Image 4">
+        <img src="5.jpg" alt="Image 5">
+        <img src="6.jpg" alt="Image 6">
     </div>
-
-    <div class="navigation">
-        <button class="nav-btn" id="prev-btn">Prev</button>
-        <button class="nav-btn" id="next-btn">Next</button>
-    </div>
-
-    <script>
-        let currentCard = 0;
-        const cards = document.querySelectorAll('.card');
-        const totalCards = cards.length;
-
-        document.getElementById('prev-btn').addEventListener('click', showPrevCard);
-        document.getElementById('next-btn').addEventListener('click', showNextCard);
-
-        function updateCards() {
-            cards.forEach((card, index) => {
-                card.style.transform = `translateX(${(index - currentCard) * 100}%)`;
-            });
-        }
-
-        function showPrevCard() {
-            currentCard = (currentCard > 0) ? currentCard - 1 : totalCards - 1;
-            updateCards();
-        }
-
-        function showNextCard() {
-            currentCard = (currentCard < totalCards - 1) ? currentCard + 1 : 0;
-            updateCards();
-        }
-
-        // Initialize the cards to ensure they are in the correct position
-        updateCards();
-    </script>
 </body>
 </html>
