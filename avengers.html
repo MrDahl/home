@@ -29,6 +29,9 @@
             min-width: 100%;
             transition: transform 0.5s ease-in-out;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .card img {
@@ -96,28 +99,9 @@
         document.getElementById('prev-btn').addEventListener('click', showPrevCard);
         document.getElementById('next-btn').addEventListener('click', showNextCard);
 
-        function showPrevCard() {
-            cards[currentCard].style.transform = 'translateX(100%)';
-            currentCard = (currentCard > 0) ? currentCard - 1 : totalCards - 1;
-            cards[currentCard].style.transform = 'translateX(0)';
-        }
-
-        function showNextCard() {
-            cards[currentCard].style.transform = 'translateX(-100%)';
-            currentCard = (currentCard < totalCards - 1) ? currentCard + 1 : 0;
-            cards[currentCard].style.transform = 'translateX(0)';
-        }
-
-        // Adjust the transition to show the correct card
         function updateCards() {
             cards.forEach((card, index) => {
-                if (index === currentCard) {
-                    card.style.transform = 'translateX(0)';
-                } else if (index < currentCard) {
-                    card.style.transform = 'translateX(-100%)';
-                } else {
-                    card.style.transform = 'translateX(100%)';
-                }
+                card.style.transform = `translateX(${(index - currentCard) * 100}%)`;
             });
         }
 
