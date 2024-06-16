@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .gallery-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1080px;
+            position: relative;
+        }
+
+        .card {
+            min-width: 100%;
+            transition: transform 0.5s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .navigation {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .nav-btn {
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <div class="card" id="card1">
+            <img src="1.jpg" alt="Image 1">
+        </div>
+        <div class="card" id="card2">
+            <img src="2.jpg" alt="Image 2">
+        </div>
+        <div class="card" id="card3">
+            <img src="3.jpg" alt="Image 3">
+        </div>
+        <div class="card" id="card4">
+            <img src="4.jpg" alt="Image 4">
+        </div>
+        <div class="card" id="card5">
+            <img src="5.jpg" alt="Image 5">
+        </div>
+        <div class="card" id="card6">
+            <img src="6.jpg" alt="Image 6">
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn">Prev</button>
+        <button class="nav-btn" id="next-btn">Next</button>
+    </div>
+
+    <script>
+        let currentCard = 0;
+        const cards = document.querySelectorAll('.card');
+        const totalCards = cards.length;
+
+        document.getElementById('prev-btn').addEventListener('click', showPrevCard);
+        document.getElementById('next-btn').addEventListener('click', showNextCard);
+
+        function showPrevCard() {
+            cards[currentCard].style.transform = 'translateX(100%)';
+            currentCard = (currentCard > 0) ? currentCard - 1 : totalCards - 1;
+            cards[currentCard].style.transform = 'translateX(0)';
+        }
+
+        function showNextCard() {
+            cards[currentCard].style.transform = 'translateX(-100%)';
+            currentCard = (currentCard < totalCards - 1) ? currentCard + 1 : 0;
+            cards[currentCard].style.transform = 'translateX(0)';
+        }
+    </script>
+</body>
+</html>
