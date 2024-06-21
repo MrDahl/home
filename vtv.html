@@ -308,14 +308,14 @@
 
     function generateSpiderWeb() {
       const categories = {
-        "Borger - Anvendelighed": (getRadioValue("1a") + getRadioValue("1b")) / 2,
-        "Borger - Værdi": (getRadioValue("1c") + getRadioValue("1d")) / 2,
-        "Organisation - Personale": (getRadioValue("2a") + getRadioValue("2b")) / 2,
-        "Organisation - Ledelse": (getRadioValue("2c") + getRadioValue("2d")) / 2,
-        "Teknologi - Brugervenlighed": (getRadioValue("3a") + getRadioValue("3b")) / 2,
-        "Teknologi - Funktionalitet": (getRadioValue("3c") + getRadioValue("3d")) / 2,
-        "Økonomi - Drift": (getRadioValue("4a") + getRadioValue("4b")) / 2,
-        "Økonomi - Investering": (getRadioValue("4c") + getRadioValue("4d")) / 2,
+        "Borger - Anvendelighed": (getRadioValue("1a") + getRadioValue("1b")),
+        "Borger - Værdi": (getRadioValue("1c") + getRadioValue("1d")),
+        "Organisation - Personale": (getRadioValue("2a") + getRadioValue("2b")),
+        "Organisation - Ledelse": (getRadioValue("2c") + getRadioValue("2d")),
+        "Teknologi - Brugervenlighed": (getRadioValue("3a") + getRadioValue("3b")),
+        "Teknologi - Funktionalitet": (getRadioValue("3c") + getRadioValue("3d")),
+        "Økonomi - Drift": (getRadioValue("4a") + getRadioValue("4b")),
+        "Økonomi - Investering": (getRadioValue("4c") + getRadioValue("4d")),
       };
       const data = {
         labels: Object.keys(categories),
@@ -336,7 +336,7 @@
           scales: {
             r: {
               min: 0,
-              max: 2,
+              max: 4,
               ticks: {
                 stepSize: 1
               }
