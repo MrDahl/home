@@ -7,102 +7,337 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 20px;
-      line-height: 1.6;
-      background-color: #f5f5f5;
-      color: #333;
-      user-select: none;
+<html lang="da">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velfærdsteknologisk Vurderings Matrix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 20px auto; /* Center align and add auto to the left and right margin */
+    line-height: 1.6;
+    background-color: #f5f5f5;
+    color: #333;
+    max-width: 600px; /* Limit maximum width */
+    padding: 0 20px; /* Add padding to maintain spacing */
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #000;
+}
+
+h2 {
+    font-size: 1.1em;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.category {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+}
+
+.category h2 {
+    font-size: 1em;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.question {
+    margin-bottom: 12px;
+}
+
+.question label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.radio-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 0.9em;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+}
+
+.spider-web {
+    max-width: 100%;
+    margin: 30px auto;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.material-icons {
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
+  </style>
+</head>
+
+<body>
+  <h1>Velfærdsteknologisk Vurderings Matrix</h1>
+  <form id="assessmentForm">
+    <div class="category blue">
+      <h3>Borger</h3>
+      <h2>Anvendelighed</h2>
+      <div class="question">
+        <label>Opfylder teknologien borgernes behov?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="1a" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="1a" value="1"> Delvist</label>
+          <label><input type="radio" name="1a" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <div class="question">
+        <label>Ønsker borgerne at anvende teknologien?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="1b" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="1b" value="1"> Delvist</label>
+          <label><input type="radio" name="1b" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <h2>Værdi</h2>
+      <div class="question">
+        <label>Er borgerne mere selvhjulpne med brugen af teknologien?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="1c" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="1c" value="1"> Delvist</label>
+          <label><input type="radio" name="1c" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <div class="question">
+        <label>Er teknologien årsag til større livskvalitet?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="1d" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="1d" value="1"> Delvist</label>
+          <label><input type="radio" name="1d" value="0"> Slet ikke</label>
+        </div>
+      </div>
+    </div>
+    <div class="category yellow">
+      <h3>Organisation</h3>
+      <h2>Personale</h2>
+      <div class="question">
+        <label>Er teknologien årsag til et forbedret arbejdsmiljø?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="2a" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="2a" value="1"> Delvist</label>
+          <label><input type="radio" name="2a" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <div class="question">
+        <label>Er der motivation for at bruge teknologien?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="2b" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="2b" value="1"> Delvist</label>
+          <label><input type="radio" name="2b" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <h2>Ledelse</h2>
+      <div class="question">
+        <label>Er der ledelsesmæssig opbakning til brug af teknologien?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="2c" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="2c" value="1"> Delvist</label>
+          <label><input type="radio" name="2c" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <div class="question">
+        <label>Understøtter teknologien gode arbejdsgange?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="2d" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="2d" value="1"> Delvist</label>
+          <label><input type="radio" name="2d" value="0"> Slet ikke</label>
+        </div>
+      </div>
+    </div>
+    <div class="category red">
+      <h3>Teknologi</h3>
+      <h2>Brugervenlighed</h2>
+      <div class="question">
+        <label>Er teknologien let og intuitiv at anvende?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="3a" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="3a" value="1"> Delvist</label>
+          <label><input type="radio" name="3a" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <div class="question">
+        <label>Er teknologiens manualer og vejledninger anvendelige?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="3b" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="3b" value="1"> Delvist</label>
+          <label><input type="radio" name="3b" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <h2>Funktionalitet</h2>
+      <div class="question">
+        <label>Kan teknologien det, som det forventes, at den skal kunne?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="3c" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="3c" value="1"> Delvist</label>
+          <label><input type="radio" name="3c" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <div class="question">
+        <label>Fungerer teknologien hver gang den anvendes?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="3d" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="3d" value="1"> Delvist</label>
+          <label><input type="radio" name="3d" value="0"> Slet ikke</label>
+        </div>
+      </div>
+    </div>
+    <div class="category green">
+      <h3>Økonomi</h3>
+      <h2>Drift</h2>
+      <div class="question">
+        <label>Frigiver teknologien medarbejderressourcer?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="4a" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="4a" value="1"> Delvist</label>
+          <label><input type="radio" name="4a" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <div class="question">
+        <label>Erstatter teknologien brugen af andre hjælpemidler eller tilbud?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="4b" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="4b" value="1"> Delvist</label>
+          <label><input type="radio" name="4b" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <h2>Investering</h2>
+      <div class="question">
+        <label>Kan teknologien benyttes uden ressourcetung kompetence-udvikling?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="4c" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="4c" value="1"> Delvist</label>
+          <label><input type="radio" name="4c" value="0"> Slet ikke</label>
+        </div>
+      </div>
+      <div class="question">
+        <label>Kan teknologien benyttes uden ombygning eller indkøb af andre produkter?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="4d" value="2"> Ja – fuldstændigt</label>
+          <label><input type="radio" name="4d" value="1"> Delvist</label>
+          <label><input type="radio" name="4d" value="0"> Slet ikke</label>
+        </div>
+      </div>
+    </div>
+    <button type="button" onclick="generateSpiderWeb()">Generer VTV Diagram</button>
+
+  </form>
+
+  <div class="spider-web">
+    <canvas id="spiderWebChart"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let spiderWebChart;
+
+    function getRadioValue(name) {
+      const radios = document.getElementsByName(name);
+      for (let radio of radios) {
+        if (radio.checked) {
+          return parseInt(radio.value);
+        }
+      }
+      return 0;
     }
 
-    h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-      text-align: center;
-      color: #000;
+    function generateSpiderWeb() {
+      const categories = {
+        "Borger - Anvendelighed": (getRadioValue("1a") + getRadioValue("1b")) / 2,
+        "Borger - Værdi": (getRadioValue("1c") + getRadioValue("1d")) / 2,
+        "Organisation - Personale": (getRadioValue("2a") + getRadioValue("2b")) / 2,
+        "Organisation - Ledelse": (getRadioValue("2c") + getRadioValue("2d")) / 2,
+        "Teknologi - Brugervenlighed": (getRadioValue("3a") + getRadioValue("3b")) / 2,
+        "Teknologi - Funktionalitet": (getRadioValue("3c") + getRadioValue("3d")) / 2,
+        "Økonomi - Drift": (getRadioValue("4a") + getRadioValue("4b")) / 2,
+        "Økonomi - Investering": (getRadioValue("4c") + getRadioValue("4d")) / 2,
+      };
+      const data = {
+        labels: Object.keys(categories),
+        datasets: [{
+          label: 'Vurdering',
+          data: Object.values(categories),
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          pointBackgroundColor: ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9', '#c45850', '#f38b4a', '#ffcc00', '#ff6384'],
+          pointBorderColor: '#fff',
+          borderWidth: 1
+        }]
+      };
+      const config = {
+        type: 'radar',
+        data: data,
+        options: {
+          scales: {
+            r: {
+              min: 0,
+              max: 2,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      };
+      if (spiderWebChart) {
+        spiderWebChart.destroy();
+      }
+      const ctx = document.getElementById('spiderWebChart').getContext('2d');
+      spiderWebChart = new Chart(ctx, config);
     }
+  </script>
+</body>
 
-    h2 {
-      font-size: 1.1em;
-      margin-top: 15px;
-      margin-bottom: 10px;
-      color: #000;
-    }
-
-    .category {
-      margin: 20px 0;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .category h3 {
-      margin-top: 0;
-      font-size: 1.2em;
-    }
-
-    .category h2 {
-      font-size: 1em;
-      margin-top: 15px;
-      margin-bottom: 8px;
-    }
-
-    .question {
-      margin-bottom: 12px;
-    }
-
-    .question label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
-      font-size: 0.9em;
-    }
-
-    .radio-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .radio-group label {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background-color: #f0f0f0;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      font-size: 0.9em;
-    }
-
-    button {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      font-size: 1em;
-    }
-
-    .spider-web {
-      max-width: 100%;
-      margin: 30px auto;
-      background-color: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .material-icons {
-      font-size: 1.2em;
-      vertical-align: middle;
-    }
+</html>
   </style>
 </head>
 
