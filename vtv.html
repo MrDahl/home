@@ -436,43 +436,47 @@
     radio.addEventListener('change', generateSpiderWeb);
   });
 
-  function generatePDF() {
-    const {
-      jsPDF
-    } = window.jspdf;
-    const doc = new jsPDF();
-    // Add border to all pages
-    doc.setDrawColor(0);
-    doc.setLineWidth(0.5);
-    // Function to add border and page number to each page
-    function addBorderAndPageNumber() {
-      const pageCount = doc.internal.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        doc.rect(5, 5, 200, 287); // A4 size: 210x297mm, leaving 5mm margin
-        doc.setFontSize(10);
-        doc.text(`Side ${i} af ${pageCount}`, 105, 290, null, null, 'center');
-      }
+function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Function to add border and page number to each page
+  function addBorderAndPageNumber() {
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.5);
+      doc.rect(5, 5, 200, 287); // A4 size: 210x297mm, leaving 5mm margin
+      doc.setFontSize(10);
+      doc.text(`Side ${i} af ${pageCount}`, 105, 290, null, null, 'center');
     }
-    // Add title
-    doc.setFontSize(20);
-    doc.text("Velfærdsteknologisk Vurderings Rapport", 105, 20, null, null, "center");
+  }
+
+  // Add title
+  doc.setFontSize(20);
+  doc.text("Velfærdsteknologisk Vurderings Rapport", 105, 20, null, null, "center");
+
+  // Load image first
+  const img = new Image();
+  img.src = 'https://mrdahl.github.io/home/vtvlogo.png'; // Replace with the actual path to your image
+
+  img.onload = function() {
     // Add image to the first page
-    const img = new Image();
-    img.src = 'https://mrdahl.github.io/home/vtvlogo.png'; // Replace with the actual path to your image
-    img.onload = function() {
-      doc.addImage(this, 'PNG', 170, 10, 30, 30); // Adjust position and size as needed
-    };
+    doc.addImage(this, 'PNG', 170, 10, 30, 30); // Adjust position and size as needed
+
     // Add basic information
     doc.setFontSize(12);
     doc.text(`Navn: ${document.getElementById('navn').value}`, 20, 40);
     doc.text(`Kunde: ${document.getElementById('kunde').value}`, 20, 50);
+
     // Add description
     doc.setFontSize(14);
     doc.text("Overordnet beskrivelse af velfærdsteknologisk løsning:", 20, 70);
     const splitDescription = doc.splitTextToSize(document.getElementById('beskrivelse').value, 170);
     doc.setFontSize(12);
     doc.text(splitDescription, 20, 80);
+
     // Add answers and comments
     let yPosition = 120;
     document.querySelectorAll('.question').forEach((question, index) => {
@@ -496,21 +500,25 @@
       }
       yPosition += 10;
     });
+
     // Add SpiderWeb chart
     html2canvas(document.querySelector(".spider-web")).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL('https://mrdahl.github.io/home/vtvlogo.png');
       doc.addPage();
       doc.addImage(imgData, 'PNG', 10, 10, 190, 190);
+
       // Add footer
       doc.setFontSize(8);
-      doc.text("Dette er rapport udarbejdet til Modul 2.8 - Elteknik i velfærdsteknologiske løsninger på Roskilde Tekniske Skole. Udarbejdet af Marc Sonne Dahl (c) 2024", 105, 280, null, null, "center");
+      doc.text("Dette er rapport udarbejdet til Modul 2.8 - Elteknik i velfærdsteknologiske løsninger på Roskilde Tekniske Skole.", 105, 280, null, null, "center");
+      doc.text("Programmet og koden er udarbejdet af Marc Sonne Dahl (c) 2024", 105, 284, null, null, "center");
       // Before saving the PDF, add borders and page numbers
       addBorderAndPageNumber();
-      // Save the PDF
+
       // Save the PDF
       doc.save("VTV_RTS_Matrix.pdf");
     });
-  }
+  };
+}
 </script>
 
 </html>
