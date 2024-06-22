@@ -6,6 +6,10 @@
   <title>Velfærdsteknologisk Vurderings Matrix</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
   <style>
     :root {
       --primary-color: #369;
@@ -14,26 +18,23 @@
       --border-color: #ccc;
     }
 
-    /* Global box-sizing */
     *,
     *::before,
     *::after {
       box-sizing: border-box;
     }
 
-    /* Body styles */
     body {
       font-family: 'Roboto', sans-serif;
       margin: 20px auto;
       line-height: 1.6;
       background-color: var(--background-color);
       color: var(--secondary-color);
-      max-width: 600px;
+      max-width: 800px;
       padding: 0 20px;
       user-select: none;
     }
 
-    /* Heading styles */
     h1,
     h2,
     h3 {
@@ -61,7 +62,6 @@
       text-align: left;
     }
 
-    /* Category and question styles */
     .category {
       margin: 20px 0;
       padding: 15px;
@@ -78,7 +78,6 @@
       font-weight: 500;
     }
 
-    /* Radio button group styles */
     .radio-group {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -97,7 +96,6 @@
       font-size: 0.9em;
     }
 
-    /* Button styles */
     button {
       display: block;
       margin: 20px auto;
@@ -115,7 +113,6 @@
       background-color: grey;
     }
 
-    /* Spiderweb chart container */
     .spider-web {
       max-width: 100%;
       margin: 30px auto;
@@ -124,18 +121,69 @@
       background-color: #fff;
     }
 
-    /* Responsive adjustments */
+    .input-field {
+      margin-bottom: 15px;
+    }
+
+    .input-field label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .input-field input,
+    .input-field textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 1em;
+    }
+
+    .comment-field {
+      margin-top: 10px;
+    }
+
+    .comment-field textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9em;
+    }
+
     @media (max-width: 768px) {
       .radio-group label {
         font-size: 0.85em;
       }
     }
   </style>
+
 </head>
 
 <body>
   <h1>Velfærdsteknologisk Vurderings Matrix</h1>
   <form id="assessmentForm">
+    <div class="input-field">
+      <label for="navn">Navn (max 30 tegn)</label>
+      <input type="text" id="navn" name="navn" maxlength="30" required>
+    </div>
+    <div class="input-field">
+      <label for="kunde">Kunde (max 50 tegn)</label>
+      <input type="text" id="kunde" name="kunde" maxlength="50" required>
+    </div>
+    <div class="input-field">
+      <label for="beskrivelse">Overordnet beskrivelse af velfærdsteknologisk løsning (max 3000 tegn)</label>
+      <textarea id="beskrivelse" name="beskrivelse" maxlength="3000" rows="5" required></textarea>
+    </div>
+
+    <div class="spider-web">
+      <canvas id="spiderWebChart"></canvas>
+    </div>
+
+    <!-- Category: Borger -->
     <div class="category blue">
       <h3>Borger</h3>
       <h2>Anvendelighed</h2>
@@ -146,13 +194,17 @@
           <label><input type="radio" name="1a" value="1"> Delvist</label>
           <label><input type="radio" name="1a" value="0"> Slet ikke</label>
         </div>
-      </div>
-      <div class="question">
+        <div class="comment-field">
+          <textarea name="comment-1a" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
         <label>Ønsker borgerne at anvende teknologien?</label>
         <div class="radio-group">
           <label><input type="radio" name="1b" value="2"> Ja – fuldstændigt</label>
           <label><input type="radio" name="1b" value="1"> Delvist</label>
           <label><input type="radio" name="1b" value="0"> Slet ikke</label>
+        </div>
+        <div class="comment-field">
+          <textarea name="comment-1b" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
         </div>
       </div>
       <h2>Værdi</h2>
@@ -163,16 +215,21 @@
           <label><input type="radio" name="1c" value="1"> Delvist</label>
           <label><input type="radio" name="1c" value="0"> Slet ikke</label>
         </div>
-      </div>
-      <div class="question">
+        <div class="comment-field">
+          <textarea name="comment-1c" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
         <label>Er teknologien årsag til større livskvalitet?</label>
         <div class="radio-group">
           <label><input type="radio" name="1d" value="2"> Ja – fuldstændigt</label>
           <label><input type="radio" name="1d" value="1"> Delvist</label>
           <label><input type="radio" name="1d" value="0"> Slet ikke</label>
         </div>
+        <div class="comment-field">
+          <textarea name="comment-1d" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
       </div>
     </div>
+    <!-- Category: Organisation -->
     <div class="category yellow">
       <h3>Organisation</h3>
       <h2>Personale</h2>
@@ -183,13 +240,17 @@
           <label><input type="radio" name="2a" value="1"> Delvist</label>
           <label><input type="radio" name="2a" value="0"> Slet ikke</label>
         </div>
-      </div>
-      <div class="question">
+        <div class="comment-field">
+          <textarea name="comment-2a" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
         <label>Er der motivation for at bruge teknologien?</label>
         <div class="radio-group">
           <label><input type="radio" name="2b" value="2"> Ja – fuldstændigt</label>
           <label><input type="radio" name="2b" value="1"> Delvist</label>
           <label><input type="radio" name="2b" value="0"> Slet ikke</label>
+        </div>
+        <div class="comment-field">
+          <textarea name="comment-2b" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
         </div>
       </div>
       <h2>Ledelse</h2>
@@ -200,16 +261,21 @@
           <label><input type="radio" name="2c" value="1"> Delvist</label>
           <label><input type="radio" name="2c" value="0"> Slet ikke</label>
         </div>
-      </div>
-      <div class="question">
+        <div class="comment-field">
+          <textarea name="comment-2c" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
         <label>Understøtter teknologien gode arbejdsgange?</label>
         <div class="radio-group">
           <label><input type="radio" name="2d" value="2"> Ja – fuldstændigt</label>
           <label><input type="radio" name="2d" value="1"> Delvist</label>
           <label><input type="radio" name="2d" value="0"> Slet ikke</label>
         </div>
+        <div class="comment-field">
+          <textarea name="comment-2d" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
       </div>
     </div>
+    <!-- Category: Teknologi -->
     <div class="category red">
       <h3>Teknologi</h3>
       <h2>Brugervenlighed</h2>
@@ -220,13 +286,17 @@
           <label><input type="radio" name="3a" value="1"> Delvist</label>
           <label><input type="radio" name="3a" value="0"> Slet ikke</label>
         </div>
-      </div>
-      <div class="question">
+        <div class="comment-field">
+          <textarea name="comment-3a" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
         <label>Er teknologiens manualer og vejledninger anvendelige?</label>
         <div class="radio-group">
           <label><input type="radio" name="3b" value="2"> Ja – fuldstændigt</label>
           <label><input type="radio" name="3b" value="1"> Delvist</label>
           <label><input type="radio" name="3b" value="0"> Slet ikke</label>
+        </div>
+        <div class="comment-field">
+          <textarea name="comment-3b" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
         </div>
       </div>
       <h2>Funktionalitet</h2>
@@ -237,16 +307,21 @@
           <label><input type="radio" name="3c" value="1"> Delvist</label>
           <label><input type="radio" name="3c" value="0"> Slet ikke</label>
         </div>
-      </div>
-      <div class="question">
+        <div class="comment-field">
+          <textarea name="comment-3c" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
         <label>Fungerer teknologien hver gang den anvendes?</label>
         <div class="radio-group">
           <label><input type="radio" name="3d" value="2"> Ja – fuldstændigt</label>
           <label><input type="radio" name="3d" value="1"> Delvist</label>
           <label><input type="radio" name="3d" value="0"> Slet ikke</label>
         </div>
+        <div class="comment-field">
+          <textarea name="comment-3d" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
       </div>
     </div>
+    <!-- Category: Økonomi -->
     <div class="category green">
       <h3>Økonomi</h3>
       <h2>Drift</h2>
@@ -257,13 +332,17 @@
           <label><input type="radio" name="4a" value="1"> Delvist</label>
           <label><input type="radio" name="4a" value="0"> Slet ikke</label>
         </div>
-      </div>
-      <div class="question">
+        <div class="comment-field">
+          <textarea name="comment-4a" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
         <label>Erstatter teknologien brugen af andre hjælpemidler eller tilbud?</label>
         <div class="radio-group">
           <label><input type="radio" name="4b" value="2"> Ja – fuldstændigt</label>
           <label><input type="radio" name="4b" value="1"> Delvist</label>
           <label><input type="radio" name="4b" value="0"> Slet ikke</label>
+        </div>
+        <div class="comment-field">
+          <textarea name="comment-4b" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
         </div>
       </div>
       <h2>Investering</h2>
@@ -274,83 +353,164 @@
           <label><input type="radio" name="4c" value="1"> Delvist</label>
           <label><input type="radio" name="4c" value="0"> Slet ikke</label>
         </div>
-      </div>
-      <div class="question">
+        <div class="comment-field">
+          <textarea name="comment-4c" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
         <label>Kan teknologien benyttes uden ombygning eller indkøb af andre produkter?</label>
         <div class="radio-group">
           <label><input type="radio" name="4d" value="2"> Ja – fuldstændigt</label>
           <label><input type="radio" name="4d" value="1"> Delvist</label>
           <label><input type="radio" name="4d" value="0"> Slet ikke</label>
         </div>
+        <div class="comment-field">
+          <textarea name="comment-4d" maxlength="1200" placeholder="Kommentar (max 1200 tegn)"></textarea>
+        </div>
       </div>
     </div>
+
     <button type="button" onclick="generateSpiderWeb()">Generer VTV Diagram</button>
-
+    <button type="button" onclick="generatePDF()">Generer PDF Rapport</button>
   </form>
+</body>
+<script>
+  let spiderWebChart;
 
-  <div class="spider-web">
-    <canvas id="spiderWebChart"></canvas>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    let spiderWebChart;
-
-    function getRadioValue(name) {
-      const radios = document.getElementsByName(name);
-      for (let radio of radios) {
-        if (radio.checked) {
-          return parseInt(radio.value);
-        }
+  function getRadioValue(name) {
+    const radios = document.getElementsByName(name);
+    for (let radio of radios) {
+      if (radio.checked) {
+        return parseInt(radio.value);
       }
-      return 0;
     }
+    return 0;
+  }
 
-    function generateSpiderWeb() {
-      const categories = {
-        "Borger - Anvendelighed": (getRadioValue("1a") + getRadioValue("1b")),
-        "Borger - Værdi": (getRadioValue("1c") + getRadioValue("1d")),
-        "Organisation - Personale": (getRadioValue("2a") + getRadioValue("2b")),
-        "Organisation - Ledelse": (getRadioValue("2c") + getRadioValue("2d")),
-        "Teknologi - Brugervenlighed": (getRadioValue("3a") + getRadioValue("3b")),
-        "Teknologi - Funktionalitet": (getRadioValue("3c") + getRadioValue("3d")),
-        "Økonomi - Drift": (getRadioValue("4a") + getRadioValue("4b")),
-        "Økonomi - Investering": (getRadioValue("4c") + getRadioValue("4d")),
-      };
-      const data = {
-        labels: Object.keys(categories),
-        datasets: [{
-          label: 'VTV Matrix',
-          data: Object.values(categories),
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          pointBackgroundColor: ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9', '#c45850', '#f38b4a', '#ffcc00', '#ff6384'],
-          pointBorderColor: '#fff',
-          borderWidth: 1
-        }]
-      };
-      const config = {
-        type: 'radar',
-        data: data,
-        options: {
-          scales: {
-            r: {
-              min: 0,
-              max: 4,
-              ticks: {
-                stepSize: 1
-              }
+  function generateSpiderWeb() {
+    const categories = {
+      "Borger - Anvendelighed": (getRadioValue("1a") + getRadioValue("1b")),
+      "Borger - Værdi": (getRadioValue("1c") + getRadioValue("1d")),
+      "Organisation - Personale": (getRadioValue("2a") + getRadioValue("2b")),
+      "Organisation - Ledelse": (getRadioValue("2c") + getRadioValue("2d")),
+      "Teknologi - Brugervenlighed": (getRadioValue("3a") + getRadioValue("3b")),
+      "Teknologi - Funktionalitet": (getRadioValue("3c") + getRadioValue("3d")),
+      "Økonomi - Drift": (getRadioValue("4a") + getRadioValue("4b")),
+      "Økonomi - Investering": (getRadioValue("4c") + getRadioValue("4d")),
+    };
+    const data = {
+      labels: Object.keys(categories),
+      datasets: [{
+        label: 'VTV Matrix',
+        data: Object.values(categories),
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        pointBackgroundColor: ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9', '#c45850', '#f38b4a', '#ffcc00', '#ff6384'],
+        pointBorderColor: '#fff',
+        borderWidth: 1
+      }]
+    };
+    const config = {
+      type: 'radar',
+      data: data,
+      options: {
+        scales: {
+          r: {
+            min: 0,
+            max: 4,
+            ticks: {
+              stepSize: 1
             }
           }
         }
-      };
-      if (spiderWebChart) {
-        spiderWebChart.destroy();
       }
-      const ctx = document.getElementById('spiderWebChart').getContext('2d');
-      spiderWebChart = new Chart(ctx, config);
+    };
+    if (spiderWebChart) {
+      spiderWebChart.destroy();
     }
-  </script>
-</body>
+    const ctx = document.getElementById('spiderWebChart').getContext('2d');
+    spiderWebChart = new Chart(ctx, config);
+  }
+  // Initialize the SpiderWeb chart on page load
+  document.addEventListener('DOMContentLoaded', generateSpiderWeb);
+  // Update the SpiderWeb chart whenever a radio button is clicked
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', generateSpiderWeb);
+  });
+
+  function generatePDF() {
+    const {
+      jsPDF
+    } = window.jspdf;
+    const doc = new jsPDF();
+    // Add border to all pages
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.5);
+    // Function to add border and page number to each page
+    function addBorderAndPageNumber() {
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.rect(5, 5, 200, 287); // A4 size: 210x297mm, leaving 5mm margin
+        doc.setFontSize(10);
+        doc.text(`Side ${i} af ${pageCount}`, 105, 290, null, null, 'center');
+      }
+    }
+    // Add title
+    doc.setFontSize(20);
+    doc.text("Velfærdsteknologisk Vurderings Rapport", 105, 20, null, null, "center");
+    // Add image to the first page
+    const img = new Image();
+    img.src = 'path/to/your/img.png'; // Replace with the actual path to your image
+    img.onload = function() {
+      doc.addImage(this, 'PNG', 170, 10, 30, 30); // Adjust position and size as needed
+    };
+    // Add basic information
+    doc.setFontSize(12);
+    doc.text(`Navn: ${document.getElementById('navn').value}`, 20, 40);
+    doc.text(`Kunde: ${document.getElementById('kunde').value}`, 20, 50);
+    // Add description
+    doc.setFontSize(14);
+    doc.text("Overordnet beskrivelse af velfærdsteknologisk løsning:", 20, 70);
+    const splitDescription = doc.splitTextToSize(document.getElementById('beskrivelse').value, 170);
+    doc.setFontSize(12);
+    doc.text(splitDescription, 20, 80);
+    // Add answers and comments
+    let yPosition = 120;
+    document.querySelectorAll('.question').forEach((question, index) => {
+      if (yPosition > 280) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      const questionText = question.querySelector('label').textContent;
+      const answer = question.querySelector('input:checked') ? question.querySelector('input:checked').parentElement.textContent.trim() : "Ikke besvaret";
+      const comment = question.querySelector('textarea').value;
+      doc.setFontSize(12);
+      doc.text(`${index + 1}. ${questionText}`, 20, yPosition);
+      yPosition += 10;
+      doc.setFontSize(10);
+      doc.text(`Svar: ${answer}`, 30, yPosition);
+      yPosition += 10;
+      if (comment) {
+        const splitComment = doc.splitTextToSize(`Kommentar: ${comment}`, 150);
+        doc.text(splitComment, 30, yPosition);
+        yPosition += splitComment.length * 5;
+      }
+      yPosition += 10;
+    });
+    // Add SpiderWeb chart
+    html2canvas(document.querySelector(".spider-web")).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      doc.addPage();
+      doc.addImage(imgData, 'PNG', 10, 10, 190, 190);
+      // Add footer
+      doc.setFontSize(8);
+      doc.text("Dette er rapport udarbejdet til Modul 2.8 - Elteknik i velfærdsteknologiske løsninger på Roskilde Tekniske Skole. Udarbejdet af Marc Sonne Dahl (c) 2024", 105, 280, null, null, "center");
+      // Before saving the PDF, add borders and page numbers
+      addBorderAndPageNumber();
+      // Save the PDF
+      // Save the PDF
+      doc.save("VTV_RTS_Matrix.pdf");
+    });
+  }
+</script>
 
 </html>
