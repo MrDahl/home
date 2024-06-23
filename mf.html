@@ -1,0 +1,281 @@
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beregning af vedligeholdelsesfaktorer for indendørs LED-armaturer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; }
+        h1, h2 { color: #333; }
+        .section { margin-bottom: 30px; background: #f9f9f9; padding: 20px; border-radius: 5px; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 20px; border-radius: 4px; }
+        #result, #calculations { font-weight: bold; margin-top: 20px; padding: 15px; background: #e7f3e8; border-radius: 4px; }
+        .info-box { background: #e6f3ff; padding: 15px; margin-top: 20px; border-radius: 4px; }
+        .input-group { display: flex; justify-content: space-between; }
+        .input-group input { width: calc(50% - 5px); }
+    </style>
+</head>
+<body>
+    <h1>Beregning af vedligeholdelsesfaktorer for indendørs LED-armaturer</h1>
+    
+    <div class="section">
+        <h2>Projektinformation</h2>
+        <label for="navn">Navn:</label>
+        <input type="text" id="navn" name="navn">
+        
+        <label for="projekt">Projekt:</label>
+        <input type="text" id="projekt" name="projekt">
+        
+        <label for="beskrivelse">Beskrivelse af installationen:</label>
+        <textarea id="beskrivelse" name="beskrivelse" rows="4"></textarea>
+    </div>
+   
+    <div class="info-box">
+        <h3>Om vedligeholdelsesfaktoren (FM)</h3>
+        <p>Vedligeholdelsesfaktoren (FM) er afgørende for at sikre, at et belysningsanlæg opretholder den krævede belysningsstyrke gennem hele sin levetid. FM tager højde for reduceret lysstrøm over tid, armatursvigt, overfladers tilsmudsning og rummets tilsmudsning.</p>
+        <p>FM beregnes som produktet af fire faktorer: FM = LLMF * LSF * LMF * RMF</p>
+        <ul>
+            <li>LLMF (Lamp Lumen Maintenance Factor): Lyskildens lystilbagegang</li>
+            <li>LSF (Lamp Survival Factor): Lyskildens overlevelse</li>
+            <li>LMF (Luminaire Maintenance Factor): Armaturets vedligeholdelse</li>
+            <li>RMF (Room Maintenance Factor): Rummets vedligeholdelse</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Information om belysningsinstallationen</h2>
+        <label for="driftstid">Installationens driftstid (timer/år):</label>
+        <input type="number" id="driftstid" name="driftstid">
+        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
+        
+        <label for="levetid">Planlagt levetid for installationen (år):</label>
+        <input type="number" id="levetid" name="levetid">
+        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
+        
+        <label for="miljo">Miljø:</label>
+        <select id="miljo" name="miljo">
+            <option value="meget_rent">Meget rent</option>
+            <option value="rent">Rent</option>
+            <option value="normalt">Normalt</option>
+            <option value="snavset">Snavset</option>
+        </select>
+        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
+        
+        <label for="rengoring">Rengøringsinterval (måneder):</label>
+        <input type="number" id="rengoring" name="rengoring">
+        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
+    </div>
+    
+    <div class="section">
+        <h2>LED-armaturinformation</h2>
+        <label for="l_vaerdi">L-værdi:</label>
+        <div class="input-group">
+            <input type="number" id="l_nummer" name="l_nummer" placeholder="f.eks. 70">
+            <input type="number" id="l_timer" name="l_timer" placeholder="f.eks. 50000">
+        </div>
+        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
+        
+        <label for="clo">CLO (Constant Light Output):</label>
+        <select id="clo" name="clo">
+            <option value="ja">Ja</option>
+            <option value="nej">Nej</option>
+        </select>
+        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
+    </div>
+    
+    <button onclick="calculateFactor()">Beregn vedligeholdelsesfaktor</button>
+    
+    <div id="result"></div>
+    <div id="calculations"></div>
+    
+    <button onclick="generatePDF()">Generer PDF-rapport</button>
+
+    <script>
+        function calculateFactor() {
+            // Hent værdier fra input-felter
+            const driftstid = parseFloat(document.getElementById('driftstid').value);
+            const levetid = parseFloat(document.getElementById('levetid').value);
+            const miljo = document.getElementById('miljo').value;
+            const rengoring = parseFloat(document.getElementById('rengoring').value);
+            const lNummer = parseFloat(document.getElementById('l_nummer').value);
+            const lTimer = parseFloat(document.getElementById('l_timer').value);
+            const clo = document.getElementById('clo').value;
+
+            // Beregn LLMF (Lamp Lumen Maintenance Factor)
+            let llmf;
+            if (clo === 'ja') {
+                llmf = 1; // CLO opretholder konstant lysstrøm
+            } else {
+                const driftstimer = driftstid * levetid;
+                const lFaktor = lNummer / 100;
+                llmf = Math.max(lFaktor, 1 - (driftstimer / lTimer) * (1 - lFaktor));
+            }
+
+            // Beregn LSF (Lamp Survival Factor)
+            const lsf = 0.99; // Antager høj pålidelighed for LED
+
+            // Beregn LMF (Luminaire Maintenance Factor)
+            let lmf;
+            switch(miljo) {
+                case 'meget_rent':
+                    lmf = 0.96;
+                    break;
+                case 'rent':
+                    lmf = 0.93;
+                    break;
+                case 'normalt':
+                    lmf = 0.89;
+                    break;
+                case 'snavset':
+                    lmf = 0.83;
+                    break;
+                default:
+                    lmf = 0.89;
+            }
+
+            // Juster LMF baseret på rengøringsinterval
+            lmf = Math.max(lmf - (rengoring / 12 - 1) * 0.02, 0.80);
+
+            // Beregn RMF (Room Maintenance Factor)
+            const rmf = 0.97; // Antager standard rumvedligeholdelse
+
+            // Beregn samlet vedligeholdelsesfaktor
+            const fm = llmf * lsf * lmf * rmf;
+
+            document.getElementById('result').innerHTML = `
+                <h3>Beregnet vedligeholdelsesfaktor: ${fm.toFixed(3)}</h3>
+                <p>LLMF: ${llmf.toFixed(3)}</p>
+                <p>LSF: ${lsf.toFixed(3)}</p>
+                <p>LMF: ${lmf.toFixed(3)}</p>
+                <p>RMF: ${rmf.toFixed(3)}</p>
+            `;
+
+            document.getElementById('calculations').innerHTML = `
+                <h3>Beregninger og formler:</h3>
+                <p>FM = LLMF * LSF * LMF * RMF</p>
+                <p>LLMF beregning:</p>
+                <p>Hvis CLO = ja: LLMF = 1</p>
+                <p>Hvis CLO = nej: LLMF = max(L-faktor, 1 - (driftstimer / L-timer) * (1 - L-faktor))</p>
+                <p>Hvor:</p>
+                <p>L-faktor = ${lNummer} / 100 = ${(lNummer / 100).toFixed(2)}</p>
+                <p>Driftstimer = ${driftstid} * ${levetid} = ${driftstid * levetid}</p>
+                <p>LLMF = max(${(lNummer / 100).toFixed(2)}, 1 - (${driftstid * levetid} / ${lTimer}) * (1 - ${(lNummer / 100).toFixed(2)})) = ${llmf.toFixed(3)}</p>
+                <p>LMF beregning:</p>
+                <p>Basis LMF for ${miljo} miljø: ${lmf.toFixed(3)}</p>
+                <p>Justeret for rengøringsinterval: LMF = max(${lmf.toFixed(3)} - (${rengoring} / 12 - 1) * 0.02, 0.80) = ${lmf.toFixed(3)}</p>
+                <p>Endelig FM = ${llmf.toFixed(3)} * ${lsf.toFixed(3)} * ${lmf.toFixed(3)} * ${rmf.toFixed(3)} = ${fm.toFixed(3)}</p>
+            `;
+        }
+        
+function generatePDF() {
+    console.log("Begynder PDF-generering");
+    try {
+        if (typeof jspdf === 'undefined') {
+            throw new Error("jsPDF-biblioteket er ikke indlæst korrekt");
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        console.log("jsPDF-objekt oprettet");
+
+        // Add border to all pages
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.1);
+        
+        // First page
+        doc.rect(5, 5, 200, 287);
+        console.log("Forsøger at tilføje billede");
+        
+        // Load image
+        const img = new Image();
+        img.onload = function() {
+            console.log("Billede indlæst succesfuldt");
+            doc.addImage(img, 'PNG', 80, 10, 50, 50);
+            continueGeneratingPDF(doc);
+        };
+        img.onerror = function() {
+            console.error("Kunne ikke indlæse billedet");
+            continueGeneratingPDF(doc);
+        };
+        img.src = 'https://mrdahl.github.io/home/mflogo.png';
+    } catch (error) {
+        console.error("Fejl under PDF-generering:", error);
+        alert("Der opstod en fejl under generering af PDF. Se konsollen for flere detaljer.");
+    }
+}
+
+function continueGeneratingPDF(doc) {
+    console.log("Fortsætter PDF-generering");
+    
+    // First page content
+    doc.setFontSize(14);
+    doc.text("Beregning af vedligeholdelsesfaktoren for indendørs LED belysningsanlæg", 20, 80);
+    doc.setFontSize(12);
+    doc.text(`Navn: ${document.getElementById('navn').value}`, 10, 150);
+    doc.text(`Projekt: ${document.getElementById('projekt').value}`, 10, 160);
+    doc.text("Beskrivelse af installationen:", 10, 170);
+    doc.setFontSize(10);
+    const beskrivelse = doc.splitTextToSize(document.getElementById('beskrivelse').value, 180);
+    doc.text(beskrivelse, 10, 180);
+    doc.setFontSize(10);
+    doc.text("Side 1", 100, 290, null, null, "center");
+
+    // Second page
+    doc.addPage();
+    doc.rect(5, 5, 200, 287);
+    doc.setFontSize(14);
+    doc.text("Installationsdata:", 10, 20);
+    doc.setFontSize(12);
+    
+    const installationData = [
+        { label: "Driftstid", value: `${document.getElementById('driftstid').value} timer/år`, comment: document.querySelectorAll('.comment-area')[0].value },
+        { label: "Levetid", value: `${document.getElementById('levetid').value} år`, comment: document.querySelectorAll('.comment-area')[1].value },
+        { label: "Miljø", value: document.getElementById('miljo').value, comment: document.querySelectorAll('.comment-area')[2].value },
+        { label: "Rengøringsinterval", value: `${document.getElementById('rengoring').value} måneder`, comment: document.querySelectorAll('.comment-area')[3].value },
+        { label: "L-værdi", value: `L${document.getElementById('l_nummer').value} ${document.getElementById('l_timer').value} timer`, comment: document.querySelectorAll('.comment-area')[4].value },
+        { label: "CLO", value: document.getElementById('clo').value, comment: document.querySelectorAll('.comment-area')[5].value }
+    ];
+
+    let yPos = 30;
+    installationData.forEach(data => {
+        doc.text(`${data.label}: ${data.value}`, 10, yPos);
+        yPos += 10;
+        if (data.comment) {
+            const commentText = doc.splitTextToSize(`Kommentar: ${data.comment}`, 180);
+            doc.text(commentText, 10, yPos);
+            yPos += 10 * commentText.length;
+        }
+    });
+
+    doc.setFontSize(10);
+    doc.text("Side 2", 100, 290, null, null, "center");
+
+    // Third page
+    doc.addPage();
+    doc.rect(5, 5, 200, 287);
+    doc.setFontSize(14);
+    doc.text("Beregninger og resultat:", 10, 20);
+    doc.setFontSize(12);
+    const resultText = doc.splitTextToSize(document.getElementById('result').innerText, 180);
+    doc.text(resultText, 10, 30);
+    const calculationsText = doc.splitTextToSize(document.getElementById('calculations').innerText, 180);
+    doc.text(calculationsText, 10, 100);
+    doc.setFontSize(10);
+    doc.text("Side 3", 100, 290, null, null, "center");
+
+    // Footer on the last page
+    const pageCount = doc.internal.getNumberOfPages();
+    doc.setPage(pageCount);
+    doc.setFontSize(8);
+    doc.text("Vedligeholdelsesfaktor-beregner til Modul 1.6 - Design og styring af lys, på Roskilde Tekniske Skole.", 10, 280);
+    doc.text("Kode og design lavet af Marc Sonne Dahl (c) 2024", 10, 285);
+
+    console.log("PDF-generering fuldført, forsøger at gemme");
+    doc.save("led-vedligeholdelsesfaktor-rapport.pdf");
+}
+
+    </script>
+</body>
+</html>
