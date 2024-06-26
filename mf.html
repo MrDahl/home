@@ -1,281 +1,937 @@
 <html lang="da">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beregning af vedligeholdelsesfaktorer for indendørs LED-armaturer</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; }
-        h1, h2 { color: #333; }
-        .section { margin-bottom: 30px; background: #f9f9f9; padding: 20px; border-radius: 5px; }
-        label { display: block; margin-top: 15px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; }
-        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 20px; border-radius: 4px; }
-        #result, #calculations { font-weight: bold; margin-top: 20px; padding: 15px; background: #e7f3e8; border-radius: 4px; }
-        .info-box { background: #e6f3ff; padding: 15px; margin-top: 20px; border-radius: 4px; }
-        .input-group { display: flex; justify-content: space-between; }
-        .input-group input { width: calc(50% - 5px); }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <title>Vedligeholdelsesfaktor Beregner</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      color: #555;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: calc(50% - 3px);
+      font-size: 16px;
+      display: inline;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      background: #e9f7ef;
+      border: 1px solid #d4edda;
+      color: #155724;
+      border-radius: 5px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    /* Adjust the date input width to match other inputs */
+    input[type="date"] {
+      width: 100%;
+      padding: 8px;
+    }
+
+/* Tooltip container styles */
+.tooltip-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+}
+
+.tooltip {
+  opacity: 0; /* Hide the tooltip by default */
+  position: absolute; 
+  background-color: #333;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  width: 200px;
+  z-index: 1;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0s linear 0.3s;
+}
+
+.tooltip-container:hover .tooltip {
+  opacity: 1; /* Show the tooltip on hover */
+  visibility: visible;
+  left: -300px;
+  padding: 20px;
+}
+
+.tooltip-icon {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip-icon span {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #fff;
+  color: lightgrey;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.tooltip-icon:hover .tooltip {
+  opacity: 1; /* Show the tooltip on hover */
+  visibility: visible;
+  color: #000;
+}
+
+  </style>
 </head>
+
 <body>
-    <h1>Beregning af vedligeholdelsesfaktorer for indendørs LED-armaturer</h1>
-    
-    <div class="section">
-        <h2>Projektinformation</h2>
+  <div class="container">
+    <h1>Vedligeholdelsesfaktor</h1>
+    <div class="container" style="background-color: #ffee93;">
+      <div class="input-group">
         <label for="navn">Navn:</label>
         <input type="text" id="navn" name="navn">
-        
-        <label for="projekt">Projekt:</label>
+      </div>
+      <div class="input-group">
+        <label for="dato">Dato:</label>
+        <input type="date" id="dato" name="dato">
+      </div>
+      <div class="input-group">
+        <label for="projekt">Projektbeskrivelse:</label>
         <input type="text" id="projekt" name="projekt">
-        
-        <label for="beskrivelse">Beskrivelse af installationen:</label>
-        <textarea id="beskrivelse" name="beskrivelse" rows="4"></textarea>
-    </div>
-   
-    <div class="info-box">
-        <h3>Om vedligeholdelsesfaktoren (FM)</h3>
-        <p>Vedligeholdelsesfaktoren (FM) er afgørende for at sikre, at et belysningsanlæg opretholder den krævede belysningsstyrke gennem hele sin levetid. FM tager højde for reduceret lysstrøm over tid, armatursvigt, overfladers tilsmudsning og rummets tilsmudsning.</p>
-        <p>FM beregnes som produktet af fire faktorer: FM = LLMF * LSF * LMF * RMF</p>
-        <ul>
-            <li>LLMF (Lamp Lumen Maintenance Factor): Lyskildens lystilbagegang</li>
-            <li>LSF (Lamp Survival Factor): Lyskildens overlevelse</li>
-            <li>LMF (Luminaire Maintenance Factor): Armaturets vedligeholdelse</li>
-            <li>RMF (Room Maintenance Factor): Rummets vedligeholdelse</li>
-        </ul>
-    </div>
-
-    <div class="section">
-        <h2>Information om belysningsinstallationen</h2>
-        <label for="driftstid">Installationens driftstid (timer/år):</label>
-        <input type="number" id="driftstid" name="driftstid">
-        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
-        
-        <label for="levetid">Planlagt levetid for installationen (år):</label>
-        <input type="number" id="levetid" name="levetid">
-        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
-        
-        <label for="miljo">Miljø:</label>
-        <select id="miljo" name="miljo">
-            <option value="meget_rent">Meget rent</option>
-            <option value="rent">Rent</option>
-            <option value="normalt">Normalt</option>
-            <option value="snavset">Snavset</option>
-        </select>
-        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
-        
-        <label for="rengoring">Rengøringsinterval (måneder):</label>
-        <input type="number" id="rengoring" name="rengoring">
-        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
-    </div>
-    
-    <div class="section">
-        <h2>LED-armaturinformation</h2>
-        <label for="l_vaerdi">L-værdi:</label>
-        <div class="input-group">
-            <input type="number" id="l_nummer" name="l_nummer" placeholder="f.eks. 70">
-            <input type="number" id="l_timer" name="l_timer" placeholder="f.eks. 50000">
+      </div>
+      <div class="tooltip-container">
+        <div class="tooltip-icon">
+          <span>INFO</span>
         </div>
-        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
-        
-        <label for="clo">CLO (Constant Light Output):</label>
-        <select id="clo" name="clo">
-            <option value="ja">Ja</option>
-            <option value="nej">Nej</option>
-        </select>
-        <textarea class="comment-area" placeholder="Tilføj din kommentar her"></textarea>
+        <div class="tooltip">
+          <p>Udfyld navn og dato, og beskriv projektet i detaljer.</p>
+          <p>Husk at beggrunde dine valg!</p>
+        </div>
+      </div>
     </div>
-    
-    <button onclick="calculateFactor()">Beregn vedligeholdelsesfaktor</button>
-    
-    <div id="result"></div>
-    <div id="calculations"></div>
-    
-    <button onclick="generatePDF()">Generer PDF-rapport</button>
+    <form id="calculator-form">
+      <div class="container" style="background-color: #ffc09f;">
+        <label for="uptime">Installationens driftstid (timer):</label>
+        <input type="number" id="uptime" required>
 
-    <script>
-        function calculateFactor() {
-            // Hent værdier fra input-felter
-            const driftstid = parseFloat(document.getElementById('driftstid').value);
-            const levetid = parseFloat(document.getElementById('levetid').value);
-            const miljo = document.getElementById('miljo').value;
-            const rengoring = parseFloat(document.getElementById('rengoring').value);
-            const lNummer = parseFloat(document.getElementById('l_nummer').value);
-            const lTimer = parseFloat(document.getElementById('l_timer').value);
-            const clo = document.getElementById('clo').value;
+        <label for="lightingTime">Tændtid per år (timer):</label>
+        <input type="number" id="lightingTime" required>
 
-            // Beregn LLMF (Lamp Lumen Maintenance Factor)
-            let llmf;
-            if (clo === 'ja') {
-                llmf = 1; // CLO opretholder konstant lysstrøm
-            } else {
-                const driftstimer = driftstid * levetid;
-                const lFaktor = lNummer / 100;
-                llmf = Math.max(lFaktor, 1 - (driftstimer / lTimer) * (1 - lFaktor));
-            }
+        <label for="repairStrategy">Reparationsstrategi:</label>
+        <select id="repairStrategy" required>
+          <option value="individual">Punkt udskiftning</option>
+          <option value="group">Gruppe udskiftning</option>
+        </select>
+        <div class="tooltip-container">
+          <div class="tooltip-icon">
+            <span>INFO</span>
+          </div>
+          <div class="tooltip">
+            <p>DS/ISO/CIE TS 22012:2019 afsnit 6.3.2-6.3.3</p>
+          </div>
+        </div>
+      </div>
+      <div class="container" style="background-color: #a0ced9;">
+        <label for="environment">Miljø:</label>
+        <select id="environment" required>
+          <option value="very_clean">Meget rent</option>
+          <option value="clean">Rent</option>
+          <option value="normal">Normalt</option>
+          <option value="dirty">Snavset</option>
+          <option value="very_dirty">Meget snavset</option>
+        </select>
 
-            // Beregn LSF (Lamp Survival Factor)
-            const lsf = 0.99; // Antager høj pålidelighed for LED
+        <label for="roomCleaningInterval">Rengøringsinterval for omgivelser (måneder):</label>
+        <input type="number" id="roomCleaningInterval" required>
 
-            // Beregn LMF (Luminaire Maintenance Factor)
-            let lmf;
-            switch(miljo) {
-                case 'meget_rent':
-                    lmf = 0.96;
-                    break;
-                case 'rent':
-                    lmf = 0.93;
-                    break;
-                case 'normalt':
-                    lmf = 0.89;
-                    break;
-                case 'snavset':
-                    lmf = 0.83;
-                    break;
-                default:
-                    lmf = 0.89;
-            }
+        <label for="luminaireCleaningInterval">Rengøringsinterval for armaturer (måneder):</label>
+        <input type="number" id="luminaireCleaningInterval" required>
+        <div class="tooltip-container">
+          <div class="tooltip-icon">
+            <span>INFO</span>
+          </div>
+          <div class="tooltip">
+            <p>CIE 097:2005, tabel 2.1</p>
+            <p>CIE 097:2005, tabel 3.7</p>
+          </div>
+        </div>
+      </div>
+      <div class="container" style="background-color: #fcf5c7;">
+        <label for="ceilingReflectance">Reflektans - Loft (%):</label>
+        <input type="number" id="ceilingReflectance" required>
 
-            // Juster LMF baseret på rengøringsinterval
-            lmf = Math.max(lmf - (rengoring / 12 - 1) * 0.02, 0.80);
+        <label for="wallsReflectance">Reflektans - Vægge (%):</label>
+        <input type="number" id="wallsReflectance" required>
 
-            // Beregn RMF (Room Maintenance Factor)
-            const rmf = 0.97; // Antager standard rumvedligeholdelse
+        <label for="floorsReflectance">Reflektans - Gulv (%):</label>
+        <input type="number" id="floorsReflectance" required>
+        <div class="tooltip-container">
+          <div class="tooltip-icon">
+            <span>INFO</span>
+          </div>
+          <div class="tooltip">
+            <p>CIE 097:2005</p>
+            <p>Som regel sættes reflektanserne til standart værdier (Loft - 0,8, Vægge - 0,5, Gulve - 0,2) for at kompensere for møblering osv.</p>
+          </div>
+        </div>
+      </div>
+      <div class="container" style="background-color: #adf7b6;">
+        <label for="luminaireType">Type af armatur:</label>
+        <select id="luminaireType" required>
+          <option value="basic">Grundarmatur</option>
+          <option value="open_top_bottom">Armaturer med åben top og bund</option>
+          <option value="open_bottom">Armaturer med åben bund</option>
+          <option value="closed_top_bottom_ip2x">Armaturer med lukket top og bund, IP2X</option>
+          <option value="closed_top_bottom_ip5x">Armaturer med lukket top og bund, IP5X</option>
+          <option value="closed_uplights">Lukkede uplights</option>
+          <option value="mechanically_ventilated">Mekanisk ventilerede armaturer</option>
+        </select>
 
-            // Beregn samlet vedligeholdelsesfaktor
-            const fm = llmf * lsf * lmf * rmf;
+        <label for="usefullife">Median Useful Life - L:</label>
+        <select id="usefullife" required>
+          <option value="l60">L60</option>
+          <option value="l65">L65</option>
+          <option value="l70">L70</option>
+          <option value="l75">L75</option>
+          <option value="l80">L80</option>
+          <option value="l85">L85</option>
+          <option value="l90">L90</option>
+        </select>
 
-            document.getElementById('result').innerHTML = `
-                <h3>Beregnet vedligeholdelsesfaktor: ${fm.toFixed(3)}</h3>
-                <p>LLMF: ${llmf.toFixed(3)}</p>
-                <p>LSF: ${lsf.toFixed(3)}</p>
-                <p>LMF: ${lmf.toFixed(3)}</p>
-                <p>RMF: ${rmf.toFixed(3)}</p>
-            `;
+        <label for="medianUsefulLife">Median Useful Life (timer):
+        </label>
+        <select id="medianUsefulLife" required>
+          <option value="25000">25,000</option>
+          <option value="30000">30,000</option>
+          <option value="35000">35,000</option>
+          <option value="40000">40,000</option>
+          <option value="45000">45,000</option>
+          <option value="50000">50,000</option>
+          <option value="55000">55,000</option>
+          <option value="60000">60,000</option>
+          <option value="65000">65,000</option>
+          <option value="70000">70,000</option>
+          <option value="75000">75,000</option>
+          <option value="80000">80,000</option>
+          <option value="85000">85,000</option>
+          <option value="90000">90,000</option>
+          <option value="95000">95,000</option>
+          <option value="100000">100,000</option>
+          <option value="105000">105,000</option>
+          <option value="110000">110,000</option>
+          <option value="115000">115,000</option>
+          <option value="120000">120,000</option>
+        </select>
 
-            document.getElementById('calculations').innerHTML = `
-                <h3>Beregninger og formler:</h3>
-                <p>FM = LLMF * LSF * LMF * RMF</p>
-                <p>LLMF beregning:</p>
-                <p>Hvis CLO = ja: LLMF = 1</p>
-                <p>Hvis CLO = nej: LLMF = max(L-faktor, 1 - (driftstimer / L-timer) * (1 - L-faktor))</p>
-                <p>Hvor:</p>
-                <p>L-faktor = ${lNummer} / 100 = ${(lNummer / 100).toFixed(2)}</p>
-                <p>Driftstimer = ${driftstid} * ${levetid} = ${driftstid * levetid}</p>
-                <p>LLMF = max(${(lNummer / 100).toFixed(2)}, 1 - (${driftstid * levetid} / ${lTimer}) * (1 - ${(lNummer / 100).toFixed(2)})) = ${llmf.toFixed(3)}</p>
-                <p>LMF beregning:</p>
-                <p>Basis LMF for ${miljo} miljø: ${lmf.toFixed(3)}</p>
-                <p>Justeret for rengøringsinterval: LMF = max(${lmf.toFixed(3)} - (${rengoring} / 12 - 1) * 0.02, 0.80) = ${lmf.toFixed(3)}</p>
-                <p>Endelig FM = ${llmf.toFixed(3)} * ${lsf.toFixed(3)} * ${lmf.toFixed(3)} * ${rmf.toFixed(3)} = ${fm.toFixed(3)}</p>
-            `;
+        <label for="clo">Constant Light Output (CLO):</label>
+        <select id="clo" required>
+          <option value="yes">Ja</option>
+          <option value="no">Nej</option>
+        </select>
+        <div class="tooltip-container">
+          <div class="tooltip-icon">
+            <span>INFO</span>
+          </div>
+          <div class="tooltip">
+            <p>"LX XXXXX timer" - Det antal timer, som går før lysudbyttet af 50% af en gruppe af LED-produkter er faldet X procent af det oprindelige - Opgives af leverandøren</p>
+            <p>CLO - opgives af leverandøren</p>
+          </div>
+        </div>
+      </div>
+      <button type="button" onclick="calculateMaintenanceFactor()">Vedligeholdelsesfaktor</button>
+      <button type="button" onclick="generatePDF()">PDF Rapport</button>
+    </form>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    // Data table
+    const LLMF_TABLE = {
+      60: { // L60 values
+        25000: {
+          LLMF: 0.5
+        },
+        30000: {
+          LLMF: 0.55
+        },
+        35000: {
+          LLMF: 0.56
+        },
+        40000: {
+          LLMF: 0.58
+        },
+        45000: {
+          LLMF: 0.6
+        },
+        50000: {
+          LLMF: 0.61
+        },
+        55000: {
+          LLMF: 0.62
+        },
+        60000: {
+          LLMF: 0.64
+        },
+        65000: {
+          LLMF: 0.65
+        },
+        70000: {
+          LLMF: 0.68
+        },
+        75000: {
+          LLMF: 0.69
+        },
+        80000: {
+          LLMF: 0.72
+        },
+        85000: {
+          LLMF: 0.75
+        },
+        90000: {
+          LLMF: 0.78
+        },
+        95000: {
+          LLMF: 0.80
+        },
+        100000: {
+          LLMF: 0.81
+        },
+        105000: {
+          LLMF: 0.82
+        },
+        110000: {
+          LLMF: 0.83
+        },
+        115000: {
+          LLMF: 0.84
+        },
+        120000: {
+          LLMF: 0.86
         }
-        
+      },
+      65: { // L65 values
+        25000: {
+          LLMF: 0.58
+        },
+        30000: {
+          LLMF: 0.59
+        },
+        35000: {
+          LLMF: 0.6
+        },
+        40000: {
+          LLMF: 0.605
+        },
+        45000: {
+          LLMF: 0.615
+        },
+        50000: {
+          LLMF: 0.62
+        },
+        55000: {
+          LLMF: 0.64
+        },
+        60000: {
+          LLMF: 0.68
+        },
+        65000: {
+          LLMF: 0.70
+        },
+        70000: {
+          LLMF: 0.74
+        },
+        75000: {
+          LLMF: 0.78
+        },
+        80000: {
+          LLMF: 0.8
+        },
+        85000: {
+          LLMF: 0.82
+        },
+        90000: {
+          LLMF: 0.84
+        },
+        95000: {
+          LLMF: 0.86
+        },
+        100000: {
+          LLMF: 0.87
+        },
+        105000: {
+          LLMF: 0.88
+        },
+        110000: {
+          LLMF: 0.89
+        },
+        115000: {
+          LLMF: 0.90
+        },
+        120000: {
+          LLMF: 0.92
+        }
+      },
+      70: { // L70 values
+        25000: {
+          LLMF: 0.6
+        },
+        30000: {
+          LLMF: 0.68
+        },
+        35000: {
+          LLMF: 0.72
+        },
+        40000: {
+          LLMF: 0.76
+        },
+        45000: {
+          LLMF: 0.8
+        },
+        50000: {
+          LLMF: 0.84
+        },
+        55000: {
+          LLMF: 0.88
+        },
+        60000: {
+          LLMF: 0.92
+        },
+        65000: {
+          LLMF: 0.925
+        },
+        70000: {
+          LLMF: 0.93
+        },
+        75000: {
+          LLMF: 0.935
+        },
+        80000: {
+          LLMF: 0.94
+        },
+        85000: {
+          LLMF: 0.945
+        },
+        90000: {
+          LLMF: 0.95
+        },
+        95000: {
+          LLMF: 0.96
+        },
+        100000: {
+          LLMF: 0.97
+        },
+        105000: {
+          LLMF: 0.98
+        },
+        110000: {
+          LLMF: 0.985
+        },
+        115000: {
+          LLMF: 0.99
+        },
+        120000: {
+          LLMF: 0.99
+        }
+      },
+      75: { // L75 values
+        25000: {
+          LLMF: 0.78
+        },
+        30000: {
+          LLMF: 0.79
+        },
+        35000: {
+          LLMF: 0.80
+        },
+        40000: {
+          LLMF: 0.81
+        },
+        45000: {
+          LLMF: 0.82
+        },
+        50000: {
+          LLMF: 0.83
+        },
+        55000: {
+          LLMF: 0.84
+        },
+        60000: {
+          LLMF: 0.85
+        },
+        65000: {
+          LLMF: 0.86
+        },
+        70000: {
+          LLMF: 0.87
+        },
+        75000: {
+          LLMF: 0.88
+        },
+        80000: {
+          LLMF: 0.89
+        },
+        85000: {
+          LLMF: 0.9
+        },
+        90000: {
+          LLMF: 0.91
+        },
+        95000: {
+          LLMF: 0.92
+        },
+        100000: {
+          LLMF: 0.93
+        },
+        105000: {
+          LLMF: 0.94
+        },
+        110000: {
+          LLMF: 0.95
+        },
+        115000: {
+          LLMF: 0.96
+        },
+        120000: {
+          LLMF: 0.97
+        }
+      },
+      80: { // L80 values
+        25000: {
+          LLMF: 0.918
+        },
+        30000: {
+          LLMF: 0.92
+        },
+        35000: {
+          LLMF: 0.93
+        },
+        40000: {
+          LLMF: 0.934
+        },
+        45000: {
+          LLMF: 0.938
+        },
+        50000: {
+          LLMF: 0.94
+        },
+        55000: {
+          LLMF: 0.95
+        },
+        60000: {
+          LLMF: 0.96
+        },
+        65000: {
+          LLMF: 0.964
+        },
+        70000: {
+          LLMF: 0.945
+        },
+        75000: {
+          LLMF: 0.95
+        },
+        80000: {
+          LLMF: 0.955
+        },
+        85000: {
+          LLMF: 0.960
+        },
+        90000: {
+          LLMF: 0.965
+        },
+        95000: {
+          LLMF: 0.970
+        },
+        100000: {
+          LLMF: 0.975
+        },
+        105000: {
+          LLMF: 0.980
+        },
+        110000: {
+          LLMF: 0.985
+        },
+        115000: {
+          LLMF: 0.988
+        },
+        120000: {
+          LLMF: 0.99
+        }
+      },
+      85: { // L85 values
+        25000: {
+          LLMF: 0.905
+        },
+        30000: {
+          LLMF: 0.91
+        },
+        35000: {
+          LLMF: 0.92
+        },
+        40000: {
+          LLMF: 0.928
+        },
+        45000: {
+          LLMF: 0.94
+        },
+        50000: {
+          LLMF: 0.945
+        },
+        55000: {
+          LLMF: 0.95
+        },
+        60000: {
+          LLMF: 0.958
+        },
+        65000: {
+          LLMF: 0.96
+        },
+        70000: {
+          LLMF: 0.968
+        },
+        75000: {
+          LLMF: 0.97
+        },
+        80000: {
+          LLMF: 0.972
+        },
+        85000: {
+          LLMF: 0.978
+        },
+        90000: {
+          LLMF: 0.98
+        },
+        95000: {
+          LLMF: 0.985
+        },
+        100000: {
+          LLMF: 0.988
+        },
+        105000: {
+          LLMF: 0.99
+        },
+        110000: {
+          LLMF: 0.99
+        },
+        115000: {
+          LLMF: 0.99
+        },
+        120000: {
+          LLMF: 1
+        }
+      },
+      90: { // L90 values
+        25000: {
+          LLMF: 0.918
+        },
+        30000: {
+          LLMF: 0.92
+        },
+        35000: {
+          LLMF: 0.93
+        },
+        40000: {
+          LLMF: 0.934
+        },
+        45000: {
+          LLMF: 0.938
+        },
+        50000: {
+          LLMF: 0.94
+        },
+        55000: {
+          LLMF: 0.95
+        },
+        60000: {
+          LLMF: 0.96
+        },
+        65000: {
+          LLMF: 0.964
+        },
+        70000: {
+          LLMF: 0.968
+        },
+        75000: {
+          LLMF: 0.972
+        },
+        80000: {
+          LLMF: 0.978
+        },
+        85000: {
+          LLMF: 0.98
+        },
+        90000: {
+          LLMF: 0.983
+        },
+        95000: {
+          LLMF: 0.985
+        },
+        100000: {
+          LLMF: 0.99
+        },
+        105000: {
+          LLMF: 0.997
+        },
+        110000: {
+          LLMF: 0.998
+        },
+        115000: {
+          LLMF: 0.999
+        },
+        120000: {
+          LLMF: 1
+        }
+      }
+    };
+    const ENVIRONMENT_TABLE = {
+      'very_clean': 1.0,
+      'clean': 0.9,
+      'normal': 0.8,
+      'dirty': 0.7,
+      'very_dirty': 0.6
+    };
+    const LUMINAIRE_TYPE_TABLE = {
+      'basic': 1.0,
+      'open_top_bottom': 0.95,
+      'open_bottom': 0.9,
+      'closed_top_bottom_ip2x': 0.85,
+      'closed_top_bottom_ip5x': 0.8,
+      'closed_uplights': 0.75,
+      'mechanically_ventilated': 0.7
+    };
+    // Add the new calculateRMF function here
+    function calculateRMF(environment, roomCleaningInterval, ceilingReflectance, wallsReflectance, floorsReflectance) {
+      const baseRMF = ENVIRONMENT_TABLE[environment];
+      const cleaningFactor = 1 - (roomCleaningInterval / 12 * 0.01);
+      // Calculate average reflectance
+      const avgReflectance = (ceilingReflectance + wallsReflectance + floorsReflectance) / 3;
+      // Adjust RMF based on reflectance (higher reflectance slightly improves RMF)
+      const reflectanceFactor = 0.9 + (avgReflectance * 0.2); // Scale from 0.9 to 1.1
+      return baseRMF * cleaningFactor * reflectanceFactor;
+    }
+
+    function calculateMaintenanceFactor() {
+      const uptime = parseFloat(document.getElementById('uptime').value);
+      const lightingTimePerYear = parseFloat(document.getElementById('lightingTime').value);
+      const repairStrategy = document.getElementById('repairStrategy').value;
+      const environment = document.getElementById('environment').value;
+      const roomCleaningInterval = parseFloat(document.getElementById('roomCleaningInterval').value);
+      const luminaireCleaningInterval = parseFloat(document.getElementById('luminaireCleaningInterval').value);
+      const ceilingReflectance = parseFloat(document.getElementById('ceilingReflectance').value) / 100;
+      const wallsReflectance = parseFloat(document.getElementById('wallsReflectance').value) / 100;
+      const floorsReflectance = parseFloat(document.getElementById('floorsReflectance').value) / 100;
+      const luminaireType = document.getElementById('luminaireType').value;
+      const usefullife = document.getElementById('usefullife').value;
+      const medianUsefulLife = parseFloat(document.getElementById('medianUsefulLife').value);
+      const clo = document.getElementById('clo').value;
+      // Calculate the total hours the lamp has been on
+      const totalHoursOn = (uptime * lightingTimePerYear) / 8760; // 8760 hours in a year
+      // Get the selected Lx and convert it to a number (e.g., 'l60' to 60)
+      const lx = parseInt(usefullife.substring(1));
+      // Determine the LLMF value based on the selected Lx and medianUsefulLife
+      let LLMF;
+      if (LLMF_TABLE[lx]) {
+        const LLMFValues = LLMF_TABLE[lx];
+        let lowerKey = null;
+        let upperKey = null;
+        Object.keys(LLMFValues).forEach(key => {
+          const L = parseInt(key);
+          if (L <= medianUsefulLife) {
+            if (!lowerKey || L > lowerKey) {
+              lowerKey = L;
+            }
+          } else {
+            if (!upperKey || L < upperKey) {
+              upperKey = L;
+            }
+          }
+        });
+        if (lowerKey && upperKey) {
+          const lowerLLMF = LLMFValues[lowerKey].LLMF;
+          const upperLLMF = LLMFValues[upperKey].LLMF;
+          const lowerL = lowerKey;
+          const upperL = upperKey;
+          LLMF = lowerLLMF + (upperLLMF - lowerLLMF) * (medianUsefulLife - lowerL) / (upperL - lowerL);
+        } else if (lowerKey) {
+          LLMF = LLMFValues[lowerKey].LLMF;
+        } else if (upperKey) {
+          LLMF = LLMFValues[upperKey].LLMF;
+        } else {
+          LLMF = 1.0;
+        }
+      } else {
+        LLMF = 1.0;
+      }
+      // Luminaire Maintenance Factor (LMF) based on type and cleaning interval
+      const LMF = LUMINAIRE_TYPE_TABLE[luminaireType] * (1 - (luminaireCleaningInterval / 12 * 0.02));
+      // Room Maintenance Factor (RMF) using the new function
+      const RMF = calculateRMF(environment, roomCleaningInterval, ceilingReflectance, wallsReflectance, floorsReflectance);
+      // Constant Light Output (CLO) Factor
+      const CLOFactor = clo === 'yes' ? 1.0 : LLMF; // If CLO is enabled, use 1.0, otherwise use LLMF
+      // Calculate the base Maintenance Factor (MF)
+      let maintenanceFactor = LMF * RMF * CLOFactor;
+      // Adjust the maintenance factor based on total hours on
+      // Reduce it by 1% for every 1000 hours of use
+      maintenanceFactor *= Math.max(0, 1 - (totalHoursOn / 1000) * 0.01);
+      // Display the calculated Maintenance Factor
+      document.getElementById('result').innerHTML = `Vedligeholdelsesfaktor er: ${maintenanceFactor.toFixed(3)}`;
+    }
+
+
 function generatePDF() {
-    console.log("Begynder PDF-generering");
+    // Calculate the maintenance factor first
+    calculateMaintenanceFactor();
+    
     try {
+        console.log("Starting PDF generation...");
+        
         if (typeof jspdf === 'undefined') {
-            throw new Error("jsPDF-biblioteket er ikke indlæst korrekt");
+            throw new Error("jsPDF library is not properly loaded");
         }
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
         
-        console.log("jsPDF-objekt oprettet");
+        const doc = new jspdf.jsPDF();
+        console.log("jsPDF instance created");
 
-        // Add border to all pages
-        doc.setDrawColor(0);
-        doc.setLineWidth(0.1);
-        
-        // First page
-        doc.rect(5, 5, 200, 287);
-        console.log("Forsøger at tilføje billede");
-        
-        // Load image
-        const img = new Image();
-        img.onload = function() {
-            console.log("Billede indlæst succesfuldt");
-            doc.addImage(img, 'PNG', 80, 10, 50, 50);
-            continueGeneratingPDF(doc);
-        };
-        img.onerror = function() {
-            console.error("Kunne ikke indlæse billedet");
-            continueGeneratingPDF(doc);
-        };
-        img.src = 'https://mrdahl.github.io/home/mflogo.png';
+        // Function to add page border and number
+        function addPageBorderAndNumber(pageNumber) {
+            doc.setDrawColor(173, 216, 230);
+            doc.setLineWidth(0.5);
+            doc.rect(5, 5, 200, 287);
+            doc.setFontSize(8);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Side ${pageNumber}`, 200, 290, null, null, "right");
+        }
+
+        // Add title
+        doc.setFontSize(18);
+        doc.setTextColor(0, 0, 0);
+        doc.text("Vedligeholdelsesfaktor Beregning", 105, 40, null, null, "center");
+
+        // Add inputs
+        doc.setFontSize(12);
+        let yPos = 50;
+
+        function addField(label, value) {
+            if (yPos > 250) {
+                addPageBorderAndNumber(doc.internal.getNumberOfPages());
+                doc.addPage();
+                yPos = 20;
+            }
+            doc.text(`${label}: ${value}`, 20, yPos);
+            yPos += 10;
+        }
+
+        // Add all fields
+        addField("Navn", document.getElementById('navn').value);
+        addField("Dato", document.getElementById('dato').value);
+        addField("Projekt", document.getElementById('projekt').value);
+        addField("Installationens driftstid", document.getElementById('uptime').value + " timer");
+        addField("Tændtid per år", document.getElementById('lightingTime').value + " timer");
+        addField("Reparationsstrategi", document.getElementById('repairStrategy').options[document.getElementById('repairStrategy').selectedIndex].text);
+        addField("Miljø", document.getElementById('environment').options[document.getElementById('environment').selectedIndex].text);
+        addField("Rengøringsinterval for omgivelser", document.getElementById('roomCleaningInterval').value + " måneder");
+        addField("Rengøringsinterval for armaturer", document.getElementById('luminaireCleaningInterval').value + " måneder");
+        addField("Reflektans - Loft", document.getElementById('ceilingReflectance').value + "%");
+        addField("Reflektans - Vægge", document.getElementById('wallsReflectance').value + "%");
+        addField("Reflektans - Gulv", document.getElementById('floorsReflectance').value + "%");
+        addField("Type af armatur", document.getElementById('luminaireType').options[document.getElementById('luminaireType').selectedIndex].text);
+        addField("Median Useful Life - L", document.getElementById('usefullife').value);
+        addField("Median Useful Life", document.getElementById('medianUsefulLife').value + " timer");
+        addField("Constant Light Output (CLO)", document.getElementById('clo').value);
+
+        // Add result
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        const resultText = document.getElementById('result').innerText;
+        doc.text(resultText, 20, yPos + 10);
+
+        // Add footer
+        doc.setFontSize(8);
+        doc.setFont(undefined, 'normal');
+        doc.text("Dette er rapport udarbejdet til Modul 1.6 - Design og styring af lys på Roskilde Tekniske Skole.", 105, 280, null, null, "center");
+        doc.text("Programmet og koden er udarbejdet af Marc Sonne Dahl (c) 2024", 105, 284, null, null, "center");
+
+        // Add border and page number to all pages
+        let pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            addPageBorderAndNumber(i);
+        }
+
+        // Save the PDF
+        doc.save("vedligeholdelsesfaktor_beregning.pdf");
+        console.log("PDF generated and saved successfully");
     } catch (error) {
-        console.error("Fejl under PDF-generering:", error);
-        alert("Der opstod en fejl under generering af PDF. Se konsollen for flere detaljer.");
+        console.error("Error generating PDF:", error);
+        alert("Der opstod en fejl under generering af PDF'en. Se fejlkonsollen for detaljer.");
     }
 }
-
-function continueGeneratingPDF(doc) {
-    console.log("Fortsætter PDF-generering");
     
-    // First page content
-    doc.setFontSize(14);
-    doc.text("Beregning af vedligeholdelsesfaktoren for indendørs LED belysningsanlæg", 20, 80);
-    doc.setFontSize(12);
-    doc.text(`Navn: ${document.getElementById('navn').value}`, 10, 150);
-    doc.text(`Projekt: ${document.getElementById('projekt').value}`, 10, 160);
-    doc.text("Beskrivelse af installationen:", 10, 170);
-    doc.setFontSize(10);
-    const beskrivelse = doc.splitTextToSize(document.getElementById('beskrivelse').value, 180);
-    doc.text(beskrivelse, 10, 180);
-    doc.setFontSize(10);
-    doc.text("Side 1", 100, 290, null, null, "center");
-
-    // Second page
-    doc.addPage();
-    doc.rect(5, 5, 200, 287);
-    doc.setFontSize(14);
-    doc.text("Installationsdata:", 10, 20);
-    doc.setFontSize(12);
-    
-    const installationData = [
-        { label: "Driftstid", value: `${document.getElementById('driftstid').value} timer/år`, comment: document.querySelectorAll('.comment-area')[0].value },
-        { label: "Levetid", value: `${document.getElementById('levetid').value} år`, comment: document.querySelectorAll('.comment-area')[1].value },
-        { label: "Miljø", value: document.getElementById('miljo').value, comment: document.querySelectorAll('.comment-area')[2].value },
-        { label: "Rengøringsinterval", value: `${document.getElementById('rengoring').value} måneder`, comment: document.querySelectorAll('.comment-area')[3].value },
-        { label: "L-værdi", value: `L${document.getElementById('l_nummer').value} ${document.getElementById('l_timer').value} timer`, comment: document.querySelectorAll('.comment-area')[4].value },
-        { label: "CLO", value: document.getElementById('clo').value, comment: document.querySelectorAll('.comment-area')[5].value }
-    ];
-
-    let yPos = 30;
-    installationData.forEach(data => {
-        doc.text(`${data.label}: ${data.value}`, 10, yPos);
-        yPos += 10;
-        if (data.comment) {
-            const commentText = doc.splitTextToSize(`Kommentar: ${data.comment}`, 180);
-            doc.text(commentText, 10, yPos);
-            yPos += 10 * commentText.length;
-        }
-    });
-
-    doc.setFontSize(10);
-    doc.text("Side 2", 100, 290, null, null, "center");
-
-    // Third page
-    doc.addPage();
-    doc.rect(5, 5, 200, 287);
-    doc.setFontSize(14);
-    doc.text("Beregninger og resultat:", 10, 20);
-    doc.setFontSize(12);
-    const resultText = doc.splitTextToSize(document.getElementById('result').innerText, 180);
-    doc.text(resultText, 10, 30);
-    const calculationsText = doc.splitTextToSize(document.getElementById('calculations').innerText, 180);
-    doc.text(calculationsText, 10, 100);
-    doc.setFontSize(10);
-    doc.text("Side 3", 100, 290, null, null, "center");
-
-    // Footer on the last page
-    const pageCount = doc.internal.getNumberOfPages();
-    doc.setPage(pageCount);
-    doc.setFontSize(8);
-    doc.text("Vedligeholdelsesfaktor-beregner til Modul 1.6 - Design og styring af lys, på Roskilde Tekniske Skole.", 10, 280);
-    doc.text("Kode og design lavet af Marc Sonne Dahl (c) 2024", 10, 285);
-
-    console.log("PDF-generering fuldført, forsøger at gemme");
-    doc.save("led-vedligeholdelsesfaktor-rapport.pdf");
-}
-
-    </script>
+  </script>
 </body>
+
 </html>
