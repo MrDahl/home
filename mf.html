@@ -1,5 +1,7 @@
 <html lang="da">
 
+<html lang="da">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,13 +12,22 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 20px;
       background-color: #f4f4f9;
+      user-select: none;
+      overflow-x: hidden;
+    }
+
+    #center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 0px;
     }
 
     .container {
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
-      background: white;
+      background: #FFA726;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       border-radius: 10px;
       margin-bottom: 20px;
@@ -25,7 +36,14 @@
 
     h1 {
       text-align: center;
-      color: #333;
+      color: #FFF;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+      text-align: center;
+      color: #FFF;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     }
 
     label {
@@ -44,21 +62,49 @@
       box-sizing: border-box;
     }
 
+    #btn {
+      display: inline-block;
+      margin-left: 3vh;
+    }
+
     button {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #4CAF50;
-      color: white;
+      outline: 0;
+      font-size: 1em;
+      font-weight: 600;
+      text-align: center;
+      background: #fff;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: calc(50% - 3px);
-      font-size: 16px;
-      display: inline;
+      display: inline-block;
+      margin-right: 1vh;
+      padding: 2em 4em;
+      transition: all .3s ease-out;
+      box-shadow: inset 0 -8px 0 0 rgba(0, 0, 0, .2),
+        1px 1px 0 0 #d98e20,
+        2px 2px 0 0 #d98e20,
+        3px 3px 0 0 #d98e20,
+        4px 4px 0 0 #d98e20,
+        5px 5px 0 0 #d98e20,
+        6px 6px 0 0 #d98e20,
+        7px 7px 0 0 #d98e20,
+        8px 8px 0 0 #d98e20,
+        9px 9px 0 0 #d98e20,
+        10px 10px 0 0 #d98e20,
+        11px 11px 0 0 #d98e20,
+        12px 12px 0 0 #d98e20;
     }
 
     button:hover {
-      background-color: #45a049;
+      color: #444;
+    }
+
+    button:active {
+      color: #222;
+      box-shadow: inset 0 -4px 0 0 rgba(0, 0, 0, .2),
+        1px 1px 0 0 #d98e20,
+        2px 2px 0 0 #d98e20,
+        3px 3px 0 0 #d98e20,
+        4px 4px 0 0 #d98e20,
+        5px 5px 0 0 #d98e20;
     }
 
     .result {
@@ -94,63 +140,76 @@
       padding: 8px;
     }
 
-/* Tooltip container styles */
-.tooltip-container {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 10px;
-}
+    /* Tooltip container styles */
+    .tooltip-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 10px;
+      transform:
+        perspective(75em) rotateX(18deg);
+      box-shadow:
+        rgba(22, 31, 39, 0.42) 0px 60px 123px -25px,
+        rgba(19, 26, 32, 0.08) 0px 35px 75px -35px;
+      border-radius: 10px;
+      border-color:
+        rgb(213, 220, 226) rgb(213, 220, 226) rgb(184, 194, 204);
+    }
 
-.tooltip {
-  opacity: 0; /* Hide the tooltip by default */
-  position: absolute; 
-  background-color: #333;
-  color: white;
-  padding: 8px;
-  border-radius: 5px;
-  width: 200px;
-  z-index: 1;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0s linear 0.3s;
-}
+    .tooltip {
+      opacity: 0;
+      /* Hide the tooltip by default */
+      position: absolute;
+      background-color: #333;
+      color: #fff;
+      padding: 8px;
+      border-radius: 5px;
+      width: 200px;
+      z-index: 1;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0s linear 0.3s;
+    }
 
-.tooltip-container:hover .tooltip {
-  opacity: 1; /* Show the tooltip on hover */
-  visibility: visible;
-  left: -300px;
-  padding: 20px;
-}
+    .tooltip-container:hover .tooltip {
+      opacity: 1;
+      /* Show the tooltip on hover */
+      visibility: visible;
+      left: -300px;
+      padding: 20px;
+    }
 
-.tooltip-icon {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
+    .tooltip-icon {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
 
-.tooltip-icon span {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: #fff;
-  color: lightgrey;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-}
+    .tooltip-icon span {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #fff;
+      color: lightgrey;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #000;
+    }
 
-.tooltip-icon:hover .tooltip {
-  opacity: 1; /* Show the tooltip on hover */
-  visibility: visible;
-  color: #000;
-}
-
+    .tooltip-icon:hover .tooltip {
+      opacity: 1;
+      /* Show the tooltip on hover */
+      visibility: visible;
+      color: #000;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
     <h1>Vedligeholdelsesfaktor</h1>
+    <img id="center" src="https://raw.githubusercontent.com/MrDahl/home/main/mf_logo.png" alt="Trulli" width="80" height="80">
+    <h2>𝑓𝑚 = 𝑓𝐿𝐹 ∙ 𝑓𝑆 ∙ 𝑓𝐿𝑀 ∙ 𝑓𝑆𝑀</h2>
     <div class="container" style="background-color: #ffee93;">
       <div class="input-group">
         <label for="navn">Navn:</label>
@@ -222,19 +281,20 @@
         </div>
       </div>
       <div class="container" style="background-color: #fcf5c7;">
-        <label for="ceilingReflectance">Reflektans - Loft (%):</label>
+        <label for="ceilingReflectance">Reflektans - Loft:</label>
         <input type="number" id="ceilingReflectance" required>
 
-        <label for="wallsReflectance">Reflektans - Vægge (%):</label>
+        <label for="wallsReflectance">Reflektans - Vægge:</label>
         <input type="number" id="wallsReflectance" required>
 
-        <label for="floorsReflectance">Reflektans - Gulv (%):</label>
+        <label for="floorsReflectance">Reflektans - Gulv:</label>
         <input type="number" id="floorsReflectance" required>
         <div class="tooltip-container">
           <div class="tooltip-icon">
             <span>INFO</span>
           </div>
           <div class="tooltip">
+            <p>Husk, 2 decimaler (x,x)</p>
             <p>CIE 097:2005</p>
             <p>Som regel sættes reflektanserne til standart værdier (Loft - 0,8, Vægge - 0,5, Gulve - 0,2) for at kompensere for møblering osv.</p>
           </div>
@@ -298,13 +358,13 @@
             <span>INFO</span>
           </div>
           <div class="tooltip">
-            <p>"LX XXXXX timer" - Det antal timer, som går før lysudbyttet af 50% af en gruppe af LED-produkter er faldet X procent af det oprindelige - Opgives af leverandøren</p>
-            <p>CLO - opgives af leverandøren</p>
+            <p>L-værdien er den procent som lysintensiteten er faldet til efter levetiden - Opgives af leverandøren</p>
+            <p>Ved CLO bliver værdien sat til L100 - opgives af leverandøren</p>
           </div>
         </div>
       </div>
-      <button type="button" onclick="calculateMaintenanceFactor()">Vedligeholdelsesfaktor</button>
-      <button type="button" onclick="generatePDF()">PDF Rapport</button>
+      <button id="btn" type="button" onclick="calculateMaintenanceFactor()">Vedligeholdelsesfaktor</button>
+      <button id="btn" type="button" onclick="generatePDF()">PDF Rapport</button>
     </form>
     <div class="result" id="result"></div>
   </div>
@@ -781,9 +841,9 @@
       const environment = document.getElementById('environment').value;
       const roomCleaningInterval = parseFloat(document.getElementById('roomCleaningInterval').value);
       const luminaireCleaningInterval = parseFloat(document.getElementById('luminaireCleaningInterval').value);
-      const ceilingReflectance = parseFloat(document.getElementById('ceilingReflectance').value) / 100;
-      const wallsReflectance = parseFloat(document.getElementById('wallsReflectance').value) / 100;
-      const floorsReflectance = parseFloat(document.getElementById('floorsReflectance').value) / 100;
+      const ceilingReflectance = parseFloat(document.getElementById('ceilingReflectance').value);
+      const wallsReflectance = parseFloat(document.getElementById('wallsReflectance').value);
+      const floorsReflectance = parseFloat(document.getElementById('floorsReflectance').value);
       const luminaireType = document.getElementById('luminaireType').value;
       const usefullife = document.getElementById('usefullife').value;
       const medianUsefulLife = parseFloat(document.getElementById('medianUsefulLife').value);
@@ -841,50 +901,42 @@
       document.getElementById('result').innerHTML = `Vedligeholdelsesfaktor er: ${maintenanceFactor.toFixed(3)}`;
     }
 
-
-function generatePDF() {
-    // Calculate the maintenance factor first
-    calculateMaintenanceFactor();
-    
-    try {
+    function generatePDF() {
+      // Calculate the maintenance factor first
+      calculateMaintenanceFactor();
+      try {
         console.log("Starting PDF generation...");
-        
         if (typeof jspdf === 'undefined') {
-            throw new Error("jsPDF library is not properly loaded");
+          throw new Error("jsPDF library is not properly loaded");
         }
-        
         const doc = new jspdf.jsPDF();
         console.log("jsPDF instance created");
-
         // Function to add page border and number
         function addPageBorderAndNumber(pageNumber) {
-            doc.setDrawColor(173, 216, 230);
-            doc.setLineWidth(0.5);
-            doc.rect(5, 5, 200, 287);
-            doc.setFontSize(8);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`Side ${pageNumber}`, 200, 290, null, null, "right");
+          doc.setDrawColor(173, 216, 230);
+          doc.setLineWidth(0.5);
+          doc.rect(5, 5, 200, 287);
+          doc.setFontSize(8);
+          doc.setTextColor(0, 0, 0);
+          doc.text(`Side ${pageNumber}`, 200, 290, null, null, "right");
         }
-
         // Add title
         doc.setFontSize(18);
         doc.setTextColor(0, 0, 0);
         doc.text("Vedligeholdelsesfaktor Beregning", 105, 40, null, null, "center");
-
         // Add inputs
         doc.setFontSize(12);
         let yPos = 50;
 
         function addField(label, value) {
-            if (yPos > 250) {
-                addPageBorderAndNumber(doc.internal.getNumberOfPages());
-                doc.addPage();
-                yPos = 20;
-            }
-            doc.text(`${label}: ${value}`, 20, yPos);
-            yPos += 10;
+          if (yPos > 250) {
+            addPageBorderAndNumber(doc.internal.getNumberOfPages());
+            doc.addPage();
+            yPos = 20;
+          }
+          doc.text(`${label}: ${value}`, 20, yPos);
+          yPos += 10;
         }
-
         // Add all fields
         addField("Navn", document.getElementById('navn').value);
         addField("Dato", document.getElementById('dato').value);
@@ -895,42 +947,37 @@ function generatePDF() {
         addField("Miljø", document.getElementById('environment').options[document.getElementById('environment').selectedIndex].text);
         addField("Rengøringsinterval for omgivelser", document.getElementById('roomCleaningInterval').value + " måneder");
         addField("Rengøringsinterval for armaturer", document.getElementById('luminaireCleaningInterval').value + " måneder");
-        addField("Reflektans - Loft", document.getElementById('ceilingReflectance').value + "%");
-        addField("Reflektans - Vægge", document.getElementById('wallsReflectance').value + "%");
-        addField("Reflektans - Gulv", document.getElementById('floorsReflectance').value + "%");
+        addField("Reflektans - Loft", document.getElementById('ceilingReflectance').value);
+        addField("Reflektans - Vægge", document.getElementById('wallsReflectance').value);
+        addField("Reflektans - Gulv", document.getElementById('floorsReflectance').value);
         addField("Type af armatur", document.getElementById('luminaireType').options[document.getElementById('luminaireType').selectedIndex].text);
         addField("Median Useful Life - L", document.getElementById('usefullife').value);
         addField("Median Useful Life", document.getElementById('medianUsefulLife').value + " timer");
         addField("Constant Light Output (CLO)", document.getElementById('clo').value);
-
         // Add result
         doc.setFontSize(14);
         doc.setFont(undefined, 'bold');
         const resultText = document.getElementById('result').innerText;
         doc.text(resultText, 20, yPos + 10);
-
         // Add footer
         doc.setFontSize(8);
         doc.setFont(undefined, 'normal');
         doc.text("Dette er rapport udarbejdet til Modul 1.6 - Design og styring af lys på Roskilde Tekniske Skole.", 105, 280, null, null, "center");
         doc.text("Programmet og koden er udarbejdet af Marc Sonne Dahl (c) 2024", 105, 284, null, null, "center");
-
         // Add border and page number to all pages
         let pageCount = doc.internal.getNumberOfPages();
         for (let i = 1; i <= pageCount; i++) {
-            doc.setPage(i);
-            addPageBorderAndNumber(i);
+          doc.setPage(i);
+          addPageBorderAndNumber(i);
         }
-
         // Save the PDF
         doc.save("vedligeholdelsesfaktor_beregning.pdf");
         console.log("PDF generated and saved successfully");
-    } catch (error) {
+      } catch (error) {
         console.error("Error generating PDF:", error);
         alert("Der opstod en fejl under generering af PDF'en. Se fejlkonsollen for detaljer.");
+      }
     }
-}
-    
   </script>
 </body>
 
