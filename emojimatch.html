@@ -1,257 +1,216 @@
-<html>
+<html lang="en">
 <head>
-  <title>Emoji Matching Game</title>
-<style>
-  /* CSS Styles go here */
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Matching Game</title>
+    <style>
 
-  /* Layout */
-  body {
-    margin: 0;
-    display: flex;
-    align-items: top;
-    justify-content: center;
-    height: inherit;
-    background-color: none;
-  }
-
-  .container {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    width: inherit;
-    height: inherit;
-    max-width: 100vw;
-    background-color: none;
-    overflow: hidden;
-  }
-
-  .game-board {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    max-width: inherit;
-    height: inherit;
-    flex-grow: 1;
-    padding: 10px;
-    background-color: none;
-  }
-
-  .tile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 64px;
-    min-height: 64px;
-    max-width: 100%;
-    max-height: 100%;
-    margin: 5px;
-    background-color: #f1f1f1;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 35px;
-    font-size: clamp(33px, 10vw, 45px);
-    transition: background-color 0.3s ease-in-out;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  .tile:hover {
-    background-color: #ffffff;
-  }
-  .menu-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: inherit;
-    min-width: 56px;
-    max-height: 100%;
-    padding: 16px;
-    background-color: none;
-    margin: 0px;
-  }
-
-  .menu {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
-    margin: 8px;
-    background-color: none;
-    font-size: 24px;
-    cursor: pointer;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s, background-color 0.3s;
-  }
-
-  .menu:hover {
-    background-color: #f1f1f1;
-    font-size: 35px;
-  }
-
-  @media (max-width: 780px) {
-    body {
-      font-size: 1.2rem; /* Increase base font size */
-    }
-
-    .game-board {
-      transform: scale(1.2); /* Scale up the game board */
-    }
-
-    .card {
-      width: 80px; /* Increase card size */
-      height: 80px;
-      font-size: 2rem; /* Increase emoji size */
-    }
-  }
-
-
-</style>
-  <script>
-    // Javascript start
-    // Array of emojis for each theme
-    var foodEmojis = ["🍕", "🍔", "🌮", "🍟", "🌯", "🍛", "🥞", "🍝", "🥙", "🍲", "🥪", "🍗"];
-    var animalEmojis = ["🐭", "🐱", "🐼", "🐔", "🐸", "🦝", "🐯", "🐨", "🐻", "🐷", "🐵", "🐰"];
-    var transportationEmojis = ["🚗", "🚕", "🚂", "🚚", "🏍️", "🚎", "🚜", "🚑", "🛺", "🚛", "🚓", "🚙"];
-    var flagEmojis = ["⚽", "⚾", "🥎", "🏀", "🏐", "🏈", "🏉", "🎱", "🎲", "🎮", "🏓", "🎳"];
-    var drinkEmojis = ["🍺", "🍷", "🍹", "🍸", "🥤", "🧋", "🍶", "🍵", "🍾", "🍼", "🧃", "🥛"];
-    var natureEmojis = ["🍄", "🌸", "🌺", "🌻", "🌼", "🍃", "🌿", "🍂", "🍁", "🌹", "🌷", "🌱"];
-    // Array to hold the shuffled emojis
-    var shuffledEmojis = [];
-    // Array to hold the flipped tiles
-    var flippedTiles = [];
-
-    // Function to shuffle an array
-    function shuffle(array) {
-      var currentIndex = array.length,
-        temporaryValue, randomIndex;
-      while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-      }
-      return array;
-    }
-
-    // Function to reset the game board
-    function resetGameBoard(themeEmojis) {
-      // Shuffle the emojis
-      shuffledEmojis = shuffle(themeEmojis.concat(themeEmojis));
-      // Clear the flipped tiles array
-      flippedTiles = [];
-      // Generate the game board HTML
-      var gameBoard = document.getElementById("game-board");
-      gameBoard.innerHTML = "";
-      for (var i = 0; i < 24; i++) {
-        var tile = document.createElement("div");
-        tile.className = "tile";
-        tile.dataset.index = i;
-        tile.textContent = "";
-        tile.addEventListener("click", flipTile);
-        gameBoard.appendChild(tile);
-      }
-    }
-
-    // Function to handle tile flipping
-    function flipTile() {
-      var tile = this;
-      var index = tile.dataset.index;
-
-      // Check if the tile is already flipped or two tiles are already flipped
-      if (flippedTiles.length === 2 || flippedTiles.indexOf(index) !== -1) {
-        return;
-      }
-
-      // Flip the tile
-      tile.textContent = shuffledEmojis[index];
-      flippedTiles.push(index);
-
-      // Check if two tiles are flipped
-      if (flippedTiles.length === 2) {
-        var tile1 = flippedTiles[0];
-        var tile2 = flippedTiles[1];
-
-        // Check if the tiles match
-        if (shuffledEmojis[tile1] === shuffledEmojis[tile2]) {
-          flippedTiles = [];
-        } else {
-          // Delay flipping back the tiles if they don't match
-          setTimeout(function() {
-            var tiles = document.getElementsByClassName("tile");
-            tiles[tile1].textContent = "";
-            tiles[tile2].textContent = "";
-            flippedTiles = [];
-          }, 1000);
+        body {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
         }
-      }
-    }
 
-    // Function to handle menu tile clicks
-    function handleMenuClick(themeEmojis) {
-      resetGameBoard(themeEmojis);
-    }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-    // Initialize the game
-    document.addEventListener("DOMContentLoaded", function() {
-      var foodMenu = document.getElementById("food-menu");
-      var animalMenu = document.getElementById("animal-menu");
-      var transportationMenu = document.getElementById("transportation-menu");
-      var flagMenu = document.getElementById("flag-menu");
-      var drinkMenu = document.getElementById("drink-menu");
-      var natureMenu = document.getElementById("nature-menu");
+        .menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+          max-width: 300px;
+        }
 
-      // Menu items
-      foodMenu.textContent = "🍜";
-      animalMenu.textContent = "🐶";
-      transportationMenu.textContent = "🚗";
-      flagMenu.innerHTML = "🎯";
-      drinkMenu.innerHTML = "☕";
-      natureMenu.innerHTML = "🌵";
+        .menu {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            margin: 8px;
+            background-color: #ffffff;
+            font-size: 30px;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, background-color 0.3s;
+        }
 
-      foodMenu.addEventListener("click", function() {
-        handleMenuClick(foodEmojis);
-      });
+        .menu:hover {
+            background-color: #bebebe;
+            transform: scale(1.1);
+        }
 
-      animalMenu.addEventListener("click", function() {
-        handleMenuClick(animalEmojis);
-      });
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            width: 100%;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-      transportationMenu.addEventListener("click", function() {
-        handleMenuClick(transportationEmojis);
-      });
+        .tile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          margin: 2px;
+            width: 80px;
+            height: 80px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 35px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-      flagMenu.addEventListener("click", function() {
-        handleMenuClick(flagEmojis);
-      });
+        .tile:hover {
+            background-color: #e0e0e0;
+        }
 
-      drinkMenu.addEventListener("click", function() {
-        handleMenuClick(drinkEmojis);
-      });
-
-      natureMenu.addEventListener("click", function() {
-        handleMenuClick(natureEmojis);
-      });
-
-      // Display the game board with the initial theme
-      resetGameBoard(foodEmojis);
-    });
-    // Javascript end
-  </script>
+    </style>
 </head>
-<!-- HTML start -->
 <body>
-  <div class="container">
-    <div class="menu-container">
-      <!-- Navigation -->
-      <div class="menu" id="food-menu"></div>
-      <div class="menu" id="animal-menu"></div>
-      <div class="menu" id="transportation-menu"></div>
-      <div class="menu" id="flag-menu"></div>
-      <div class="menu" id="drink-menu"></div>
-      <div class="menu" id="nature-menu"></div>
+    <div class="container">
+        <div class="menu-container">
+            <div class="menu" id="food-menu" title="Food"></div>
+            <div class="menu" id="animal-menu" title="Animals"></div>
+            <div class="menu" id="transportation-menu" title="Transportation"></div>
+            <div class="menu" id="flag-menu" title="Flags"></div>
+            <div class="menu" id="drink-menu" title="Drinks"></div>
+            <div class="menu" id="nature-menu" title="Nature"></div>
+        </div>
+        <div class="game-board" id="game-board"></div>
     </div>
-    <div class="game-board" id="game-board"></div>
-  </div>
+
+    <script>
+
+        var foodEmojis = ["🍕", "🍔", "🌮", "🍟", "🌯", "🍛", "🥞", "🍝", "🥙", "🍲", "🥪", "🍗"];
+        var animalEmojis = ["🐭", "🐱", "🐼", "🐔", "🐸", "🦝", "🐯", "🐨", "🐻", "🐷", "🐵", "🐰"];
+        var transportationEmojis = ["🚗", "🚕", "🚂", "🚚", "🏍️", "🚎", "🚜", "🚑", "🛺", "🚛", "🚓", "🚙"];
+        var flagEmojis = ["⚽", "⚾", "🥎", "🏀", "🏐", "🏈", "🏉", "🎱", "🎲", "🎮", "🏓", "🎳"];
+        var drinkEmojis = ["🍺", "🍷", "🍹", "🍸", "🥤", "🧋", "🍶", "🍵", "🍾", "🍼", "🧃", "🥛"];
+        var natureEmojis = ["🍄", "🌸", "🌺", "🌻", "🌼", "🍃", "🌿", "🍂", "🍁", "🌹", "🌷", "🌱"];
+
+        var shuffledEmojis = [];
+        var flippedTiles = [];
+
+        function shuffle(array) {
+            var currentIndex = array.length, temporaryValue, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        }
+
+        function resetGameBoard(themeEmojis) {
+            shuffledEmojis = shuffle(themeEmojis.concat(themeEmojis));
+            flippedTiles = [];
+            var gameBoard = document.getElementById("game-board");
+            gameBoard.innerHTML = "";
+            for (var i = 0; i < 24; i++) {
+                var tile = document.createElement("div");
+                tile.className = "tile";
+                tile.dataset.index = i;
+                tile.textContent = "";
+                tile.addEventListener("click", flipTile);
+                gameBoard.appendChild(tile);
+            }
+        }
+
+        function flipTile() {
+            var tile = this;
+            var index = tile.dataset.index;
+
+            if (flippedTiles.length === 2 || flippedTiles.indexOf(index) !== -1) {
+                return;
+            }
+
+            tile.textContent = shuffledEmojis[index];
+            flippedTiles.push(index);
+
+            if (flippedTiles.length === 2) {
+                var tile1 = flippedTiles[0];
+                var tile2 = flippedTiles[1];
+
+                if (shuffledEmojis[tile1] === shuffledEmojis[tile2]) {
+                    flippedTiles = [];
+                } else {
+                    setTimeout(function() {
+                        var tiles = document.getElementsByClassName("tile");
+                        tiles[tile1].textContent = "";
+                        tiles[tile2].textContent = "";
+                        flippedTiles = [];
+                    }, 1000);
+                }
+            }
+        }
+
+        function handleMenuClick(themeEmojis) {
+            resetGameBoard(themeEmojis);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var foodMenu = document.getElementById("food-menu");
+            var animalMenu = document.getElementById("animal-menu");
+            var transportationMenu = document.getElementById("transportation-menu");
+            var flagMenu = document.getElementById("flag-menu");
+            var drinkMenu = document.getElementById("drink-menu");
+            var natureMenu = document.getElementById("nature-menu");
+
+            foodMenu.textContent = "🍜";
+            animalMenu.textContent = "🐶";
+            transportationMenu.textContent = "🚗";
+            flagMenu.innerHTML = "🎯";
+            drinkMenu.innerHTML = "☕";
+            natureMenu.innerHTML = "🌵";
+
+            foodMenu.addEventListener("click", function() {
+                handleMenuClick(foodEmojis);
+            });
+
+            animalMenu.addEventListener("click", function() {
+                handleMenuClick(animalEmojis);
+            });
+
+            transportationMenu.addEventListener("click", function() {
+                handleMenuClick(transportationEmojis);
+            });
+
+            flagMenu.addEventListener("click", function() {
+                handleMenuClick(flagEmojis);
+            });
+
+            drinkMenu.addEventListener("click", function() {
+                handleMenuClick(drinkEmojis);
+            });
+
+            natureMenu.addEventListener("click", function() {
+                handleMenuClick(natureEmojis);
+            });
+
+            resetGameBoard(foodEmojis);
+        });
+    </script>
 </body>
-<!-- HTML end -->
 </html>
