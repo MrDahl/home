@@ -1,203 +1,178 @@
-<!-- CopyRighted to Marc Sonne Dahl 2024 -->
-
-<html>
+<html lang="da">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChoiceForge by Marc Sonne Dahl</title>
-
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
-    @import url("https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap");
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    body {
-      font-family: "Roboto", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: auto;
+    :root {
+      --bg-color: #e0e5ec;
+      --text-color: #4a4a4a;
+      --shadow-light: #ffffff;
+      --shadow-dark: #a3b1c6;
+      --accent-color: #6d5dfc;
     }
 
-    .container {
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      min-height: auto;
+      user-select: none;
+    }
+
+    .container {
       width: 100%;
-      padding-top: 20px;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .logo {
-      font-family: "Indie Flower", cursive;
-      font-weight: 400;
-      font-style: normal;
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 80px;
-      height: 80px;
-      border: 10px solid #007bff;
-      border-radius: 50%;
-      font-size: 50px;
-      font-weight: bold;
-      color: #007bff;
-      text-transform: uppercase;
+      font-size: 5rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 1px 1px 1px #919191,
+        1px 2px 1px #919191,
+        1px 3px 1px #919191,
+        1px 4px 1px #919191,
+        1px 5px 1px #919191,
+        1px 6px 1px #919191,
+        1px 7px 1px #919191,
+        1px 8px 1px #919191,
+        1px 9px 1px #919191,
+        1px 10px 1px #919191,
+        1px 18px 6px rgba(16, 16, 16, 0.4),
+        1px 22px 10px rgba(16, 16, 16, 0.2),
+        1px 25px 35px rgba(16, 16, 16, 0.2),
+        1px 30px 60px rgba(16, 16, 16, 0.4);
+    }
     }
 
-    h1 {
-      margin: 0;
-      color: #333;
-      font-weight: 700;
-      font-size: 2em;
-      margin-bottom: 15px;
+    h1,
+    h2,
+    h3,
+    h4 {
       text-align: center;
-    }
-
-    h2 {
-      margin: 0;
-      color: #777;
-      font-weight: 400;
-      font-size: 1.4em;
       margin-bottom: 20px;
-      text-align: center;
-      padding-top: 20px;
     }
 
-    h5 {
-      margin: 0;
-      color: #999;
-      font-weight: 400;
-      font-size: 1em;
-      margin-bottom: 25px;
-      text-align: left;
+    .instructions {
+      background: var(--bg-color);
+      box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .instructions h3 {
+      margin-top: 0;
+      color: var(--accent-color);
+      font-size: 1.2rem;
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+      margin-bottom: 0;
+    }
+
+    .instructions li {
+      margin-bottom: 15px;
       line-height: 1.5;
-    }
-
-    h5 span {
-      display: block;
-      margin-bottom: 9px;
     }
 
     .input-wrapper {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: inherit;
-      width: 600px;
-      max-width: 100vh;
-      margin-bottom: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      width: 100%;
     }
 
     .input-field {
       flex: 1;
-      width: 61vh;
-      padding: 10px;
+      min-width: 200px;
+      padding: 15px;
       border: none;
       border-radius: 15px;
-      font-size: 1em;
-      margin-bottom: 10px;
-      outline: none;
-      background: #f0f0f0;
-      box-shadow: inset 1px 1px 5px lightgrey, inset -1px -1px 5px #ffffff;
+      font-size: 1rem;
+      background: var(--bg-color);
+      box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+      color: var(--text-color);
     }
 
-    .button-container {
-      display: flex;
-      justify-content: space-between;
-      max-width: 90vh;
-    }
-
-    .add-btn,
-    .clear-btn {
-      padding: 10px 30px;
-      border: 3px;
-      width: 31vh;
-      border-color: #ffffff;
-      border-radius: 13px;
-      font-size: 1em;
+    .btn {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 15px;
+      font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.3s, box-shadow 0.3s;
+      transition: all 0.3s ease;
+      background: var(--bg-color);
+      color: var(--text-color);
+      box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+    }
+
+    .btn:hover {
+      box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
     }
 
     .add-btn {
-      background-color: #46bc46;
-      color: #ffffff;
-      margin-right: 10px;
-    }
-
-    .add-btn:hover {
-      background-color: grey;
-      box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+      color: #46bc46;
     }
 
     .clear-btn {
-      background-color: #ff5050;
-      color: #ffffff;
-    }
-
-    .clear-btn:hover {
-      background-color: grey;
-      box-shadow: 0 4px 8px rgba(255, 80, 80, 0.3);
+      color: #ff5050;
     }
 
     #board {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
-      width: 90vh;
-      margin-top: 20px;
-    }
-
-    .card-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
       gap: 20px;
-      max-width: 100vh;
-      width: auto;
+      width: 100%;
     }
 
     .card {
-      position: relative;
-      min-width: 25%;
-      height: 80px;
-      background-color: #ffffff;
-      margin: 10px;
-      border-radius: 10px;
-      border: 1px solid #f0f0f0;
+      width: calc(33.333% - 20px);
+      height: 100px;
+      perspective: 1000px;
       cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 4px 4px 8px #d9d9d9, -4px -4px 8px #ffffff;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
       text-align: center;
-      flex: 1 1 calc(33.33% - 20px);
-      max-width: calc(33.33% - 20px);
-      box-sizing: border-box;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
     }
 
-    .card:hover {
+    .card:hover .card-inner {
       transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .card.flip .back {
-      transform: rotateY(0deg);
-    }
-
-    .card.flip .front {
+    .card.flip .card-inner {
       transform: rotateY(180deg);
     }
 
-    .card .front,
-    .card .back {
+    .card-front,
+    .card-back {
       position: absolute;
       width: 100%;
       height: 100%;
@@ -205,81 +180,63 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #333;
-      font-weight: bold;
-      font-size: 14px;
-      border-radius: 10px;
-      padding: 10px;
-      box-sizing: border-box;
+      border-radius: 15px;
+      box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+      font-weight: 600;
     }
 
-    .card .front {
-      background-color: #eeeeee;
-      transform: rotateY(0deg);
+    .card-front {
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
 
-    .card .back {
-      background-color: #93c47d;
-      color: #fff;
+    .card-back {
+      background-color: var(--accent-color);
+      color: white;
       transform: rotateY(180deg);
-      word-wrap: break-word;
-      overflow-wrap: break-word;
     }
 
-    .instructions {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .instructions li {
-      color: #999;
-      font-weight: 400;
-      font-size: 14px;
-      margin-bottom: 10px;
-      text-align: left;
-      line-height: 1.5;
-    }
-
-/*    @media (max-width: 768px) {
+    @media (max-width: 768px) {
       .card {
-        flex: 1 1 calc(50% - 20px);
-        max-width: calc(50% - 20px);
+        width: calc(50% - 20px);
       }
     }
 
     @media (max-width: 480px) {
       .card {
-        flex: 1 1 100%;
-        max-width: 100%;
+        width: 100%;
       }
-*/
-      .container {
-        padding: 0 10px;
-        /* Optional: add horizontal padding on very small screens */
+
+      .input-wrapper {
+        flex-direction: column;
+      }
+
+      .input-field,
+      .btn {
+        width: 100%;
       }
     }
   </style>
-
 </head>
 
 <body>
   <div class="container">
-    <h1>ChoiceForge</h1>
     <div class="logo">CF</div>
-    <h2>by Marc Sonne Dahl</h2>
-    <ul class="instructions">
-      <li>Enter your choices, separated by comma or by clicking on ADD.</li>
-      <li>Cards are shuffled automatically.</li>
-      <li>Choose one of the cards.</li>
-      <li>The choice is made.</li>
-    </ul>
+    <h1>ChoiceForge</h1>
+    <p>by Marc Sonne Dahl</p>
+    <div class="instructions">
+      <h4>How to Use ChoiceForge</h4>
+      <ol>
+        <li>Enter your choices in the input field. You can separate multiple choices with commas.</li>
+        <li>Click "Add" or press Enter to create choice cards. They'll shuffle automatically.</li>
+        <li>Click on a card to reveal your choice.</li>
+        <li>Use "Clear" to start over with new choices.</li>
+      </ol>
+    </div>
     <div class="input-wrapper">
-      <input type="text" id="inputField" class="input-field" placeholder="Enter topics here, use comma" required>
-      <div class="button-container">
-        <button id="addBtn" class="add-btn">Add</button>
-        <button id="clearBtn" class="clear-btn">Clear</button>
-      </div>
+      <input type="text" id="inputField" class="input-field" placeholder="Enter your choices here" required>
+      <button id="addBtn" class="btn add-btn">Add</button>
+      <button id="clearBtn" class="btn clear-btn">Clear</button>
     </div>
     <div id="board"></div>
   </div>
@@ -290,38 +247,34 @@
     const addBtn = document.getElementById("addBtn");
     const clearBtn = document.getElementById("clearBtn");
     const cards = [];
-    inputField.addEventListener("input", function() {
-      if (inputField.value.endsWith(",")) {
-        const topics = inputField.value
-          .split(",")
-          .map((topic) => topic.trim())
-          .filter((topic) => topic !== "");
-        topics.forEach((topic) => createCard(topic));
-        inputField.value = "";
-      }
-      shuffleCards();
-    });
-    addBtn.addEventListener("click", function() {
-      const newTopic = inputField.value.trim();
-      if (newTopic) {
-        createCard(newTopic);
-        shuffleCards();
-        inputField.value = "";
+    inputField.addEventListener("keyup", function(event) {
+      if (event.key === "Enter" || event.key === ",") {
+        addChoices();
       }
     });
+    addBtn.addEventListener("click", addChoices);
     clearBtn.addEventListener("click", clearBoard);
+
+    function addChoices() {
+      const choices = inputField.value
+        .split(",")
+        .map(choice => choice.trim())
+        .filter(choice => choice !== "");
+      choices.forEach(createCard);
+      shuffleCards();
+      inputField.value = "";
+    }
 
     function createCard(input) {
       if (input) {
         const card = document.createElement("div");
         card.classList.add("card");
-        const front = document.createElement("div");
-        front.classList.add("front");
-        const back = document.createElement("div");
-        back.classList.add("back");
-        back.textContent = input;
-        card.appendChild(front);
-        card.appendChild(back);
+        card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front"></div>
+                        <div class="card-back">${input}</div>
+                    </div>
+                `;
         card.addEventListener("click", function() {
           flipCard(card);
         });
@@ -340,7 +293,6 @@
 
     function flipCard(card) {
       card.classList.toggle("flip");
-      card.querySelector(".front").style.visibility = "visible";
     }
 
     function clearBoard() {
@@ -351,6 +303,5 @@
     }
   </script>
 </body>
-<!-- CopyRighted to Marc Sonne Dahl 2024 -->
 
 </html>
