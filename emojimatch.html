@@ -1,216 +1,260 @@
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emoji Matching Game</title>
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Copyright Marc Sonne Dahl (c) 2024 - Created July 2024 -->
+  <title>Emoji Matching Game</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+    }
 
-        body {
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            background-color: #f0f0f0;
-            font-family: 'Arial', sans-serif;
-        }
+    h5 {
+      font-size: 0.8em;
+      color: #ffffff;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+    }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 90%;
-            max-width: 600px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 90%;
+      height: 90%;
+      max-width: 400px;
+      padding: 20px;
+      box-sizing: border-box;
+      transition: transform 0.3s ease;
+    }
 
-        .menu-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-          max-width: 300px;
-        }
+    .hamburger-menu {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      cursor: pointer;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 20px;
+      height: 15px;
+    }
 
-        .menu {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            margin: 8px;
-            background-color: #ffffff;
-            font-size: 30px;
-            cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, background-color 0.3s;
-        }
+    .hamburger-menu div {
+      width: 100%;
+      height: 3px;
+      background-color: #ffffff;
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    }
 
-        .menu:hover {
-            background-color: #bebebe;
-            transform: scale(1.1);
-        }
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -300px;
+      width: 150px;
+      height: 100vh;
+      background-color: #f3f3f3;
+      box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: left 0.3s ease;
+    }
 
-        .game-board {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 10px;
-            width: 100%;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    .menu-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10vh;
+    }
 
-        .tile {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          margin: 2px;
-            width: 80px;
-            height: 80px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 35px;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    .menu {
+      width: 10vh;
+      height: 10vh;
+      margin: 10px;
+      background-color: #ffffff;
+      font-size: 2em;
+      cursor: pointer;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
 
-        .tile:hover {
-            background-color: #e0e0e0;
-        }
+    .menu:hover {
+      background-color: #f2f2f2;
+      transform: scale(1.2);
+    }
 
-    </style>
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 10px;
+      width: 100%;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .tile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2px;
+      width: 80px;
+      height: 80px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 35px;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .tile:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="menu-container">
-            <div class="menu" id="food-menu" title="Food"></div>
-            <div class="menu" id="animal-menu" title="Animals"></div>
-            <div class="menu" id="transportation-menu" title="Transportation"></div>
-            <div class="menu" id="flag-menu" title="Flags"></div>
-            <div class="menu" id="drink-menu" title="Drinks"></div>
-            <div class="menu" id="nature-menu" title="Nature"></div>
-        </div>
-        <div class="game-board" id="game-board"></div>
+  <div class="hamburger-menu" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <div class="side-menu">
+    <div class="menu-container">
+      <div class="menu" id="food-menu" title="Food">Food</div>
+      <div class="menu" id="animal-menu" title="Animals">Animals</div>
+      <div class="menu" id="transportation-menu" title="Transportation">Transportation</div>
+      <div class="menu" id="flag-menu" title="Flags">Flags</div>
+      <div class="menu" id="drink-menu" title="Drinks">Drinks</div>
+      <div class="menu" id="nature-menu" title="Nature">Nature</div>
+      <h5>Marc Sonne Dahl</h5>
     </div>
+  </div>
+  <div class="container">
+    <div class="game-board" id="game-board"></div>
+  </div>
 
-    <script>
+  <script>
+    function toggleMenu() {
+      var sideMenu = document.querySelector('.side-menu');
+      var isMenuOpen = sideMenu.style.left === '0px';
+      sideMenu.style.left = isMenuOpen ? '-300px' : '0px';
+      var container = document.querySelector('.container');
+      container.style.transform = isMenuOpen ? 'none' : 'translateX(250px)';
+    }
+    var foodEmojis = ["🍕", "🍔", "🌮", "🍟", "🌯", "🍛", "🥞", "🍝", "🥙", "🍲", "🥪", "🍗"];
+    var animalEmojis = ["🐭", "🐱", "🐼", "🐔", "🐸", "🦝", "🐯", "🐨", "🐻", "🐷", "🐵", "🐰"];
+    var transportationEmojis = ["🚗", "🚕", "🚂", "🚚", "🏍️", "🚎", "🚜", "🚑", "🛺", "🚛", "🚓", "🚙"];
+    var flagEmojis = ["⚽", "⚾", "🥎", "🏀", "🏐", "🏈", "🏉", "🎱", "🎲", "🎮", "🏓", "🎳"];
+    var drinkEmojis = ["🍺", "🍷", "🍹", "🍸", "🥤", "🧋", "🍶", "🍵", "🍾", "🍼", "🧃", "🥛"];
+    var natureEmojis = ["🍄", "🌸", "🌺", "🌻", "🌼", "🍃", "🌿", "🍂", "🍁", "🌹", "🌷", "🌱"];
+    var shuffledEmojis = [];
+    var flippedTiles = [];
 
-        var foodEmojis = ["🍕", "🍔", "🌮", "🍟", "🌯", "🍛", "🥞", "🍝", "🥙", "🍲", "🥪", "🍗"];
-        var animalEmojis = ["🐭", "🐱", "🐼", "🐔", "🐸", "🦝", "🐯", "🐨", "🐻", "🐷", "🐵", "🐰"];
-        var transportationEmojis = ["🚗", "🚕", "🚂", "🚚", "🏍️", "🚎", "🚜", "🚑", "🛺", "🚛", "🚓", "🚙"];
-        var flagEmojis = ["⚽", "⚾", "🥎", "🏀", "🏐", "🏈", "🏉", "🎱", "🎲", "🎮", "🏓", "🎳"];
-        var drinkEmojis = ["🍺", "🍷", "🍹", "🍸", "🥤", "🧋", "🍶", "🍵", "🍾", "🍼", "🧃", "🥛"];
-        var natureEmojis = ["🍄", "🌸", "🌺", "🌻", "🌼", "🍃", "🌿", "🍂", "🍁", "🌹", "🌷", "🌱"];
+    function shuffle(array) {
+      var currentIndex = array.length,
+        temporaryValue, randomIndex;
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
+    }
 
-        var shuffledEmojis = [];
-        var flippedTiles = [];
+    function resetGameBoard(themeEmojis) {
+      shuffledEmojis = shuffle(themeEmojis.concat(themeEmojis));
+      flippedTiles = [];
+      var gameBoard = document.getElementById("game-board");
+      gameBoard.innerHTML = "";
+      for (var i = 0; i < 24; i++) {
+        var tile = document.createElement("div");
+        tile.className = "tile";
+        tile.dataset.index = i;
+        tile.textContent = "";
+        tile.addEventListener("click", flipTile);
+        gameBoard.appendChild(tile);
+      }
+    }
 
-        function shuffle(array) {
-            var currentIndex = array.length, temporaryValue, randomIndex;
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex -= 1;
-                temporaryValue = array[currentIndex];
-                array[currentIndex] = array[randomIndex];
-                array[randomIndex] = temporaryValue;
-            }
-            return array;
-        }
-
-        function resetGameBoard(themeEmojis) {
-            shuffledEmojis = shuffle(themeEmojis.concat(themeEmojis));
+    function flipTile() {
+      var tile = this;
+      var index = tile.dataset.index;
+      if (flippedTiles.length === 2 || flippedTiles.indexOf(index) !== -1) {
+        return;
+      }
+      tile.textContent = shuffledEmojis[index];
+      flippedTiles.push(index);
+      if (flippedTiles.length === 2) {
+        var tile1 = flippedTiles[0];
+        var tile2 = flippedTiles[1];
+        if (shuffledEmojis[tile1] === shuffledEmojis[tile2]) {
+          flippedTiles = [];
+        } else {
+          setTimeout(function() {
+            var tiles = document.getElementsByClassName("tile");
+            tiles[tile1].textContent = "";
+            tiles[tile2].textContent = "";
             flippedTiles = [];
-            var gameBoard = document.getElementById("game-board");
-            gameBoard.innerHTML = "";
-            for (var i = 0; i < 24; i++) {
-                var tile = document.createElement("div");
-                tile.className = "tile";
-                tile.dataset.index = i;
-                tile.textContent = "";
-                tile.addEventListener("click", flipTile);
-                gameBoard.appendChild(tile);
-            }
+          }, 1000);
         }
+      }
+    }
 
-        function flipTile() {
-            var tile = this;
-            var index = tile.dataset.index;
-
-            if (flippedTiles.length === 2 || flippedTiles.indexOf(index) !== -1) {
-                return;
-            }
-
-            tile.textContent = shuffledEmojis[index];
-            flippedTiles.push(index);
-
-            if (flippedTiles.length === 2) {
-                var tile1 = flippedTiles[0];
-                var tile2 = flippedTiles[1];
-
-                if (shuffledEmojis[tile1] === shuffledEmojis[tile2]) {
-                    flippedTiles = [];
-                } else {
-                    setTimeout(function() {
-                        var tiles = document.getElementsByClassName("tile");
-                        tiles[tile1].textContent = "";
-                        tiles[tile2].textContent = "";
-                        flippedTiles = [];
-                    }, 1000);
-                }
-            }
-        }
-
-        function handleMenuClick(themeEmojis) {
-            resetGameBoard(themeEmojis);
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            var foodMenu = document.getElementById("food-menu");
-            var animalMenu = document.getElementById("animal-menu");
-            var transportationMenu = document.getElementById("transportation-menu");
-            var flagMenu = document.getElementById("flag-menu");
-            var drinkMenu = document.getElementById("drink-menu");
-            var natureMenu = document.getElementById("nature-menu");
-
-            foodMenu.textContent = "🍜";
-            animalMenu.textContent = "🐶";
-            transportationMenu.textContent = "🚗";
-            flagMenu.innerHTML = "🎯";
-            drinkMenu.innerHTML = "☕";
-            natureMenu.innerHTML = "🌵";
-
-            foodMenu.addEventListener("click", function() {
-                handleMenuClick(foodEmojis);
-            });
-
-            animalMenu.addEventListener("click", function() {
-                handleMenuClick(animalEmojis);
-            });
-
-            transportationMenu.addEventListener("click", function() {
-                handleMenuClick(transportationEmojis);
-            });
-
-            flagMenu.addEventListener("click", function() {
-                handleMenuClick(flagEmojis);
-            });
-
-            drinkMenu.addEventListener("click", function() {
-                handleMenuClick(drinkEmojis);
-            });
-
-            natureMenu.addEventListener("click", function() {
-                handleMenuClick(natureEmojis);
-            });
-
-            resetGameBoard(foodEmojis);
-        });
-    </script>
+    function handleMenuClick(themeEmojis) {
+      resetGameBoard(themeEmojis);
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      var foodMenu = document.getElementById("food-menu");
+      var animalMenu = document.getElementById("animal-menu");
+      var transportationMenu = document.getElementById("transportation-menu");
+      var flagMenu = document.getElementById("flag-menu");
+      var drinkMenu = document.getElementById("drink-menu");
+      var natureMenu = document.getElementById("nature-menu");
+      foodMenu.textContent = "🍜";
+      animalMenu.textContent = "🐶";
+      transportationMenu.textContent = "🚗";
+      flagMenu.innerHTML = "🎯";
+      drinkMenu.innerHTML = "☕";
+      natureMenu.innerHTML = "🌵";
+      foodMenu.addEventListener("click", function() {
+        handleMenuClick(foodEmojis);
+      });
+      animalMenu.addEventListener("click", function() {
+        handleMenuClick(animalEmojis);
+      });
+      transportationMenu.addEventListener("click", function() {
+        handleMenuClick(transportationEmojis);
+      });
+      flagMenu.addEventListener("click", function() {
+        handleMenuClick(flagEmojis);
+      });
+      drinkMenu.addEventListener("click", function() {
+        handleMenuClick(drinkEmojis);
+      });
+      natureMenu.addEventListener("click", function() {
+        handleMenuClick(natureEmojis);
+      });
+      resetGameBoard(foodEmojis);
+    });
+  </script>
 </body>
+
 </html>
