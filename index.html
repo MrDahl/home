@@ -1,76 +1,139 @@
-<html lang="en">
+<html lang="da">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marc Sonne Dahl - Projects</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 90vh;
-            margin: 0;
-        }
-        .container {
-            max-width: 500px;
-            width: 100%;
-            padding: 0 20px;
-            text-align: center;
-        }
-        .header {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #888;
-        }
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .button-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .button-link:hover {
-            background-color: #0056b3;
-        }
-    </style>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marc Sonne Dahl - Projects</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Luckiest+Guy&display=swap");
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      color: #333;
+      user-select: none;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .button-link {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 25px;
+      box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .button-link:hover {
+      background-color: #FFFFFF;
+      color: #007bff;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 4em;
+      padding: 0;
+      font-family: "Luckiest Guy", cursive;
+      color: #007bff;
+      text-shadow: 0 0.1em 20px rgba(0, 0, 0, 1), 0.05em -0.03em 0 rgba(0, 0, 0, 1),
+        0.05em 0.005em 0 rgba(0, 0, 0, 1), 0em 0.08em 0 rgba(0, 0, 0, 1),
+        0.05em 0.08em 0 rgba(0, 0, 0, 1), 0px -0.03em 0 rgba(0, 0, 0, 1),
+        -0.03em -0.03em 0 rgba(0, 0, 0, 1), -0.03em 0.08em 0 rgba(0, 0, 0, 1), -0.03em 0 0 rgba(0, 0, 0, 1);
+
+      span {
+        transform: scale(0.9);
+        display: inline-block;
+      }
+
+      span:first-child {
+        animation: bop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards infinite alternate;
+      }
+
+      span:last-child {
+        animation: bopB 1s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards infinite alternate;
+      }
+    }
+
+    @keyframes bop {
+      0% {
+        transform: scale(0.9);
+      }
+
+      50%,
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes bopB {
+      0% {
+        transform: scale(0.9);
+      }
+
+      80%,
+      100% {
+        transform: scale(1) rotateZ(-3deg);
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="container">
-      <div class="header"><h4>Marc Sonne Dahl</h4></div>
-        <div class="button-container">
-            <a href="https://mrdahl.github.io/home/faktura.html" class="button-link">Faktura Generator</a>
-            <a href="https://mrdahl.github.io/home/choice.html" class="button-link">Choice Forge</a>
-            <a href="https://mrdahl.github.io/home/vtv.html" class="button-link">VTV Matrix Generator</a>
-            <a href="https://mrdahl.github.io/home/mf.html" class="button-link">MF Calculations Generator</a>            
-            <a href="https://mrdahl.github.io/home/music.html" class="button-link">Equalizer</a>
-            <a href="https://mrdahl.github.io/home/dnd.html" class="button-link">Terninger</a>
-            <a href="https://mrdahl.github.io/home/tsp.html" class="button-link">Traveling Salesman Problem</a>
-            <a href="https://mrdahl.github.io/home/mesh.html" class="button-link">Mesh Generator</a>
-            <a href="https://mrdahl.github.io/home/snails.html" class="button-link">Sneglespil</a>
-            <a href="https://mrdahl.github.io/home/snake.html" class="button-link">Snake</a>
-            <a href="https://mrdahl.github.io/home/avengers.html" class="button-link">Avengers Gallery</a>
-            <a href="https://mrdahl.github.io/home/voodoo.html" class="button-link">Voodoo Rush</a>
-            <a href="https://mrdahl.github.io/home/rockpaper.html" class="button-link">Sten, Saks, Papir v.2</a>
-            <a href="https://mrdahl.github.io/home/emojimatch.html" class="button-link">Emoji Match</a>
-        </div>
-        <div class="footer">Copyright © 2024 Marc Sonne Dahl. All rights reserved.</div>
+  <d class="container">
+    <h1><span>"Marcs</span><span>Projects"</span></h1>
+    <div class="button-container">
+      <a href="https://mrdahl.github.io/home/faktura.html" class="button-link">Faktura / Tilbud generator</a>
+      <a href="https://mrdahl.github.io/home/choice.html" class="button-link">Choice Forge / Valg hjælper</a>
+      <a href="https://mrdahl.github.io/home/vtv.html" class="button-link">Velfærdsteknologisk Vurdering</a>
+      <a href="https://mrdahl.github.io/home/mf.html" class="button-link">Vedligeholdelsesfaktor Udregner</a>
+      <a href="https://mrdahl.github.io/home/music.html" class="button-link">Music Styring</a>
+      <a href="https://mrdahl.github.io/home/dnd.html" class="button-link">DnD / D2 til D100</a>
+      <a href="https://mrdahl.github.io/home/tsp.html" class="button-link">Traveling Salesman Problem</a>
+      <a href="https://mrdahl.github.io/home/mesh.html" class="button-link">Mesh Generator</a>
+      <a href="https://mrdahl.github.io/home/snails.html" class="button-link">Sneglespil</a>
+      <a href="https://mrdahl.github.io/home/snake.html" class="button-link">Snake</a>
+      <a href="https://mrdahl.github.io/home/avengers.html" class="button-link">Avengers Gallery</a>
+      <a href="https://mrdahl.github.io/home/voodoo.html" class="button-link">Voodoo Rush / Kort Blander</a>
+      <a href="https://mrdahl.github.io/home/rockpaper.html" class="button-link">Sten, Saks, Papir v.2</a>
+      <a href="https://mrdahl.github.io/home/emojimatch.html" class="button-link">Emoji Match / Huske Spil</a>
+    </div>
+    <div class="footer">Copyright © 2024 Marc Sonne Dahl. All rights reserved.</div>
     </div>
 </body>
+
 </html>
