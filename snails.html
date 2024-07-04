@@ -1,320 +1,384 @@
-<!DOCTYPE html>
 <html lang="da">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Improved Snail Game</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+  <!-- Copyright Marc Sonne Dahl (c) 2024 - Created July 2024 -->
+    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snail Game</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
-        :root {
-            --red: #ff6b6b;
-            --blue: #74b9ff;
-            --green: #55efc4;
-            --yellow: #f9ca24;
-            --purple: #a29bfe;
-            --orange: #fdcb6e;
-        }
+    :root {
+      --red: #ff6b6b;
+      --blue: #74b9ff;
+      --green: #55efc4;
+      --yellow: #f9ca24;
+      --purple: #a29bfe;
+      --orange: #fdcb6e;
+    }
 
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f0f0;
-            font-family: "Pacifico", cursive;
-            user-select: none;
-        }
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f0f0f0;
+      font-family: "Pacifico", cursive;
+      user-select: none;
+      background: conic-gradient(
+          #ff6b6b 16.666%,
+          #74b9ff 16.666%,
+          #74b9ff 33.333%,
+          #55efc4 33.333%,
+          #55efc4 50%,
+          #f9ca24 50%,
+          #f9ca24 66.666%,
+          #a29bfe 66.666%,
+          #a29bfe 83.333%,
+          #fdcb6e 83.333%);
+    }
 
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 95%;
-            max-width: 600px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative;
-        }
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 95%;
+      max-width: 60vh;
+      backdrop-filter: blur(30px);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      box-sizing: border-box;
+      position: relative;
+    }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
+    h1 {
+      text-align: center;
+      color: #ffffff;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
 
-        .board {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+    .board {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
 
-        .track {
-            display: flex;
-            flex-direction: column;
-        }
+    .track {
+      display: flex;
+      flex-direction: column;
+      
+    }
 
-        .square {
-            aspect-ratio: 1;
-            border-radius: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
+    .square {
+      aspect-ratio: 1;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+    }
 
-        .square:not(:empty) {
-            transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
+    .square:not(:empty) {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
 
-        .red { background-color: var(--red); }
-        .blue { background-color: var(--blue); }
-        .green { background-color: var(--green); }
-        .yellow { background-color: var(--yellow); }
-        .purple { background-color: var(--purple); }
-        .orange { background-color: var(--orange); }
+    .red {
+      background-color: var(--red);
+    }
 
-        .winning-track .square {
-            animation: pulse 1s infinite alternate;
-        }
+    .blue {
+      background-color: var(--blue);
+    }
 
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.1); }
-        }
+    .green {
+      background-color: var(--green);
+    }
 
-        .button-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
+    .yellow {
+      background-color: var(--yellow);
+    }
 
-        .game-button {
-            font-size: 1.2rem;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            font-family: inherit;
-            color: #fff;
-            width: 100%;
-            max-width: 200px;
-        }
+    .purple {
+      background-color: var(--purple);
+    }
 
-        .game-button:active {
-            transform: scale(0.98);
-        }
+    .orange {
+      background-color: var(--orange);
+    }
 
-        #roll-button {
-            background-color: #3498db;
-        }
+    .winning-track .square {
+      animation: pulse 1s infinite alternate;
+    }
 
-        #roll-button:hover {
-            background-color: #2980b9;
-        }
+    @keyframes pulse {
+      from {
+        transform: scale(1);
+      }
 
-        #restart-button {
-            background-color: #2ecc71;
-            display: none;
-        }
+      to {
+        transform: scale(1.1);
+      }
+    }
 
-        #restart-button:hover {
-            background-color: #27ae60;
-        }
+    .button-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
 
-        .winner-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-            cursor: pointer;
-        }
+    .game-button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      font-family: inherit;
+      color: #fff;
+      width: 100%;
+      max-width: 200px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);      
+    }
 
-        .winner-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
+    .game-button:active {
+      transform: scale(0.98);
+    }
 
-        .winner-message {
-            font-size: 2rem;
-            color: #fff;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    #roll-button {
+      background-color: #3498db;
+    }
 
-        .winner-snail {
-            font-size: 5rem;
-            animation: bounce 1s infinite alternate;
-        }
+    #roll-button:hover {
+      background-color: #2980b9;
+    }
 
-        .click-to-dismiss {
-            font-size: 1rem;
-            color: #fff;
-            margin-top: 20px;
-            opacity: 0.7;
-        }
+    #restart-button {
+      background-color: #2ecc71;
+      display: none;
+    }
 
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-20px); }
-        }
+    #restart-button:hover {
+      background-color: #27ae60;
+    }
 
-        @media (max-width: 600px) {
-            .game-container {
-                padding: 10px;
-            }
+    .winner-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      cursor: pointer;
+      border-radius: 10px;
+    }
 
-            h1 {
-                font-size: 1.5rem;
-            }
+    .winner-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+      backdrop-filter: blur(50px);
+    }
 
-            .square {
-                font-size: 1rem;
-            }
+    .winner-message {
+      font-size: 2rem;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-            .game-button {
-                font-size: 1rem;
-                padding: 8px 16px;
-            }
+    .winner-snail {
+      font-size: 5rem;
+      animation: bounce 1s infinite alternate;
+    }
 
-            .winner-message {
-                font-size: 1.5rem;
-            }
+    .click-to-dismiss {
+      font-size: 1rem;
+      color: #fff;
+      margin-top: 20px;
+      opacity: 0.7;
+    }
 
-            .winner-snail {
-                font-size: 4rem;
-            }
+    @keyframes bounce {
+      from {
+        transform: translateY(0);
+      }
 
-            .click-to-dismiss {
-                font-size: 0.8rem;
-            }
-        }
-    </style>
+      to {
+        transform: translateY(-20px);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .game-container {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .square {
+        font-size: 1rem;
+      }
+
+      .game-button {
+        font-size: 1rem;
+        padding: 8px 16px;
+      }
+
+      .winner-message {
+        font-size: 1.5rem;
+      }
+
+      .winner-snail {
+        font-size: 4rem;
+      }
+
+      .click-to-dismiss {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="game-container">
-        <h1>Snail Race</h1>
-        <div class="board" id="game-board"></div>
-        <div class="button-container">
-            <button onclick="rollDie()" id="roll-button" class="game-button">Roll Die</button>
-            <button onclick="restartGame()" id="restart-button" class="game-button">Restart</button>
-        </div>
-        <div class="winner-overlay" id="winner-overlay">
-            <div class="winner-message">
-                <span id="winner-color"></span> Snail Wins!
-            </div>
-            <div class="winner-snail">🐌</div>
-            <div class="click-to-dismiss">Click anywhere to dismiss</div>
-        </div>
+  <div class="game-container">
+    <h1>Snail Race</h1>
+    <div class="board" id="game-board"></div>
+    <div class="button-container">
+      <button onclick="rollDie()" id="roll-button" class="game-button">Roll Die</button>
+      <button onclick="restartGame()" id="restart-button" class="game-button">Restart</button>
     </div>
+    <div class="winner-overlay" id="winner-overlay">
+      <div class="winner-message">
+        <span id="winner-color"></span> Snail Wins!
+      </div>
+      <div class="winner-snail">🐌</div>
+      <div class="click-to-dismiss">Click anywhere to dismiss</div>
+    </div>
+  </div>
 
-    <script>
-        const snails = [
-            { color: 'red', position: 0 },
-            { color: 'blue', position: 0 },
-            { color: 'green', position: 0 },
-            { color: 'yellow', position: 0 },
-            { color: 'purple', position: 0 },
-            { color: 'orange', position: 0 }
-        ];
-        const boardSize = 8;
-        const rollButton = document.getElementById('roll-button');
-        const restartButton = document.getElementById('restart-button');
-        const gameBoard = document.getElementById('game-board');
-        const winnerOverlay = document.getElementById('winner-overlay');
-        const winnerColor = document.getElementById('winner-color');
+  <script>
+    const snails = [{
+        color: 'red',
+        position: 0
+      },
+      {
+        color: 'blue',
+        position: 0
+      },
+      {
+        color: 'green',
+        position: 0
+      },
+      {
+        color: 'yellow',
+        position: 0
+      },
+      {
+        color: 'purple',
+        position: 0
+      },
+      {
+        color: 'orange',
+        position: 0
+      }
+    ];
+    const boardSize = 8;
+    const rollButton = document.getElementById('roll-button');
+    const restartButton = document.getElementById('restart-button');
+    const gameBoard = document.getElementById('game-board');
+    const winnerOverlay = document.getElementById('winner-overlay');
+    const winnerColor = document.getElementById('winner-color');
 
-        function createBoard() {
-            gameBoard.innerHTML = '';
-            snails.forEach(snail => {
-                const track = document.createElement('div');
-                track.className = `track ${snail.color}`;
-                for (let i = 0; i < boardSize; i++) {
-                    const square = document.createElement('div');
-                    square.className = `square ${snail.color}`;
-                    if (i === 0) square.textContent = '🐌';
-                    track.appendChild(square);
-                }
-                gameBoard.appendChild(track);
-            });
+    function createBoard() {
+      gameBoard.innerHTML = '';
+      snails.forEach(snail => {
+        const track = document.createElement('div');
+        track.className = `track ${snail.color}`;
+        for (let i = 0; i < boardSize; i++) {
+          const square = document.createElement('div');
+          square.className = `square ${snail.color}`;
+          if (i === 0) square.textContent = '🐌';
+          track.appendChild(square);
         }
+        gameBoard.appendChild(track);
+      });
+    }
 
-        function rollDie() {
-            const colors = snails.map(s => s.color);
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            rollButton.style.backgroundColor = `var(--${randomColor})`;
-            const snail = snails.find(s => s.color === randomColor);
-            if (snail.position < boardSize - 1) {
-                snail.position++;
-                updateBoard();
-                checkWinner(snail);
-            }
-        }
+    function rollDie() {
+      const colors = snails.map(s => s.color);
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      rollButton.style.backgroundColor = `var(--${randomColor})`;
+      const snail = snails.find(s => s.color === randomColor);
+      if (snail.position < boardSize - 1) {
+        snail.position++;
+        updateBoard();
+        checkWinner(snail);
+      }
+    }
 
-        function updateBoard() {
-            snails.forEach(snail => {
-                const track = document.querySelector(`.track.${snail.color}`);
-                const squares = track.querySelectorAll('.square');
-                squares.forEach((square, index) => {
-                    square.textContent = index === snail.position ? '🐌' : '';
-                });
-            });
-        }
+    function updateBoard() {
+      snails.forEach(snail => {
+        const track = document.querySelector(`.track.${snail.color}`);
+        const squares = track.querySelectorAll('.square');
+        squares.forEach((square, index) => {
+          square.textContent = index === snail.position ? '🐌' : '';
+        });
+      });
+    }
 
-        function checkWinner(snail) {
-            if (snail.position === boardSize - 1) {
-                const winningTrack = document.querySelector(`.track.${snail.color}`);
-                winningTrack.classList.add('winning-track');
-                rollButton.style.display = 'none';
-                restartButton.style.display = 'block';
-                showWinnerOverlay(snail.color);
-            }
-        }
+    function checkWinner(snail) {
+      if (snail.position === boardSize - 1) {
+        const winningTrack = document.querySelector(`.track.${snail.color}`);
+        winningTrack.classList.add('winning-track');
+        rollButton.style.display = 'none';
+        restartButton.style.display = 'block';
+        showWinnerOverlay(snail.color);
+      }
+    }
 
-        function showWinnerOverlay(color) {
-            winnerColor.textContent = color.charAt(0).toUpperCase() + color.slice(1);
-            winnerOverlay.classList.add('show');
-        }
+    function showWinnerOverlay(color) {
+      winnerColor.textContent = color.charAt(0).toUpperCase() + color.slice(1);
+      winnerOverlay.classList.add('show');
+    }
 
-        function hideWinnerOverlay() {
-            winnerOverlay.classList.remove('show');
-        }
+    function hideWinnerOverlay() {
+      winnerOverlay.classList.remove('show');
+    }
 
-        function restartGame() {
-            snails.forEach(snail => snail.position = 0);
-            createBoard();
-            rollButton.style.backgroundColor = '#3498db';
-            rollButton.style.display = 'block';
-            restartButton.style.display = 'none';
-            hideWinnerOverlay();
-            document.querySelector('.winning-track')?.classList.remove('winning-track');
-        }
-
-        winnerOverlay.addEventListener('click', hideWinnerOverlay);
-
-        createBoard();
-    </script>
+    function restartGame() {
+      snails.forEach(snail => snail.position = 0);
+      createBoard();
+      rollButton.style.backgroundColor = '#3498db';
+      rollButton.style.display = 'block';
+      restartButton.style.display = 'none';
+      hideWinnerOverlay();
+      document.querySelector('.winning-track')?.classList.remove('winning-track');
+    }
+    winnerOverlay.addEventListener('click', hideWinnerOverlay);
+    createBoard();
+  </script>
 </body>
+    
+<!-- Copyright Marc Sonne Dahl (c) 2024 - Created July 2024 -->
+
 </html>
