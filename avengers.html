@@ -12,107 +12,73 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background-color: #f3f3f3;
+      background-color: #e0e5ec;
       font-family: Arial, sans-serif;
       user-select: none;
     }
 
     .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 10px;
-      width: 90%;
-      max-width: 90%;
-      padding: 10px;
-      box-sizing: border-box;
+      max-width: 90vh;
+      width: 55vh;
+      max-height: 90vh;
+      height: 80vh;
+      position: relative;
+      perspective: 1000px;
     }
 
     .image-container {
-      position: relative;
-      overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+
+      cursor: pointer;
+      transition: transform 0.3s ease;
     }
 
     .image-container img {
       width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .image-container:hover {
-      transform: scale(1.05);
-    }
-
-    .overlay {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
       height: 100%;
-      width: 100%;
-      opacity: 0;
-      transition: .5s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      object-fit: cover;
+      border-radius: 20px;
     }
 
-    .image-container:hover .overlay {
-      opacity: 1;
-      background-color: rgba(255, 255, 255, 0.5);
-    }
-
-    .overlay-text {
-      color: black;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
+    .image-container:not(:first-child) {
+      transform: scale(0.98);
+      opacity: 0.8;
     }
   </style>
 </head>
 
 <body>
-  <div class="gallery">
-    <div class="image-container">
-      <img src="https://mrdahl.github.io/home/1.jpg" alt="Spiderman">
-      <div class="overlay">
-        <div class="overlay-text">Spider-Man</div>
-      </div>
-    </div>
-    <div class="image-container">
-      <img src="https://mrdahl.github.io/home/2.jpg" alt="Iron Man">
-      <div class="overlay">
-        <div class="overlay-text">Iron Man</div>
-      </div>
-    </div>
-    <div class="image-container">
-      <img src="https://mrdahl.github.io/home/3.jpg" alt="Thanos">
-      <div class="overlay">
-        <div class="overlay-text">Thanos</div>
-      </div>
-    </div>
-    <div class="image-container">
-      <img src="https://mrdahl.github.io/home/4.jpg" alt="Captain America">
-      <div class="overlay">
-        <div class="overlay-text">Captain America</div>
-      </div>
-    </div>
-    <div class="image-container">
-      <img src="https://mrdahl.github.io/home/5.jpg" alt="Thor">
-      <div class="overlay">
-        <div class="overlay-text">Thor</div>
-      </div>
-    </div>
-    <div class="image-container">
-      <img src="https://mrdahl.github.io/home/6.jpg" alt="HULK">
-      <div class="overlay">
-        <div class="overlay-text">HULK</div>
-      </div>
-    </div>
+  <div class="gallery" id="gallery">
   </div>
+
+  <script>
+    const images = [
+      "https://mrdahl.github.io/home/1.jpg",
+      "https://mrdahl.github.io/home/2.jpg",
+      "https://mrdahl.github.io/home/3.jpg",
+      "https://mrdahl.github.io/home/4.jpg",
+      "https://mrdahl.github.io/home/5.jpg",
+      "https://mrdahl.github.io/home/6.jpg"
+    ];
+
+    const gallery = document.getElementById('gallery');
+
+    // Create image containers dynamically
+    images.forEach(src => {
+      const container = document.createElement('div');
+      container.className = 'image-container';
+      container.innerHTML = `<img src="${src}" alt="Image">`;
+      container.addEventListener('click', () => rotateImages());
+      gallery.appendChild(container);
+    });
+
+    function rotateImages() {
+      gallery.appendChild(gallery.firstElementChild);
+    }
+  </script>
 </body>
 
 </html>
