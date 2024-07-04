@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +39,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             box-sizing: border-box;
+            position: relative;
         }
 
         h1 {
@@ -134,6 +135,52 @@
             background-color: #27ae60;
         }
 
+        .winner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            cursor: pointer;
+        }
+
+        .winner-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .winner-message {
+            font-size: 2rem;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .winner-snail {
+            font-size: 5rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        .click-to-dismiss {
+            font-size: 1rem;
+            color: #fff;
+            margin-top: 20px;
+            opacity: 0.7;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
         @media (max-width: 600px) {
             .game-container {
                 padding: 10px;
@@ -151,6 +198,18 @@
                 font-size: 1rem;
                 padding: 8px 16px;
             }
+
+            .winner-message {
+                font-size: 1.5rem;
+            }
+
+            .winner-snail {
+                font-size: 4rem;
+            }
+
+            .click-to-dismiss {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -161,6 +220,13 @@
         <div class="button-container">
             <button onclick="rollDie()" id="roll-button" class="game-button">Roll Die</button>
             <button onclick="restartGame()" id="restart-button" class="game-button">Restart</button>
+        </div>
+        <div class="winner-overlay" id="winner-overlay">
+            <div class="winner-message">
+                <span id="winner-color"></span> Snail Wins!
+            </div>
+            <div class="winner-snail">🐌</div>
+            <div class="click-to-dismiss">Click anywhere to dismiss</div>
         </div>
     </div>
 
@@ -177,6 +243,8 @@
         const rollButton = document.getElementById('roll-button');
         const restartButton = document.getElementById('restart-button');
         const gameBoard = document.getElementById('game-board');
+        const winnerOverlay = document.getElementById('winner-overlay');
+        const winnerColor = document.getElementById('winner-color');
 
         function createBoard() {
             gameBoard.innerHTML = '';
@@ -221,7 +289,17 @@
                 winningTrack.classList.add('winning-track');
                 rollButton.style.display = 'none';
                 restartButton.style.display = 'block';
+                showWinnerOverlay(snail.color);
             }
+        }
+
+        function showWinnerOverlay(color) {
+            winnerColor.textContent = color.charAt(0).toUpperCase() + color.slice(1);
+            winnerOverlay.classList.add('show');
+        }
+
+        function hideWinnerOverlay() {
+            winnerOverlay.classList.remove('show');
         }
 
         function restartGame() {
@@ -230,7 +308,11 @@
             rollButton.style.backgroundColor = '#3498db';
             rollButton.style.display = 'block';
             restartButton.style.display = 'none';
+            hideWinnerOverlay();
+            document.querySelector('.winning-track')?.classList.remove('winning-track');
         }
+
+        winnerOverlay.addEventListener('click', hideWinnerOverlay);
 
         createBoard();
     </script>
