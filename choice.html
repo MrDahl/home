@@ -12,7 +12,7 @@
       --text-color: #4a4a4a;
       --shadow-light: #ffffff;
       --shadow-dark: #a3b1c6;
-      --accent-color: #6d5dfc;
+      --accent-color: #674ea7;
     }
 
     body {
@@ -21,7 +21,7 @@
       padding: 20px;
       background-color: var(--bg-color);
       color: var(--text-color);
-      min-height: 100vh;
+      min-height: 80vh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -29,7 +29,7 @@
     }
 
     .container {
-      width: 100%;
+      width: 78%;
       max-width: 1200px;
       display: flex;
       flex-direction: column;
@@ -58,7 +58,6 @@
         1px 25px 35px rgba(16, 16, 16, 0.2),
         1px 30px 60px rgba(16, 16, 16, 0.4);
     }
-    }
 
     h1,
     h2,
@@ -68,30 +67,38 @@
       margin-bottom: 20px;
     }
 
-    .instructions {
-      background: var(--bg-color);
+    .tooltip {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      color: var(--text-color);
+      font-size: 1em;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 250px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      text-align: left;
+      padding: 10px;
+      border-radius: 5px;
       box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-      border-radius: 15px;
-      padding: 25px;
-      margin-bottom: 30px;
-      width: 100%;
-      max-width: 600px;
+      position: absolute;
+      z-index: 1;
+      top: 100%;
+      /* Position the tooltip below the icon */
+      right: 0;
+      /* Align the tooltip to the right of the icon */
+      margin-top: 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
-    .instructions h3 {
-      margin-top: 0;
-      color: var(--accent-color);
-      font-size: 1.2rem;
-    }
-
-    .instructions ol {
-      padding-left: 20px;
-      margin-bottom: 0;
-    }
-
-    .instructions li {
-      margin-bottom: 15px;
-      line-height: 1.5;
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
     }
 
     .input-wrapper {
@@ -105,7 +112,7 @@
 
     .input-field {
       flex: 1;
-      min-width: 200px;
+      max-width: 385px;
       padding: 15px;
       border: none;
       border-radius: 15px;
@@ -125,10 +132,13 @@
       background: var(--bg-color);
       color: var(--text-color);
       box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+      font-weight: bold;
     }
 
     .btn:hover {
-      box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+      background: var(--accent-color);
+      color: var(--shadow-light);
+      font-weight: bold;
     }
 
     .add-btn {
@@ -168,7 +178,7 @@
     }
 
     .card.flip .card-inner {
-      transform: rotateY(180deg);
+      transform: rotateX(180deg);
     }
 
     .card-front,
@@ -193,7 +203,7 @@
     .card-back {
       background-color: var(--accent-color);
       color: white;
-      transform: rotateY(180deg);
+      transform: rotateX(180deg);
     }
 
     @media (max-width: 768px) {
@@ -224,14 +234,16 @@
     <div class="logo">CF</div>
     <h1>ChoiceForge</h1>
     <p>by Marc Sonne Dahl</p>
-    <div class="instructions">
-      <h4>How to Use ChoiceForge</h4>
-      <ol>
-        <li>Enter your choices in the input field. You can separate multiple choices with commas.</li>
-        <li>Click "Add" or press Enter to create choice cards. They'll shuffle automatically.</li>
-        <li>Click on a card to reveal your choice.</li>
-        <li>Use "Clear" to start over with new choices.</li>
-      </ol>
+    <div class="tooltip">❓
+      <div class="tooltiptext">
+        <ol>
+          <li>Enter your choices</li>
+          <li>Separate choices with commas,"Add" or "Enter"</li>
+          <li>Cards shuffle automatically.</li>
+          <li>Click on a card to reveal your choice.</li>
+          <li>"Clear" to start over with new choices.</li>
+        </ol>
+      </div>
     </div>
     <div class="input-wrapper">
       <input type="text" id="inputField" class="input-field" placeholder="Enter your choices here" required>
