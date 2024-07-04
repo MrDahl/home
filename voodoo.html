@@ -1,13 +1,14 @@
+<!DOCTYPE html>
 <html lang="da">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Card Reshuffler</title>
+  <title>Improved Card Reshuffler</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Concert+One">
   <style>
     :root {
-      --card-height: min(65vh, 500px);
-      --card-width: calc(var(--card-height) / 1.8);
+      --card-height: min(70vh, 500px);
+      --card-width: calc(var(--card-height) / 1.4);
       --primary-color: #f5f5f5;
       --on-primary-color: #212121;
       --accent-color: #3f51b5;
@@ -15,6 +16,7 @@
 
     body {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
@@ -22,6 +24,17 @@
       font-family: "Concert One", sans-serif;
       background-color: var(--accent-color);
       user-select: none;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     .card {
@@ -79,13 +92,19 @@
     }
 
     .progress-container {
-      position: fixed;
-      top: 0;
-      right: 0;
+      width: var(--card-width);
+      height: 16px;
+      background: #e0e0e0;
+      border-radius: 8px;
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0;
       height: 100%;
-      width: 16px;
       background: linear-gradient(
-        0deg,
+        90deg,
         rgba(255, 0, 0, 1) 0%,
         rgba(255, 154, 0, 1) 10%,
         rgba(208, 222, 33, 1) 20%,
@@ -98,34 +117,56 @@
         rgba(251, 7, 217, 1) 90%,
         rgba(255, 0, 0, 1) 100%
       );
+      transition: width 0.3s ease;
     }
 
-    .progress-bar {
-      width: 100%;
-      height: 0;
-      background: var(--primary-color);
-      transition: height 0.3s ease;
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .button {
+      background-color: var(--primary-color);
+      color: var(--accent-color);
+      border: none;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #e0e0e0;
     }
 
     @media (max-width: 480px) {
       :root {
-        --card-height: 70vh;
+        --card-height: 60vh;
       }
     }
   </style>
 </head>
 <body>
-  <div id="deck" class="card" onclick="pickCard()">
-    <div class="card-content">
-      🃏<br>Start
+  <div class="game-container">
+    <div id="deck" class="card" onclick="pickCard()">
+      <div class="card-content">🪬
+       <br>Start
+      </div>
     </div>
-  </div>
-  <div class="progress-container">
-    <div id="progress-bar" class="progress-bar"></div>
+    <div class="progress-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <div class="controls">
+      <button class="button" onclick="resetGame()">Reset</button>
+      <button class="button" onclick="pickCard()">Draw Card</button>
+    </div>
   </div>
 
   <script>
-    const cards = ['A<br>♦', '2<br>♦', '3<br>♦', '4<br>♦', '5<br>♦', '6<br>♦', '7<br>♦', '8<br>♦', '9<br>♦', '10<br>♦', 'J<br>♦', 'Q<br>♦', 'K<br>♦', 'A<br>♣', '2<br>♣', '3<br>♣', '4<br>♣', '5<br>♣', '6<br>♣', '7<br>♣', '8<br>♣', '9<br>♣', '10<br>♣', 'J<br>♣', 'Q<br>♣', 'K<br>♣', 'A<br>♥', '2<br>♥', '3<br>♥', '4<br>♥', '5<br>♥', '6<br>♥', '7<br>♥', '8<br>♥', '9<br>♥', '10<br>♥', 'J<br>♥', 'Q<br>♥', 'K<br>♥', 'A<br>♠', '2<br>♠', '3<br>♠', '4<br>♠', '5<br>♠', '6<br>♠', '7<br>♠', '8<br>♠', '9<br>♠', '10<br>♠', 'J<br>♠', 'Q<br>♠', 'K<br>♠', 'J<br>O<br>K<br>E<br>R<br>⧓', 'J<br>O<br>K<br>E<br>R<br>⧗'];
+    const cards = ['A<br>♦', '2<br>♦', '3<br>♦', '4<br>♦', '5<br>♦', '6<br>♦', '7<br>♦', '8<br>♦', '9<br>♦', '10<br>♦', 'J<br>♦', 'Q<br>♦', 'K<br>♦', 'A<br>♣', '2<br>♣', '3<br>♣', '4<br>♣', '5<br>♣', '6<br>♣', '7<br>♣', '8<br>♣', '9<br>♣', '10<br>♣', 'J<br>♣', 'Q<br>♣', 'K<br>♣', 'A<br>♥', '2<br>♥', '3<br>♥', '4<br>♥', '5<br>♥', '6<br>♥', '7<br>♥', '8<br>♥', '9<br>♥', '10<br>♥', 'J<br>♥', 'Q<br>♥', 'K<br>♥', 'A<br>♠', '2<br>♠', '3<br>♠', '4<br>♠', '5<br>♠', '6<br>♠', '7<br>♠', '8<br>♠', '9<br>♠', '10<br>♠', 'J<br>♠', 'Q<br>♠', 'K<br>♠', 'J<br>O<br>K<br>E<br>R<br>🔳', 'J<br>O<br>K<br>E<br>R<br>🔲'];
     const originalDeck = [...cards];
     let currentDeck = [...cards];
     const deckElement = document.getElementById('deck');
@@ -137,15 +178,15 @@
 
     function initializeGame() {
       shuffleDeck();
-      updateCardContent('🃏<br>Start');
+      updateCardContent('🪬<br>Start');
       deckElement.style.fontSize = 'calc(var(--card-width) * 0.2)';
       deckElement.style.cursor = 'pointer';
-      progressBar.style.height = '0';
+      progressBar.style.width = '0';
     }
 
     function pickCard() {
-      if (currentDeck.length <= 1) {
-        resetGame();
+      if (currentDeck.length === 0) {
+        updateCardContent('Deck<br>Empty');
         return;
       }
 
@@ -166,9 +207,9 @@
     function resetGame() {
       currentDeck = [...originalDeck];
       shuffleDeck();
-      updateCardContent('🗘');
+      updateCardContent('🪬<br>Start');
       deckElement.style.cursor = 'pointer';
-      progressBar.style.height = '0';
+      progressBar.style.width = '0';
     }
 
     function updateCardContent(content) {
@@ -177,7 +218,7 @@
 
     function updateProgressBar() {
       const progress = ((originalDeck.length - currentDeck.length) / originalDeck.length) * 100;
-      progressBar.style.height = `${progress}%`;
+      progressBar.style.width = `${progress}%`;
     }
 
     window.onload = initializeGame;
