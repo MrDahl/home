@@ -1,6 +1,4 @@
-<html lang="en">
-<!-- Copyright Marc Sonne Dahl 2024 -->
-
+<html lang="da">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +6,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Concert+One">
   <style>
     :root {
-      --card-height: 65vh;
+      --card-height: min(65vh, 500px);
       --card-width: calc(var(--card-height) / 1.5);
       --primary-color: #f5f5f5;
       --on-primary-color: #212121;
+      --accent-color: #3f51b5;
     }
 
     body {
@@ -20,67 +19,62 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
-      font-family: "Concert One";
-      background: none;
+      font-family: "Concert One", sans-serif;
+      background-color: var(--accent-color);
+      user-select: none;
     }
 
     .card {
-      background: #f4f4f4;
+      background: var(--primary-color);
       width: var(--card-width);
       height: var(--card-height);
       padding: 3px;
       position: relative;
-      border-radius: 6px;
+      border-radius: 12px;
+      display: flex;
       justify-content: center;
       align-items: center;
       text-align: center;
-      display: flex;
-      font-size: calc(6.5em + 1vw);
+      font-size: calc(var(--card-width) * 0.2);
       color: var(--on-primary-color);
       cursor: pointer;
       user-select: none;
-      box-shadow: 1px 3px 5px #000, inset 1px 1px 10px #fff;
-      line-height: 0.85;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
     }
 
     .card::before {
       content: "";
       width: 104%;
       height: 102%;
-      border-radius: 8px;
+      border-radius: 14px;
       position: absolute;
       z-index: -1;
       top: -1%;
       left: -2%;
-    }
-
-    .card::after {
-      position: absolute;
-      content: "";
-      top: calc(var(--card-height) / 6);
-      left: 0;
-      right: 0;
-      z-index: -1;
-      height: 100%;
-      width: 100%;
-      margin: 0 auto;
+      background-color: rgba(255, 255, 255, 0.1);
     }
 
     .card .top-left-text,
     .card .bottom-right-text {
       position: absolute;
-      font-size: 60%;
+      font-size: 40%;
       color: #757575;
     }
 
     .card .top-left-text {
-      top: 20px;
-      left: 20px;
+      top: 5%;
+      left: 5%;
     }
 
     .card .bottom-right-text {
-      bottom: 20px;
-      right: 20px;
+      bottom: 5%;
+      right: 5%;
       transform: rotate(180deg);
     }
 
@@ -103,88 +97,90 @@
         rgba(186, 12, 248, 1) 80%,
         rgba(251, 7, 217, 1) 90%,
         rgba(255, 0, 0, 1) 100%
-    );
+      );
     }
 
     .progress-bar {
       width: 100%;
       height: 0;
-      background: #F7F7F7;
+      background: var(--primary-color);
+      transition: height 0.3s ease;
     }
 
-    a {
-      color: #212534;
-      text-decoration: none;
-      font-size: 3.5em;
-      margin-top: 2rem;
+    @media (max-width: 480px) {
+      :root {
+        --card-height: 70vh;
+      }
     }
   </style>
 </head>
-
 <body>
   <div id="deck" class="card" onclick="pickCard()">
     <div class="card-content">
       🃏<br>Start
     </div>
-    <div class="progress-container">
-      <div id="progress-bar" class="progress-bar"></div>
-    </div>
+  </div>
+  <div class="progress-container">
+    <div id="progress-bar" class="progress-bar"></div>
   </div>
 
   <script>
-    var cards = ['A<br>♦', '2<br>♦', '3<br>♦', '4<br>♦', '5<br>♦', '6<br>♦', '7<br>♦', '8<br>♦', '9<br>♦', '10<br>♦', 'J<br>♦', 'Q<br>♦', 'K<br>♦', 'A<br>♣', '2<br>♣', '3<br>♣', '4<br>♣', '5<br>♣', '6<br>♣', '7<br>♣', '8<br>♣', '9<br>♣', '10<br>♣', 'J<br>♣', 'Q<br>♣', 'K<br>♣', 'A<br>♥', '2<br>♥', '3<br>♥', '4<br>♥', '5<br>♥', '6<br>♥', '7<br>♥', '8<br>♥', '9<br>♥', '10<br>♥', 'J<br>♥', 'Q<br>♥', 'K<br>♥', 'A<br>♠', '2<br>♠', '3<br>♠', '4<br>♠', '5<br>♠', '6<br>♠', '7<br>♠', '8<br>♠', '9<br>♠', '10<br>♠', 'J<br>♠', 'Q<br>♠', 'K<br>♠', 'J<br>O<br>K<br>E<br>R<br>⧓', 'J<br>O<br>K<br>E<br>R<br>⧗'];
-    var originalDeck = [...cards];
-    var deckElement = document.getElementById('deck');
-    var progressBar = document.getElementById('progress-bar');
+    const cards = ['A<br>♦', '2<br>♦', '3<br>♦', '4<br>♦', '5<br>♦', '6<br>♦', '7<br>♦', '8<br>♦', '9<br>♦', '10<br>♦', 'J<br>♦', 'Q<br>♦', 'K<br>♦', 'A<br>♣', '2<br>♣', '3<br>♣', '4<br>♣', '5<br>♣', '6<br>♣', '7<br>♣', '8<br>♣', '9<br>♣', '10<br>♣', 'J<br>♣', 'Q<br>♣', 'K<br>♣', 'A<br>♥', '2<br>♥', '3<br>♥', '4<br>♥', '5<br>♥', '6<br>♥', '7<br>♥', '8<br>♥', '9<br>♥', '10<br>♥', 'J<br>♥', 'Q<br>♥', 'K<br>♥', 'A<br>♠', '2<br>♠', '3<br>♠', '4<br>♠', '5<br>♠', '6<br>♠', '7<br>♠', '8<br>♠', '9<br>♠', '10<br>♠', 'J<br>♠', 'Q<br>♠', 'K<br>♠', 'J<br>O<br>K<br>E<br>R<br>⧓', 'J<br>O<br>K<br>E<br>R<br>⧗'];
+    const originalDeck = [...cards];
+    let currentDeck = [...cards];
+    const deckElement = document.getElementById('deck');
+    const progressBar = document.getElementById('progress-bar');
 
     function shuffleDeck() {
-      cards = cards.sort(() => Math.random() - 0.5);
+      currentDeck.sort(() => Math.random() - 0.5);
     }
 
     function initializeGame() {
       shuffleDeck();
-      deckElement.querySelector('.card-content').innerHTML = '🃏<br>Start';
-      deckElement.style.fontSize = 'calc(3.5em + 1vw)';
+      updateCardContent('🃏<br>Start');
+      deckElement.style.fontSize = 'calc(var(--card-width) * 0.2)';
       deckElement.style.cursor = 'pointer';
-      progressBar = document.getElementById('progress-bar');
       progressBar.style.height = '0';
-      deckElement.onclick = pickCard;
     }
 
     function pickCard() {
-      if (cards.length === 0) {
+      if (currentDeck.length <= 1) {
         resetGame();
         return;
       }
-      if (cards.length === 1) {
-        resetGame();
-        return;
-      }
-      var index = Math.floor(Math.random() * cards.length);
-      var card = cards.splice(index, 1)[0];
-      var suit = card.slice(-1);
-      var suitColor = (suit === '♦' || suit === '♥') ? 'red' : 'black';
-      deckElement.querySelector('.card-content').innerHTML = `<span class="middle-suit" style="color: ${suitColor};">${suit}</span>`;
-      deckElement.querySelector('.card-content').innerHTML += `<span class="top-left-text">${card}</span><span class="bottom-right-text" style="transform: rotate(180deg);">${card}</span>`;
+
+      const index = Math.floor(Math.random() * currentDeck.length);
+      const card = currentDeck.splice(index, 1)[0];
+      const suit = card.split('<br>')[1];
+      const suitColor = (suit === '♦' || suit === '♥') ? 'red' : 'black';
+
+      updateCardContent(`
+        <span class="middle-suit" style="color: ${suitColor};">${suit}</span>
+        <span class="top-left-text">${card}</span>
+        <span class="bottom-right-text">${card}</span>
+      `);
+
       updateProgressBar();
     }
 
     function resetGame() {
-      cards = [...originalDeck];
+      currentDeck = [...originalDeck];
       shuffleDeck();
-      deckElement.querySelector('.card-content').innerHTML = '🗘';
+      updateCardContent('🗘');
       deckElement.style.cursor = 'pointer';
       progressBar.style.height = '0';
     }
 
+    function updateCardContent(content) {
+      deckElement.querySelector('.card-content').innerHTML = content;
+    }
+
     function updateProgressBar() {
-      var progress = ((originalDeck.length - cards.length) / originalDeck.length) * 100;
-      progressBar.style.height = progress + '%';
+      const progress = ((originalDeck.length - currentDeck.length) / originalDeck.length) * 100;
+      progressBar.style.height = `${progress}%`;
     }
 
     window.onload = initializeGame;
   </script>
 </body>
-<!-- Copyright Marc Sonne Dahl 2024 -->
-
 </html>
