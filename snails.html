@@ -1,9 +1,8 @@
 <html lang="da">
 <!-- Copyright Marc Sonne Dahl (c) 2024 - Created July 2024 -->
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Snail Game with Spinning Wheel</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
@@ -31,29 +30,28 @@
       background-color: #f0f0f0;
       font-family: "Pacifico", cursive;
       user-select: none;
-      background: conic-gradient(#ff6b6b 16.666%,
-          #74b9ff 16.666%,
-          #74b9ff 33.333%,
-          #55efc4 33.333%,
-          #55efc4 50%,
-          #f9ca24 50%,
-          #f9ca24 66.666%,
-          #a29bfe 66.666%,
-          #a29bfe 83.333%,
-          #fdcb6e 83.333%);
+      background-size: 100% 100%;
+      background-position: 0px 0px;
+      background-image: conic-gradient(from 0deg at 50% 50%,
+          #ff6b6b 0%,
+          #a29bfe 16%,
+          #74b9ff 32%,
+          #55efc4 49%,
+          #f9ca24 66%,
+          #fdcb6e 83%,
+          #ff6b6b 100%);
     }
 
     .game-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 95%;
+      width: 70vh;
       max-width: 60vh;
       backdrop-filter: blur(30px);
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      padding: 20px;
-      box-sizing: border-box;
+      padding: 10px;
       position: relative;
     }
 
@@ -70,19 +68,18 @@
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 5px;
     }
 
     .track {
       display: flex;
       flex-direction: column;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-      border-radius: 5px;
+      height: 50vh;
     }
 
     .square {
-      aspect-ratio: 2.5;
-      border-radius: 10px;
+      aspect-ratio: 0.9;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -133,39 +130,6 @@
       to {
         transform: scale(1.1);
       }
-    }
-
-    .button-container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-
-    .game-button {
-      font-size: 1.2rem;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.2s, transform 0.1s;
-      font-family: inherit;
-      color: #fff;
-      width: 100%;
-      max-width: 200px;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    }
-
-    .game-button:active {
-      transform: scale(0.98);
-    }
-
-    #restart-button {
-      background-color: #2ecc71;
-      display: none;
-    }
-
-    #restart-button:hover {
-      background-color: #27ae60;
     }
 
     .winner-overlay {
@@ -235,11 +199,6 @@
         font-size: 1rem;
       }
 
-      .game-button {
-        font-size: 1rem;
-        padding: 8px 16px;
-      }
-
       .winner-message {
         font-size: 1.5rem;
       }
@@ -253,20 +212,25 @@
       }
     }
 
-    /* Wheel Styles */
     #wheelOfFortune {
       display: inline-block;
       position: relative;
       overflow: hidden;
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     #wheel {
       display: block;
+      aspect-ratio: 1;
+      width: 30vh;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      margin: 10px;
     }
 
+
     #spin {
-      font: 3em/0 sans-serif;
+      font: 2em sans-serif;
       user-select: none;
       cursor: pointer;
       display: flex;
@@ -280,7 +244,7 @@
       margin: -15%;
       background: #fff;
       color: #fff;
-      box-shadow: 0 0 0 8px currentColor, 0 0px 15px 5px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 0 10px currentColor, 0 0px 15px 5px rgba(0, 0, 0, 0.9);
       border-radius: 50%;
       transition: 0.8s;
       text-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
@@ -297,6 +261,7 @@
 
     .arrow {
       position: absolute;
+      display: none;
       top: -40px;
       left: 50%;
       transform: translateX(-50%);
@@ -319,11 +284,7 @@
 
 <body>
   <div class="game-container">
-    <h1>Snail Race</h1>
     <div class="board" id="game-board"></div>
-    <div class="button-container">
-      <button onclick="restartGame()" id="restart-button" class="game-button">Restart</button>
-    </div>
     <div class="winner-overlay" id="winner-overlay">
       <div class="winner-message">
         <span id="winner-color"></span> Snail Wins!
@@ -333,53 +294,32 @@
     </div>
     <div id="wheelOfFortune">
       <canvas id="wheel" width="300" height="300"></canvas>
-      <div id="spin">🐌</div>
+      <div id="spin"></div>
       <div class="arrow"></div>
     </div>
     <div class="result" id="result">Spin the wheel!</div>
   </div>
 
   <script>
-    // Snail Game Code
-    const snails = [{
-        color: 'red',
-        position: 0
-      },
-      {
-        color: 'blue',
-        position: 0
-      },
-      {
-        color: 'green',
-        position: 0
-      },
-      {
-        color: 'yellow',
-        position: 0
-      },
-      {
-        color: 'purple',
-        position: 0
-      },
-      {
-        color: 'orange',
-        position: 0
-      }
-    ];
+    const snails = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'].map(color => ({
+      color,
+      position: 0
+    }));
     const boardSize = 8;
-    const restartButton = document.getElementById('restart-button');
     const gameBoard = document.getElementById('game-board');
     const winnerOverlay = document.getElementById('winner-overlay');
     const winnerColor = document.getElementById('winner-color');
 
     function createBoard() {
       gameBoard.innerHTML = '';
-      snails.forEach(snail => {
+      snails.forEach(({
+        color
+      }) => {
         const track = document.createElement('div');
-        track.className = `track ${snail.color}`;
+        track.className = `track ${color}`;
         for (let i = 0; i < boardSize; i++) {
           const square = document.createElement('div');
-          square.className = `square ${snail.color}`;
+          square.className = `square ${color}`;
           if (i === 0) square.textContent = '🐌';
           track.appendChild(square);
         }
@@ -397,20 +337,20 @@
     }
 
     function updateBoard() {
-      snails.forEach(snail => {
-        const track = document.querySelector(`.track.${snail.color}`);
-        const squares = track.querySelectorAll('.square');
+      snails.forEach(({
+        color,
+        position
+      }) => {
+        const squares = document.querySelectorAll(`.track.${color} .square`);
         squares.forEach((square, index) => {
-          square.textContent = index === snail.position ? '🐌' : '';
+          square.textContent = index === position ? '🐌' : '';
         });
       });
     }
 
     function checkWinner(snail) {
       if (snail.position === boardSize - 1) {
-        const winningTrack = document.querySelector(`.track.${snail.color}`);
-        winningTrack.classList.add('winning-track');
-        restartButton.style.display = 'block';
+        document.querySelector(`.track.${snail.color}`).classList.add('winning-track');
         showWinnerOverlay(snail.color);
       }
     }
@@ -422,46 +362,38 @@
 
     function hideWinnerOverlay() {
       winnerOverlay.classList.remove('show');
+      restartGame();
     }
 
     function restartGame() {
       snails.forEach(snail => snail.position = 0);
       createBoard();
-      restartButton.style.display = 'none';
-      hideWinnerOverlay();
       document.querySelector('.winning-track')?.classList.remove('winning-track');
     }
     winnerOverlay.addEventListener('click', hideWinnerOverlay);
     createBoard();
-    // Wheel Code
     const sectors = [{
         color: '#ff6b6b',
-        label: "",
         indicator: "red"
       },
       {
         color: '#fdcb6e',
-        label: "",
         indicator: "orange"
       },
       {
         color: '#f9ca24',
-        label: "",
         indicator: "yellow"
       },
       {
         color: '#55efc4',
-        label: "",
         indicator: "green"
       },
       {
         color: '#74b9ff',
-        label: "",
         indicator: "blue"
       },
       {
         color: '#a29bfe',
-        label: "",
         indicator: "purple"
       }
     ];
@@ -471,57 +403,45 @@
     const ctx = document.querySelector('#wheel').getContext('2d');
     const dia = ctx.canvas.width;
     const rad = dia / 2;
-    const PI = Math.PI;
-    const TAU = 2 * PI;
-    const arc = TAU / sectors.length;
-    const friction = 0.98; // 0.995=soft, 0.99=mid, 0.98=hard
-    let angVel = 0; // Angular velocity
-    let ang = 0; // Angle in radians
+    const TAU = 2 * Math.PI;
+    const arc = TAU / tot;
+    const friction = 0.98;
+    let angVel = 0;
+    let ang = 0;
     const getIndex = () => Math.floor(tot - (ang / TAU) * tot) % tot;
 
-    function drawSector(sector, i) {
+    function drawSector({
+      color
+    }, i) {
       const ang = arc * i;
       ctx.save();
-      // COLOR
       ctx.beginPath();
-      ctx.fillStyle = sector.color;
+      ctx.fillStyle = color;
       ctx.moveTo(rad, rad);
       ctx.arc(rad, rad, rad, ang, ang + arc);
       ctx.lineTo(rad, rad);
       ctx.fill();
-      // TEXT
-      ctx.translate(rad, rad);
-      ctx.rotate(ang + arc / 2);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 20px sans-serif';
-      ctx.fillText(sector.label, rad - 10, 10);
       ctx.restore();
     }
 
     function rotate() {
-      const sector = sectors[getIndex()];
-      ctx.canvas.style.transform = `rotate(${ang - PI / 2}rad)`;
-      spinEl.style.background = sector.color;
-      document.getElementById('result').textContent = `Wheel stopped on: ${sector.indicator}`;
+      ctx.canvas.style.transform = `rotate(${ang - Math.PI / 2}rad)`;
+      spinEl.style.background = sectors[getIndex()].color;
     }
 
     function frame() {
       if (!angVel) return;
-      angVel *= friction; // Decrement velocity by friction
+      angVel *= friction;
       if (angVel < 0.002) {
-        angVel = 0; // Bring to stop
-        const sector = sectors[getIndex()];
-        moveSnail(sector.indicator); // Move the snail only when the wheel stops
+        angVel = 0;
+        moveSnail(sectors[getIndex()].indicator);
       }
-      ang += angVel; // Update angle
-      ang %= TAU; // Normalize angle
+      ang += angVel;
+      ang %= TAU;
       rotate();
     }
     spinEl.addEventListener('click', () => {
-      if (!angVel) {
-        angVel = rand(0.25, 0.45);
-      }
+      if (!angVel) angVel = rand(0.25, 0.45);
     });
 
     function engine() {
@@ -531,15 +451,12 @@
 
     function init() {
       sectors.forEach(drawSector);
-      rotate(); // Initial rotation
-      engine(); // Start engine
+      rotate();
+      engine();
       spinEl.addEventListener('click', () => {
         if (!angVel) {
           angVel = rand(0.25, 0.45);
-          setTimeout(() => {
-            const sector = sectors[getIndex()];
-            moveSnail(sector.indicator);
-          }, 3000); // Match with the maximum spin duration
+          setTimeout(() => moveSnail(sectors[getIndex()].indicator), 3000);
         }
       });
     }
@@ -547,5 +464,4 @@
   </script>
 </body>
 <!-- Copyright Marc Sonne Dahl (c) 2024 - Created July 2024 -->
-
 </html>
