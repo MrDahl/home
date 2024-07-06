@@ -21,7 +21,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 96vh;
+      height: 100vh;
       margin: 0;
       font-family: "Concert One", sans-serif;
       background-color: var(--primary-color);
@@ -53,7 +53,6 @@
       font-size: calc(var(--card-width) * 0.2);
       color: var(--on-primary-color);
       cursor: pointer;
-      user-select: none;
       box-shadow: 9px 9px 16px var(--shadow-color),
         -9px -9px 16px var(--highlight-color);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -122,9 +121,8 @@
       color: var(--accent-color);
       border: none;
       padding: 10px 20px;
-      margin: 0 10px;
       border-radius: 12px;
-      width: 22.5vh;
+      width: var(--card-width);
       font-size: 16px;
       cursor: pointer;
       box-shadow: 4px 4px 6px var(--shadow-color),
@@ -140,9 +138,6 @@
       :root {
         --card-height: 60vh;
       }
-      .button{
-              width: 19vh;
-      }
     }
   </style>
 </head>
@@ -150,61 +145,27 @@
 <body>
   <div class="game-container">
     <div id="deck" class="card" onclick="pickCard()">
-      <div class="card-content">🪬
-        <br>Start
-      </div>
+      <div class="card-content">🪬<br>Start</div>
     </div>
     <div class="progress-container">
       <div id="progress-bar" class="progress-bar"></div>
     </div>
     <div class="controls">
-      <button class="button" onclick="resetGame()">✖️</button>
-      <button class="button" onclick="pickCard()">➕</button>
+      <button class="button" onclick="resetGame()">✖️ Reset</button>
     </div>
   </div>
 
   <script>
-    const cards = ['A<br>♦', '2<br>♦', '3<br>♦', '4<br>♦', '5<br>♦', '6<br>♦', '7<br>♦', '8<br>♦', '9<br>♦', '10<br>♦', 'J<br>♦', 'Q<br>♦', 'K<br>♦', 'A<br>♣', '2<br>♣', '3<br>♣', '4<br>♣', '5<br>♣', '6<br>♣', '7<br>♣', '8<br>♣', '9<br>♣', '10<br>♣', 'J<br>♣', 'Q<br>♣', 'K<br>♣', 'A<br>♥', '2<br>♥', '3<br>♥', '4<br>♥', '5<br>♥', '6<br>♥', '7<br>♥', '8<br>♥', '9<br>♥', '10<br>♥', 'J<br>♥', 'Q<br>♥', 'K<br>♥', 'A<br>♠', '2<br>♠', '3<br>♠', '4<br>♠', '5<br>♠', '6<br>♠', '7<br>♠', '8<br>♠', '9<br>♠', '10<br>♠', 'J<br>♠', 'Q<br>♠', 'K<br>♠', 'JKR<br>⚜️', 'JKR<br>🔱'];
-    const originalDeck = [...cards];
-    let currentDeck = [...cards];
+    const suits = ['♦', '♣', '♥', '♠'];
+    const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    const originalDeck = [...suits.flatMap(suit => values.map(value => `${value}<br>${suit}`)), 'JKR<br>⚜️', 'JKR<br>🔱'];
+    let currentDeck = [];
+
     const deckElement = document.getElementById('deck');
     const progressBar = document.getElementById('progress-bar');
 
     function shuffleDeck() {
-      currentDeck.sort(() => Math.random() - 0.5);
-    }
-
-    function initializeGame() {
-      shuffleDeck();
-      updateCardContent('🪬<br>Start');
-      deckElement.style.fontSize = 'calc(var(--card-width) * 0.2)';
-      deckElement.style.cursor = 'pointer';
-      progressBar.style.width = '0';
-    }
-
-    function pickCard() {
-      if (currentDeck.length === 0) {
-        updateCardContent('🪙<br>Finish');
-        return;
-      }
-      const index = Math.floor(Math.random() * currentDeck.length);
-      const card = currentDeck.splice(index, 1)[0];
-      const suit = card.split('<br>')[1];
-      const suitColor = (suit === '♦' || suit === '♥') ? 'red' : 'black';
-      updateCardContent(`
-        <span class="middle-suit" style="color: ${suitColor};">${suit}</span>
-        <span class="top-left-text">${card}</span>
-        <span class="bottom-right-text">${card}</span>
-      `);
-      updateProgressBar();
-    }
-
-    function resetGame() {
-      currentDeck = [...originalDeck];
-      shuffleDeck();
-      updateCardContent('🪬<br>Start');
-      deckElement.style.cursor = 'pointer';
-      progressBar.style.width = '0';
+      currentDeck = [...originalDeck].sort(() => Math.random() - 0.5);
     }
 
     function updateCardContent(content) {
@@ -215,8 +176,30 @@
       const progress = ((originalDeck.length - currentDeck.length) / originalDeck.length) * 100;
       progressBar.style.width = `${progress}%`;
     }
-    window.onload = initializeGame;
+
+    function pickCard() {
+      if (currentDeck.length === 0) {
+        updateCardContent('🏆<br>Finish');
+        return;
+      }
+      const card = currentDeck.pop();
+      const [value, suit] = card.split('<br>');
+      const suitColor = '♦♥'.includes(suit) ? 'red' : 'black';
+      updateCardContent(`
+        <span class="middle-suit" style="color: ${suitColor};">${suit}</span>
+        <span class="top-left-text">${card}</span>
+        <span class="bottom-right-text">${card}</span>
+      `);
+      updateProgressBar();
+    }
+
+    function resetGame() {
+      shuffleDeck();
+      updateCardContent('🪬<br>Start');
+      progressBar.style.width = '0';
+    }
+
+    window.onload = resetGame;
   </script>
 </body>
-
 </html>
