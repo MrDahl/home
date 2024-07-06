@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="da">
 <!-- Copyright Marc Sonne Dahl - Created July 2024 -->
 <head>
@@ -54,7 +55,7 @@
       color: var(--on-primary-color);
       cursor: pointer;
       box-shadow: 9px 9px 16px var(--shadow-color),
-        -9px -9px 16px var(--highlight-color);
+                  -9px -9px 16px var(--highlight-color);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -69,7 +70,7 @@
       left: -1%;
       background-color: var(--primary-color);
       box-shadow: 4px 4px 6px var(--shadow-color),
-        -4px -4px 6px var(--highlight-color);
+                  -4px -4px 6px var(--highlight-color);
     }
 
     .card .top-left-text,
@@ -98,7 +99,7 @@
       margin-top: 20px;
       overflow: hidden;
       box-shadow: inset 4px 4px 6px var(--shadow-color),
-        inset -4px -4px 6px var(--highlight-color);
+                  inset -4px -4px 6px var(--highlight-color);
     }
 
     .progress-bar {
@@ -107,7 +108,7 @@
       background: rgba(68, 117, 151, 1);
       transition: width 0.3s ease;
       box-shadow: inset 4px 4px 6px var(--shadow-color),
-        inset -1px -1px 1px var(--highlight-color);
+                  inset -1px -1px 1px var(--highlight-color);
     }
 
     .controls {
@@ -126,7 +127,7 @@
       font-size: 16px;
       cursor: pointer;
       box-shadow: 4px 4px 6px var(--shadow-color),
-        -4px -4px 6px var(--highlight-color);
+                  -4px -4px 6px var(--highlight-color);
       transition: background-color 0.3s ease;
     }
 
@@ -141,7 +142,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="game-container">
     <div id="deck" class="card" onclick="pickCard()">
@@ -154,7 +154,6 @@
       <button class="button" onclick="resetGame()">✖️ Reset</button>
     </div>
   </div>
-
   <script>
     const suits = ['♦', '♣', '♥', '♠'];
     const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
