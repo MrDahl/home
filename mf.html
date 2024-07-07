@@ -7,6 +7,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <title>Vedligeholdelsesfaktor Beregner</title>
   <style>
+    .style-switcher {
+      position: fixed;
+      top: 20px;
+      left: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      z-index: 1000;
+      text-shadow: 0 1px 2px #000,
+        0 2px 3px #ccc,
+        0 3px 4px #fff;
+    }
+  </style>
+
+  <style id="neomorphic-css">
+    /* Neomorphic Design */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 20px;
@@ -203,17 +218,222 @@
       visibility: visible;
       color: #000;
     }
+  </style>
 
-    /* Media query for narrow screens */
-    @media (max-width: 600px) {
-      .button-container {
-        flex-direction: column;
-      }
+  <style id="win95-css">
+    /*  WINDOWS 95 STYLE START */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background-image: url("https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: #008080;
+      background-attachment: fixed;
     }
+
+    body {
+      font-family: 'MS Sans Serif', Arial, sans-serif;
+      background-color: #c0c0c0;
+      color: #000000;
+      margin: 20px;
+      user-select: none;
+    }
+
+    .maincontainer,
+    .container {
+      background-color: #c0c0c0;
+      border: 2px solid;
+      border-top-color: #dfdfdf;
+      border-left-color: #dfdfdf;
+      border-right-color: #808080;
+      border-bottom-color: #808080;
+      padding: 2px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .container {
+      margin-bottom: 5px;
+      width: auto;
+    }
+
+    h1,
+    h2 {
+      background-color: #000080;
+      color: #ffffff;
+      padding: 2px 5px;
+      margin: 0 0 10px 0;
+      font-weight: bold;
+      text-align: left;
+      text-shadow: none;
+      font-size: 1em;
+    }
+
+    h1 {
+      display: none;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      color: #000000;
+    }
+
+    input,
+    select {
+      width: calc(100% - 10px);
+      padding: 2px;
+      margin-top: 2px;
+      border: 2px inset #dfdfdf;
+      background-color: #ffffff;
+      box-shadow: none;
+    }
+
+    button {
+      background-color: #c0c0c0;
+      border: 2px solid;
+      border-top-color: #dfdfdf;
+      border-left-color: #dfdfdf;
+      border-right-color: #808080;
+      border-bottom-color: #808080;
+      padding: 2px 6px;
+      margin: 5px 2px;
+      font-weight: normal;
+      color: #000000;
+      box-shadow: none;
+    }
+
+    button:active {
+      border-top-color: #808080;
+      border-left-color: #808080;
+      border-right-color: #dfdfdf;
+      border-bottom-color: #dfdfdf;
+    }
+
+    .result {
+      background-color: #c0c0c0;
+      border: 2px inset #dfdfdf;
+      padding: 5px;
+      height: auto;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      color: #000000;
+    }
+
+    .tooltip-container {
+      display: none;
+    }
+
+    .maincontainer,
+    .container,
+    input,
+    select,
+    button {
+      box-shadow: none;
+      background-image: none;
+    }
+
+    /* Adjust button hover state */
+    button:hover {
+      background-color: #c0c0c0;
+      color: #000000;
+      text-decoration: none;
+    }
+
+    /* Remove button transition effects */
+    button,
+    button span {
+      transition: none;
+      padding: 5px;
+    }
+
+    /* Add a titlebar-like element to containers */
+    .container::before {
+      content: '';
+      display: block;
+      height: 16px;
+      left: 0px;
+      margin-top: -19px;
+      background-color: #000080;
+      border: 2px inset #dfdfdf;
+    }
+
+    .tooltip-container {
+      display: block;
+      position: absolute;
+      top: 0px;
+      right: 8px;
+      z-index: 9000;
+    }
+
+    .tooltip-icon {
+      display: inline-block;
+      width: auto;
+      height: 20px;
+      padding-left: 10%;
+      padding-right: 10%;
+      background-color: #c0c0c0;
+      margin-right: -3px;
+      margin-top: -1px;
+      border: 2px solid;
+      border-top-color: #dfdfdf;
+      border-left-color: #dfdfdf;
+      border-right-color: #808080;
+      border-bottom-color: #808080;
+      text-align: center;
+      font-weight: bold;
+      color: #000080;
+      cursor: help;
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    .tooltip {
+      display: none;
+      position: absolute;
+      background-color: #ffffc0;
+      border: 1px solid #000000;
+      padding: 5px;
+      width: 200px;
+      font-size: 11px;
+      color: #000000;
+      z-index: 100;
+      top: 20px;
+      right: 0;
+      box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .tooltip-container:hover .tooltip {
+      display: block;
+    }
+
+    /* Adjusting container padding to accommodate the help button */
+    .container {
+      padding-top: 20px;
+      position: relative;
+    }
+
+    /* Ensure the tooltip doesn't affect the layout */
+    .tooltip-container,
+    .tooltip-icon,
+    .tooltip {
+      box-sizing: border-box;
+    }
+
+    /* 
+    END WINDOWS 95 STYLE
+    */
   </style>
 </head>
 
 <body>
+  <div class="style-switcher">🏴‍☠️</div>
   <div class="maincontainer">
     <h1>Maintenance Factor Calculator</h1>
     <h2>Vedligeholdelsesfaktor</h2>
@@ -224,7 +444,7 @@
       </div>
       <div class="input-group">
         <label for="dato">Dato:</label>
-        <input type="date" id="dato" name="dato">
+        <input type="text" id="dato" name="dato">
       </div>
       <div class="input-group">
         <label for="projekt">Projektbeskrivelse:</label>
@@ -232,7 +452,7 @@
       </div>
       <div class="tooltip-container">
         <div class="tooltip-icon">
-          <span>INFO</span>
+          <span>💡</span>
         </div>
         <div class="tooltip">
           <p>Udfyld navn og dato, og beskriv projektet i detaljer.</p>
@@ -255,7 +475,7 @@
         </select>
         <div class="tooltip-container">
           <div class="tooltip-icon">
-            <span>INFO</span>
+            <span>💡</span>
           </div>
           <div class="tooltip">
             <p>DS/ISO/CIE TS 22012:2019 afsnit 6.3.2-6.3.3</p>
@@ -279,7 +499,7 @@
         <input type="number" id="luminaireCleaningInterval" required>
         <div class="tooltip-container">
           <div class="tooltip-icon">
-            <span>INFO</span>
+            <span>💡</span>
           </div>
           <div class="tooltip">
             <p>CIE 097:2005, tabel 2.1</p>
@@ -298,7 +518,7 @@
         <input type="number" id="floorsReflectance" required>
         <div class="tooltip-container">
           <div class="tooltip-icon">
-            <span>INFO</span>
+            <span>💡</span>
           </div>
           <div class="tooltip">
             <p>Husk, 2 decimaler (x,x)</p>
@@ -362,7 +582,7 @@
         </select>
         <div class="tooltip-container">
           <div class="tooltip-icon">
-            <span>INFO</span>
+            <span>💡</span>
           </div>
           <div class="tooltip">
             <p>L-værdien er den procent som lysintensiteten er faldet til efter levetiden - Opgives af leverandøren</p>
@@ -378,7 +598,24 @@
     </form>
     <div class="result" id="result"></div>
   </div>
-
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const switcher = document.querySelector('.style-switcher');
+      let isNeomorphic = false;
+      switcher.addEventListener('click', () => {
+        if (isNeomorphic) {
+          document.getElementById('win95-css').disabled = false;
+          document.getElementById('neomorphic-css').disabled = true;
+        } else {
+          document.getElementById('win95-css').disabled = true;
+          document.getElementById('neomorphic-css').disabled = false;
+        }
+        isNeomorphic = !isNeomorphic;
+      });
+      // Initialize with Neomorphic disabled
+      document.getElementById('neomorphic-css').disabled = true;
+    });
+  </script>
   <script>
     // Data table
     const LLMF_TABLE = {
