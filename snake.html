@@ -1,294 +1,344 @@
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Touch</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #000;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-        }
-        #game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background-color: #222;
-        }
-        #game-board {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: grid;
-            background-color: #111;
-            background-image: 
-                linear-gradient(#222 1px, transparent 1px),
-                linear-gradient(90deg, #222 1px, transparent 1px);
-        }
-        .cell {
-            background-color: transparent;
-        }
-        .snake {
-            background-color: #4CAF50;
-            box-shadow: 0 0 5px #4CAF50, 0 0 10px #4CAF50;
-            border-radius: 2px;
-        }
-        .food {
-            background-color: #FFC107;
-            box-shadow: 0 0 5px #FFC107, 0 0 10px #FFC107;
-            border-radius: 50%;
-        }
-        #game-over {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #FFF;
-            font-size: 24px;
-            text-align: center;
-            display: none;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-        }
-        #score {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #FFF;
-            font-size: 18px;
-        }
-        #start-button {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake Game w/ Touch</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #000;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-color: #222;
+    }
+
+    #game-board {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      background-color: #111;
+      background-image:
+        linear-gradient(#222 1px, transparent 1px),
+        linear-gradient(90deg, #222 1px, transparent 1px);
+    }
+
+    .cell {
+      background-color: transparent;
+    }
+
+    .snake {
+      background-color: #4CAF50;
+      box-shadow: 0 0 5px #4CAF50, 0 0 10px #4CAF50;
+      border-radius: 2px;
+    }
+
+    .food {
+      background-color: #FFC107;
+      box-shadow: 0 0 5px #FFC107, 0 0 10px #FFC107;
+      border-radius: 50%;
+    }
+
+    #game-over {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #FFF;
+      font-size: 24px;
+      text-align: center;
+      display: none;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    #score {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #FFF;
+      font-size: 18px;
+    }
+
+    #start-button {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
 </head>
+
 <body>
-    <div id="game-container">
-        <div id="game-board"></div>
-        <div id="score">Score: 0</div>
-        <button id="start-button">Start</button>
-        <div id="game-over">
-            Game Over!<br>
-            Tap to restart
-        </div>
+  <div id="game-container">
+    <div id="game-board"></div>
+    <div id="score">Score: 0</div>
+    <button id="start-button">Start</button>
+    <div id="game-over">
+      Game Over!<br>
+      Tap to restart
     </div>
+  </div>
 
-    <script>
- 
-     const gameContainer = document.getElementById('game-container');
-const gameBoard = document.getElementById('game-board');
-const gameOverScreen = document.getElementById('game-over');
-const scoreDisplay = document.getElementById('score');
-const startButton = document.getElementById('start-button');
-let snake = [{x: 10, y: 10}];
-let food = {x: 15, y: 15};
-let direction = {x: 1, y: 0};
-let gameOver = false;
-let boardSize = {width: 20, height: 20};
-let cellSize = 20;
-let score = 0;
-let gameLoop;
-let touchStartX, touchStartY;
-let lastTouchTime = 0;
-const touchThreshold = 20; // Minimum swipe distance to trigger direction change
-const touchCooldown = 100; // Minimum time between touch events in milliseconds
+  <script>
+    const gameContainer = document.getElementById('game-container');
+    const gameBoard = document.getElementById('game-board');
+    const gameOverScreen = document.getElementById('game-over');
+    const scoreDisplay = document.getElementById('score');
+    const startButton = document.getElementById('start-button');
+    let snake = [{
+      x: 10,
+      y: 10
+    }];
+    let food = {
+      x: 15,
+      y: 15
+    };
+    let direction = {
+      x: 1,
+      y: 0
+    };
+    let gameOver = false;
+    let boardSize = {
+      width: 20,
+      height: 20
+    };
+    let cellSize = 20;
+    let score = 0;
+    let gameLoop;
+    let touchStartX, touchStartY;
+    let lastTouchTime = 0;
+    const touchThreshold = 20; // Minimum swipe distance to trigger direction change
+    const touchCooldown = 100; // Minimum time between touch events in milliseconds
+    function initGame() {
+      updateBoardSize();
+      createBoard();
+      placeFood();
+      document.addEventListener('keydown', changeDirection);
+      gameContainer.addEventListener('touchstart', handleTouchStart);
+      gameContainer.addEventListener('touchmove', handleTouchMove);
+      gameContainer.addEventListener('touchend', handleTouchEnd);
+      startButton.addEventListener('click', startGame);
+    }
 
-function initGame() {
-    updateBoardSize();
-    createBoard();
-    placeFood();
-    document.addEventListener('keydown', changeDirection);
-    gameContainer.addEventListener('touchstart', handleTouchStart);
-    gameContainer.addEventListener('touchmove', handleTouchMove);
-    gameContainer.addEventListener('touchend', handleTouchEnd);
-    startButton.addEventListener('click', startGame);
-}
+    function startGame() {
+      if (gameLoop) clearInterval(gameLoop);
+      snake = [{
+        x: 10,
+        y: 10
+      }];
+      direction = {
+        x: 1,
+        y: 0
+      };
+      gameOver = false;
+      score = 0;
+      updateScore();
+      gameOverScreen.style.display = 'none';
+      startButton.style.display = 'none';
+      placeFood();
+      gameLoop = setInterval(gameTick, 100);
+    }
 
-function startGame() {
-    if (gameLoop) clearInterval(gameLoop);
-    snake = [{x: 10, y: 10}];
-    direction = {x: 1, y: 0};
-    gameOver = false;
-    score = 0;
-    updateScore();
-    gameOverScreen.style.display = 'none';
-    startButton.style.display = 'none';
-    placeFood();
-    gameLoop = setInterval(gameTick, 100);
-}
+    function updateBoardSize() {
+      const containerWidth = gameContainer.clientWidth;
+      const containerHeight = gameContainer.clientHeight;
+      cellSize = Math.floor(Math.min(containerWidth, containerHeight) / 20);
+      boardSize.width = 20;
+      boardSize.height = 20;
+      gameBoard.style.width = `${boardSize.width * cellSize}px`;
+      gameBoard.style.height = `${boardSize.height * cellSize}px`;
+      gameBoard.style.gridTemplateColumns = `repeat(${boardSize.width}, ${cellSize}px)`;
+      gameBoard.style.gridTemplateRows = `repeat(${boardSize.height}, ${cellSize}px)`;
+      gameBoard.style.backgroundSize = `${cellSize}px ${cellSize}px`;
+    }
 
-function updateBoardSize() {
-    const containerWidth = gameContainer.clientWidth;
-    const containerHeight = gameContainer.clientHeight;
-    cellSize = Math.floor(Math.min(containerWidth, containerHeight) / 20);
-    boardSize.width = 20;
-    boardSize.height = 20;
-    gameBoard.style.width = `${boardSize.width * cellSize}px`;
-    gameBoard.style.height = `${boardSize.height * cellSize}px`;
-    gameBoard.style.gridTemplateColumns = `repeat(${boardSize.width}, ${cellSize}px)`;
-    gameBoard.style.gridTemplateRows = `repeat(${boardSize.height}, ${cellSize}px)`;
-    gameBoard.style.backgroundSize = `${cellSize}px ${cellSize}px`;
-}
-
-function createBoard() {
-    gameBoard.innerHTML = '';
-    for (let i = 0; i < boardSize.height * boardSize.width; i++) {
+    function createBoard() {
+      gameBoard.innerHTML = '';
+      for (let i = 0; i < boardSize.height * boardSize.width; i++) {
         const cell = document.createElement('div');
         cell.classList.add('cell');
         gameBoard.appendChild(cell);
+      }
     }
-}
 
-function placeFood() {
-    do {
+    function placeFood() {
+      do {
         food = {
-            x: Math.floor(Math.random() * boardSize.width),
-            y: Math.floor(Math.random() * boardSize.height)
+          x: Math.floor(Math.random() * boardSize.width),
+          y: Math.floor(Math.random() * boardSize.height)
         };
-    } while (snake.some(segment => segment.x === food.x && segment.y === food.y));
-}
-
-function gameTick() {
-    moveSnake();
-    if (!gameOver) {
-        updateBoard();
+      } while (snake.some(segment => segment.x === food.x && segment.y === food.y));
     }
-}
 
-function moveSnake() {
-    const head = {x: snake[0].x + direction.x, y: snake[0].y + direction.y};
-    head.x = (head.x + boardSize.width) % boardSize.width;
-    head.y = (head.y + boardSize.height) % boardSize.height;
+    function gameTick() {
+      moveSnake();
+      if (!gameOver) {
+        updateBoard();
+      }
+    }
 
-    if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+    function moveSnake() {
+      const head = {
+        x: snake[0].x + direction.x,
+        y: snake[0].y + direction.y
+      };
+      head.x = (head.x + boardSize.width) % boardSize.width;
+      head.y = (head.y + boardSize.height) % boardSize.height;
+      if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
         gameOver = true;
         gameOverScreen.style.display = 'block';
         startButton.style.display = 'block';
         clearInterval(gameLoop);
         return;
-    }
-
-    snake.unshift(head);
-
-    if (head.x === food.x && head.y === food.y) {
+      }
+      snake.unshift(head);
+      if (head.x === food.x && head.y === food.y) {
         score += 10;
         updateScore();
         placeFood();
-    } else {
+      } else {
         snake.pop();
+      }
     }
-}
 
-function updateBoard() {
-    const cells = document.getElementsByClassName('cell');
-    for (let i = 0; i < cells.length; i++) {
+    function updateBoard() {
+      const cells = document.getElementsByClassName('cell');
+      for (let i = 0; i < cells.length; i++) {
         cells[i].classList.remove('snake', 'food');
-    }
-
-    snake.forEach(segment => {
+      }
+      snake.forEach(segment => {
         const index = segment.y * boardSize.width + segment.x;
         cells[index].classList.add('snake');
-    });
-
-    const foodIndex = food.y * boardSize.width + food.x;
-    cells[foodIndex].classList.add('food');
-}
-
-function updateScore() {
-    scoreDisplay.textContent = `Score: ${score}`;
-}
-
-function changeDirection(event) {
-    let newDirection = { ...direction };
-    switch (event.key) {
-        case 'ArrowUp': if (direction.y === 0) newDirection = {x: 0, y: -1}; break;
-        case 'ArrowDown': if (direction.y === 0) newDirection = {x: 0, y: 1}; break;
-        case 'ArrowLeft': if (direction.x === 0) newDirection = {x: -1, y: 0}; break;
-        case 'ArrowRight': if (direction.x === 0) newDirection = {x: 1, y: 0}; break;
+      });
+      const foodIndex = food.y * boardSize.width + food.x;
+      cells[foodIndex].classList.add('food');
     }
-    if (newDirection.x !== -direction.x || newDirection.y !== -direction.y) {
+
+    function updateScore() {
+      scoreDisplay.textContent = `Score: ${score}`;
+    }
+
+    function changeDirection(event) {
+      let newDirection = {
+        ...direction
+      };
+      switch (event.key) {
+        case 'ArrowUp':
+          if (direction.y === 0) newDirection = {
+            x: 0,
+            y: -1
+          };
+          break;
+        case 'ArrowDown':
+          if (direction.y === 0) newDirection = {
+            x: 0,
+            y: 1
+          };
+          break;
+        case 'ArrowLeft':
+          if (direction.x === 0) newDirection = {
+            x: -1,
+            y: 0
+          };
+          break;
+        case 'ArrowRight':
+          if (direction.x === 0) newDirection = {
+            x: 1,
+            y: 0
+          };
+          break;
+      }
+      if (newDirection.x !== -direction.x || newDirection.y !== -direction.y) {
         direction = newDirection;
+      }
     }
-}
 
-function handleTouchStart(event) {
-    touchStartX = event.touches[0].clientX;
-    touchStartY = event.touches[0].clientY;
-}
+    function handleTouchStart(event) {
+      touchStartX = event.touches[0].clientX;
+      touchStartY = event.touches[0].clientY;
+    }
 
-function handleTouchMove(event) {
-    if (!touchStartX || !touchStartY) {
+    function handleTouchMove(event) {
+      if (!touchStartX || !touchStartY) {
         return;
-    }
-
-    const currentTime = new Date().getTime();
-    if (currentTime - lastTouchTime < touchCooldown) {
+      }
+      const currentTime = new Date().getTime();
+      if (currentTime - lastTouchTime < touchCooldown) {
         return;
-    }
-
-    const touchEndX = event.touches[0].clientX;
-    const touchEndY = event.touches[0].clientY;
-
-    const deltaX = touchEndX - touchStartX;
-    const deltaY = touchEndY - touchStartY;
-
-    if (Math.abs(deltaX) > touchThreshold || Math.abs(deltaY) > touchThreshold) {
-        let newDirection = { ...direction };
-
+      }
+      const touchEndX = event.touches[0].clientX;
+      const touchEndY = event.touches[0].clientY;
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+      if (Math.abs(deltaX) > touchThreshold || Math.abs(deltaY) > touchThreshold) {
+        let newDirection = {
+          ...direction
+        };
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            newDirection = deltaX > 0 ? {x: 1, y: 0} : {x: -1, y: 0};
+          newDirection = deltaX > 0 ? {
+            x: 1,
+            y: 0
+          } : {
+            x: -1,
+            y: 0
+          };
         } else {
-            newDirection = deltaY > 0 ? {x: 0, y: 1} : {x: 0, y: -1};
+          newDirection = deltaY > 0 ? {
+            x: 0,
+            y: 1
+          } : {
+            x: 0,
+            y: -1
+          };
         }
-
         if (newDirection.x !== -direction.x || newDirection.y !== -direction.y) {
-            direction = newDirection;
-            lastTouchTime = currentTime;
+          direction = newDirection;
+          lastTouchTime = currentTime;
         }
-
         touchStartX = touchEndX;
         touchStartY = touchEndY;
+      }
     }
-}
 
-function handleTouchEnd() {
-    touchStartX = null;
-    touchStartY = null;
-}
-
-window.addEventListener('resize', () => {
-    updateBoardSize();
-    createBoard();
-    updateBoard();
-});
-
-gameContainer.addEventListener('click', () => {
-    if (gameOver) startGame();
-});
-
-initGame();
-            
-             </script>
+    function handleTouchEnd() {
+      touchStartX = null;
+      touchStartY = null;
+    }
+    window.addEventListener('resize', () => {
+      updateBoardSize();
+      createBoard();
+      updateBoard();
+    });
+    gameContainer.addEventListener('click', () => {
+      if (gameOver) startGame();
+    });
+    initGame();
+  </script>
 </body>
+
 </html>
