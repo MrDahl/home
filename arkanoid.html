@@ -1,0 +1,339 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neumorphic Arkanoid</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #e0e5ec;
+      font-family: Arial, sans-serif;
+    }
+
+    #gameContainer {
+      width: 300px;
+      height: 600px;
+      background-color: #e0e5ec;
+      border-radius: 20px;
+      box-shadow: 8px 8px 15px #a3b1c6, -8px -8px 15px #ffffff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #gameCanvas {
+      display: none;
+    }
+
+    .button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #e0e5ec;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+      cursor: pointer;
+      outline: none;
+      z-index: 9000;
+    }
+
+    .button:active {
+      box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
+    }
+
+    #lives {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    #level {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .paddle,
+    .ball,
+    .brick {
+      position: absolute;
+      background-color: #e0e5ec;
+      box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+    }
+
+    .paddle {
+      height: 8px;
+      width: 100px;
+      bottom: 40px;
+      /* Adjust position as needed */
+      border-radius: 10px;
+    }
+
+    .ball {
+      width: 12px;
+      /* ball diameter */
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .brick {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      background-color: #e0e5ec;
+      box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="300" height="600"></canvas>
+    <button id="startButton" class="button">Start</button>
+    <button id="nextLevelButton" class="button" style="display: none;">Next Level</button>
+    <div id="lives">Lives: 3</div>
+    <div id="level">Level: 1</div>
+    <div id="paddle" class="paddle"></div>
+    <div id="ball" class="ball"></div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const startButton = document.getElementById('startButton');
+    const nextLevelButton = document.getElementById('nextLevelButton');
+    const livesDisplay = document.getElementById('lives');
+    const levelDisplay = document.getElementById('level');
+    const paddleElement = document.getElementById('paddle');
+    const ballElement = document.getElementById('ball');
+    const gameContainer = document.getElementById('gameContainer');
+    // Game variables
+    let paddleWidth = 100;
+    let paddleHeight = 8;
+    let paddleX = (canvas.width - paddleWidth) / 2;
+    let ballRadius = 6;
+    let x = canvas.width / 2;
+    let y = canvas.height - paddleHeight - 50;
+    let dx = 2;
+    let dy = -2;
+    let lives = 3;
+    let gameRunning = false;
+    let currentLevel = 1;
+    let ballSqueeze = 1;
+    let squeezeFrames = 0;
+    // Define levels
+    const levels = [
+      // Level 1
+      [
+        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+        [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0],
+        [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+      ],
+      // Level 2 (example: slightly more complex shape)
+      [
+        [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+        [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0],
+        [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0],
+      ]
+      // Add more levels here following the same pattern
+    ];
+    // Set up bricks based on current level
+    let bricks = [];
+
+    function setupBricks() {
+      const currentLungShape = levels[currentLevel - 1];
+      const brickRowCount = currentLungShape.length;
+      const brickColumnCount = currentLungShape[0].length;
+      const brickWidth = 20;
+      const brickHeight = 20;
+      const brickPadding = 2;
+      const brickOffsetTop = 30;
+      const brickOffsetLeft = (canvas.width - (brickColumnCount * (brickWidth + brickPadding))) / 2;
+      bricks.forEach(brick => gameContainer.removeChild(brick));
+      bricks = [];
+      for (let r = 0; r < brickRowCount; r++) {
+        for (let c = 0; c < brickColumnCount; c++) {
+          if (currentLungShape[r][c] === 1) {
+            const brickElement = document.createElement('div');
+            brickElement.className = 'brick';
+            brickElement.style.left = `${(c * (brickWidth + brickPadding)) + brickOffsetLeft}px`;
+            brickElement.style.top = `${(r * (brickHeight + brickPadding)) + brickOffsetTop}px`;
+            gameContainer.appendChild(brickElement);
+            bricks.push(brickElement);
+          }
+        }
+      }
+    }
+
+    function animateBallSquash() {
+      if (squeezeFrames > 0) {
+        ballSqueeze = 0.8 + (0.2 * (5 - squeezeFrames) / 5);
+        squeezeFrames--;
+      } else {
+        ballSqueeze = 1;
+      }
+      ballElement.style.transform = `scale(${ballSqueeze}, ${1 / ballSqueeze})`;
+    }
+
+    function collisionDetection() {
+      bricks.forEach(brick => {
+        const brickRect = brick.getBoundingClientRect();
+        const ballRect = ballElement.getBoundingClientRect();
+        if (ballRect.left < brickRect.right && ballRect.right > brickRect.left &&
+          ballRect.top < brickRect.bottom && ballRect.bottom > brickRect.top) {
+          dy = -dy;
+          gameContainer.removeChild(brick);
+          bricks = bricks.filter(b => b !== brick);
+          squeezeFrames = 5; // Trigger squash animation
+          if (checkLevelComplete()) {
+            showNextLevelButton();
+          }
+        }
+      });
+    }
+
+    function checkLevelComplete() {
+      return bricks.length === 0;
+    }
+
+    function showNextLevelButton() {
+      gameRunning = false;
+      nextLevelButton.style.display = 'block';
+    }
+
+    function drawLives() {
+      livesDisplay.textContent = `Lives: ${lives}`;
+    }
+
+    function drawLevel() {
+      levelDisplay.textContent = `Level: ${currentLevel}`;
+    }
+
+    function draw() {
+      animateBallSquash();
+      ballElement.style.left = `${x - ballRadius}px`;
+      ballElement.style.top = `${y - ballRadius}px`;
+      paddleElement.style.left = `${paddleX}px`;
+      drawLives();
+      drawLevel();
+      collisionDetection();
+      if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+        dx = -dx;
+        squeezeFrames = 5; // Trigger squash animation
+      }
+      if (y + dy < ballRadius) {
+        dy = -dy;
+        squeezeFrames = 5; // Trigger squash animation
+      } else if (y + dy > canvas.height - ballRadius - paddleHeight - 40) {
+        if (x + ballRadius > paddleX - 10 && x - ballRadius < paddleX + paddleWidth + 10) {
+          dy = -dy;
+          squeezeFrames = 5; // Trigger squash animation
+        }
+      }
+      if (y > canvas.height) { // Ball is out of the game board
+        lives--;
+        if (lives === 0) {
+          gameRunning = false;
+          startButton.style.display = 'block';
+          startButton.textContent = 'Restart';
+          return;
+        } else {
+          resetBallAndPaddle();
+        }
+      }
+      x += dx;
+      y += dy;
+      if (gameRunning) {
+        requestAnimationFrame(draw);
+      }
+    }
+
+    function resetBallAndPaddle() {
+      x = canvas.width / 2;
+      y = canvas.height - paddleHeight - 50;
+      dx = 2;
+      dy = -2;
+      paddleX = (canvas.width - paddleWidth) / 2;
+    }
+
+    function startGame() {
+      gameRunning = true;
+      lives = 3;
+      currentLevel = 1;
+      setupBricks();
+      resetBallAndPaddle();
+      startButton.style.display = 'none';
+      nextLevelButton.style.display = 'none';
+      draw();
+    }
+
+    function nextLevel() {
+      currentLevel++;
+      if (currentLevel <= levels.length) {
+        setupBricks();
+        resetBallAndPaddle();
+        nextLevelButton.style.display = 'none';
+        gameRunning = true;
+        draw();
+      } else {
+        // Game completed
+        alert("Congratulations! You've completed all levels!");
+        startButton.style.display = 'block';
+        startButton.textContent = 'Play Again';
+      }
+    }
+    startButton.addEventListener('click', startGame);
+    nextLevelButton.addEventListener('click', nextLevel);
+    document.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const relativeX = e.touches[0].clientX - gameContainer.offsetLeft;
+      if (relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth / 2;
+      }
+    }, {
+      passive: false
+    });
+    // Initial setup
+    setupBricks();
+    drawLives();
+    drawLevel();
+  </script>
+</body>
+
+</html>
