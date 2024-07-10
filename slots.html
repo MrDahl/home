@@ -13,15 +13,19 @@
       height: 90%;
       margin: 0;
       background-color: #e0e5ec;
+      user-select: none;
+      text-shadow: 1px 1px 2px #ffffff;
     }
 
     #game {
       text-align: center;
-      background-color: #e0e5ec;      
+      background-color: #e0e5ec;
       padding: 40px;
       margin-top: 20px;
       padding-right: 40px;
       border-radius: 20px;
+      border-top-left-radius: 47%;
+      border-top-right-radius: 47%;
       box-shadow:
         8px 8px 15px #a3b1c6,
         -8px -8px 15px #ffffff;
@@ -38,6 +42,8 @@
       box-shadow:
         inset 5px 5px 10px #a3b1c6,
         inset -5px -5px 10px #ffffff;
+      border-style: solid;
+      border-color: #fff;
     }
 
     .reel {
@@ -54,6 +60,8 @@
       box-shadow:
         inset 2px 2px 5px #a3b1c6,
         inset -2px -2px 5px #ffffff;
+      border-style: solid;
+      border-color: #f1f1f1;
     }
 
     .reel-inner {
@@ -67,6 +75,8 @@
     .emoji {
       height: 80px;
       line-height: 80px;
+      border-style: thin;
+      border-color: #fff;
     }
 
     input,
@@ -78,10 +88,22 @@
       border-radius: 50px;
       background-color: #e0e5ec;
       color: #333;
+      transition: all 0.2s ease;
+      border-style: solid;
+      border-color: #eee;
+    }
+
+    input {
+      box-shadow:
+        inset 2px 2px 5px #a3b1c6,
+        inset -2px -2px 5px #ffffff;
+      ;
+    }
+
+    button {
       box-shadow:
         5px 5px 10px #a3b1c6,
         -5px -5px 10px #ffffff;
-      transition: all 0.2s ease;
     }
 
     input:focus,
@@ -99,7 +121,7 @@
     }
 
     button:disabled {
-      opacity: 0.5;
+      opacity: 0.3;
       cursor: not-allowed;
     }
 
@@ -115,7 +137,7 @@
       align-items: center;
       flex-direction: column;
       color: #333;
-      font-size: 24px;
+      font-size: 1.2em;
     }
 
     #restart {
@@ -132,29 +154,30 @@
     h1 {
       font-size: 8em;
       margin-left: 2.5vh;
-      padding: -60px;
     }
 
     #message {
-      font-size: 20px;
-      color: red;
+      font-size: 1em;
+      color: #ccc;
       margin-top: 20px;
       height: 30px;
-      /* Adjust the height as needed */
     }
 
     #houseMessage {
-      font-size: 3em;
       color: #333;
       text-align: center;
       margin-bottom: 20px;
+    }
+
+    #Illuminati {
+      font-size: 4em;
     }
   </style>
 </head>
 
 <body>
   <div id="game">
-    <h1>🎰</h1>
+    <h1 id="logo">🎰</h1>
     <div id="slots">
       <div class="reel" id="reel1">
         <div class="reel-inner"></div>
@@ -172,7 +195,7 @@
     <div id="message"></div>
   </div>
   <div id="overlay">
-    <div id="houseMessage">The House Always Wins...</div>
+    <div id="houseMessage"><span id="Illuminati">🪬</span></br><span>The House Always Wins...</span></div>
     <button id="restart" onclick="restart()">Restart</button>
   </div>
 
