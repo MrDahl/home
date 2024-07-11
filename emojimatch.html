@@ -36,7 +36,7 @@
       background-color: white;
       border-radius: 20px;
       box-shadow: var(--shadow);
-      padding: 30px;
+      padding: 10px;
       max-width: 500px;
       width: 100%;
     }
@@ -77,7 +77,7 @@
 
     .game-board {
       display: grid;
-      gap: 10px;
+      gap: 5px;
       margin-bottom: 20px;
     }
 
@@ -88,10 +88,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 2em;
       cursor: pointer;
       transition: all 0.3s ease;
       transform-style: preserve-3d;
+      font-size: 1em; /* Base font size */
     }
 
     .tile:hover {
@@ -118,12 +118,9 @@
     }
 
     @keyframes celebrate {
-
-      0%,
-      100% {
+      0%, 100% {
         transform: scale(1);
       }
-
       50% {
         transform: scale(1.1);
       }
@@ -166,11 +163,11 @@
     const levels = {
       easy: {
         grid: 2,
-        emojis: ["😀", "😎"]
+        emojis: ["🎀", "🧩"]
       },
       normal: {
         grid: 4,
-        emojis: ["😀", "😎", "😉", "🤩", "😍", "😁", "🤓", "🧐"]
+        emojis: ["⚜️", "🔱", "🏆", "🎖️", "🧩", "🪙", "🌟", "🔥"]
       },
       hard: {
         grid: 6,
@@ -197,10 +194,7 @@
       updateTime();
       clearInterval(timer);
       timer = setInterval(updateTime, 1000);
-      const {
-        grid,
-        emojis
-      } = levels[level];
+      const { grid, emojis } = levels[level];
       const gameBoard = document.getElementById('gameBoard');
       gameBoard.style.gridTemplateColumns = `repeat(${grid}, 1fr)`;
       gameBoard.innerHTML = '';
@@ -215,6 +209,7 @@
         tile.addEventListener('click', flipTile);
         gameBoard.appendChild(tile);
       });
+      adjustEmojiSizes(); // Add this line to adjust emoji sizes after creating tiles
       document.querySelectorAll('.level-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.level === level);
       });
@@ -224,6 +219,7 @@
       if (flippedTiles.length === 2 || this.classList.contains('flipped')) return;
       this.classList.add('flipped');
       this.textContent = this.dataset.emoji;
+      adjustEmojiSize(this); // Add this line to adjust the flipped emoji size
       flippedTiles.push(this);
       if (flippedTiles.length === 2) {
         setTimeout(checkMatch, 500);
@@ -280,9 +276,25 @@
       }
       return array;
     }
+
+    function adjustEmojiSizes() {
+      const tiles = document.querySelectorAll('.tile');
+      tiles.forEach(adjustEmojiSize);
+    }
+
+    function adjustEmojiSize(tile) {
+      const tileSize = tile.offsetWidth;
+      const fontSize = tileSize * 0.7; // Adjust this multiplier as needed
+      tile.style.fontSize = `${fontSize}px`;
+    }
+
+    // Add a window resize event listener
+    window.addEventListener('resize', adjustEmojiSizes);
+
     document.querySelectorAll('.level-btn').forEach(btn => {
       btn.addEventListener('click', () => startGame(btn.dataset.level));
     });
+
     startGame('easy');
   </script>
 </body>
