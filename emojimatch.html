@@ -28,8 +28,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 85vh;
+      min-height: 100vh;
       padding: 20px;
+      user-select: none;
     }
 
     .game-container {
@@ -91,7 +92,8 @@
       cursor: pointer;
       transition: all 0.3s ease;
       transform-style: preserve-3d;
-      font-size: 1em; /* Base font size */
+      font-size: 1em;
+      /* Base font size */
     }
 
     .tile:hover {
@@ -118,9 +120,12 @@
     }
 
     @keyframes celebrate {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
       }
+
       50% {
         transform: scale(1.1);
       }
@@ -194,7 +199,10 @@
       updateTime();
       clearInterval(timer);
       timer = setInterval(updateTime, 1000);
-      const { grid, emojis } = levels[level];
+      const {
+        grid,
+        emojis
+      } = levels[level];
       const gameBoard = document.getElementById('gameBoard');
       gameBoard.style.gridTemplateColumns = `repeat(${grid}, 1fr)`;
       gameBoard.innerHTML = '';
@@ -287,14 +295,11 @@
       const fontSize = tileSize * 0.7; // Adjust this multiplier as needed
       tile.style.fontSize = `${fontSize}px`;
     }
-
     // Add a window resize event listener
     window.addEventListener('resize', adjustEmojiSizes);
-
     document.querySelectorAll('.level-btn').forEach(btn => {
       btn.addEventListener('click', () => startGame(btn.dataset.level));
     });
-
     startGame('easy');
   </script>
 </body>
