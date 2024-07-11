@@ -1,5 +1,5 @@
 <html lang="da">
-<!-- Copyright © Marc Sonne Dahl - Created July 2024 -->
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,7 @@
       --shadow-light: #ffffff;
       --shadow-dark: #a3b1c6;
       --accent-color: #88a396;
+      --logo-color: #4a4a4a;
     }
 
     body.dark-mode {
@@ -22,6 +23,7 @@
       --shadow-light: #2e2e2e;
       --shadow-dark: #000000;
       --accent-color: #88a396;
+      --logo-color: #e0e5ec;
     }
 
     body {
@@ -30,11 +32,12 @@
       padding: 20px;
       background-color: var(--bg-color);
       color: var(--text-color);
-      min-height: 80vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       user-select: none;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .container {
@@ -55,21 +58,8 @@
       align-items: center;
       font-size: 5rem;
       font-weight: 900;
-      color: #fff;
-      text-shadow: 1px 1px 1px #919191,
-        1px 2px 1px #919191,
-        1px 3px 1px #919191,
-        1px 4px 1px #919191,
-        1px 5px 1px #919191,
-        1px 6px 1px #919191,
-        1px 7px 1px #919191,
-        1px 8px 1px #919191,
-        1px 9px 1px #919191,
-        1px 10px 1px #919191,
-        1px 18px 6px rgba(16, 16, 16, 0.4),
-        1px 22px 10px rgba(16, 16, 16, 0.2),
-        1px 25px 35px rgba(16, 16, 16, 0.2),
-        1px 30px 60px rgba(16, 16, 16, 0.4);
+      color: var(--logo-color);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
     }
 
     h1,
@@ -121,6 +111,7 @@
       background: none;
       border: none;
       color: var(--text-color);
+      transition: color 0.3s;
     }
 
     .input-wrapper {
@@ -142,6 +133,7 @@
       box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
       color: var(--text-color);
       box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .btn {
@@ -156,6 +148,7 @@
       box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
       font-weight: bold;
       box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .btn:hover {
@@ -215,6 +208,7 @@
       border-radius: 15px;
       box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
       font-weight: 600;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .card-front {
@@ -306,11 +300,11 @@
         const card = document.createElement("div");
         card.classList.add("card");
         card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front"></div>
-                        <div class="card-back">${input}</div>
-                    </div>
-                `;
+          <div class="card-inner">
+            <div class="card-front"></div>
+            <div class="card-back">${input}</div>
+          </div>
+        `;
         card.addEventListener("click", function() {
           flipCard(card);
         });
@@ -344,5 +338,5 @@
     });
   </script>
 </body>
-<!-- Copyright © Marc Sonne Dahl - Created July 2024 -->
+
 </html>
