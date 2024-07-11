@@ -3,331 +3,309 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neumorphic Rock, Paper, Scissors, Lizard, Spock</title>
+  <title>Rock Paper Scissors Lizard Spock - Emoji Edition</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
     :root {
-      --bg-color: #e0e5ec;
-      --text-color: #4a4a4a;
-      --highlight-color: #7289da;
-      --shadow-light: #ffffff;
-      --shadow-dark: #a3b1c6;
+      --background-color: #131419;
+      --box-shadow-color-1: rgba(0, 0, 0, .51);
+      --box-shadow-color-2: rgba(255, 255, 255, .05);
+      --border-color: none;
+      --text-color-primary: #0081cb;
+      --text-color-secondary: rgba(255, 255, 255, 0.1);
+      --text-shadow-color: #000;
+      --text-shadow-color-secondary: #000;
+      --hover-border-color: red;
+      --reel-border-color: #131419;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
       margin: 0;
-      padding: 20px;
+      background-color: var(--background-color);
       user-select: none;
+      flex-direction: column;
+      height: 100vh;
     }
 
     .container {
-      background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 400px;
+      background-color: var(--background-color);
       border-radius: 20px;
-      padding: 30px;
-      box-shadow:
-        8px 8px 15px var(--shadow-dark),
-        -8px -8px 15px var(--shadow-light);
-      max-width: 800px;
-      width: 100%;
+      padding: 20px;
+      box-shadow: 8px 8px 15px var(--box-shadow-color-1), -8px -8px 15px var(--box-shadow-color-2);
+      border: 2px solid var(--border-color);
+      color: var(--text-color-primary);
     }
 
-    h1,
-    h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: var(--highlight-color);
-    }
-
-    .buttons {
+    .player-choices {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 30px;
+      gap: 10px;
+      margin-bottom: 20px;
     }
 
     .choice-btn {
-      width: 100px;
-      height: 100px;
+      width: 60px;
+      height: 60px;
       border: none;
-      border-radius: 50%;
-      background-color: var(--bg-color);
-      box-shadow:
-        5px 5px 10px var(--shadow-dark),
-        -5px -5px 10px var(--shadow-light);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      border-radius: 15px;
+      background-color: var(--background-color);
+      font-size: 1.5em;
       cursor: pointer;
       transition: all 0.3s ease;
+      box-shadow: 5px 5px 10px var(--box-shadow-color-1), -5px -5px 10px var(--box-shadow-color-2);
+      border: 3px solid var(--border-color);
     }
 
     .choice-btn:hover {
-      box-shadow:
-        inset 5px 5px 10px var(--shadow-dark),
-        inset -5px -5px 10px var(--shadow-light);
+      box-shadow: inset 5px 5px 10px var(--box-shadow-color-1), inset -5px -5px 10px var(--box-shadow-color-2);
+      border: 4px solid var(--hover-border-color);
     }
 
-    .choice-btn span {
-      font-size: 2.5em;
-      margin-bottom: 5px;
-    }
-
-    .choice-btn small {
-      font-size: 0.8em;
-    }
-
-    .results,
-    .scores,
-    .chosen-options {
-      background-color: var(--bg-color);
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 20px;
-      box-shadow:
-        inset 5px 5px 10px var(--shadow-dark),
-        inset -5px -5px 10px var(--shadow-light);
-    }
-
-    .results p,
-    .scores p,
-    .chosen-option p {
-      margin: 10px 0;
-      text-align: center;
-    }
-
-    .chosen-options {
-      display: flex;
-      justify-content: space-around;
-    }
-
-    .chosen-option {
+    .game-area {
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100%;
     }
 
-    .chosen-option span {
-      font-size: 2em;
-      margin-top: 10px;
-    }
-
-    .win-text {
-      color: #4caf50;
-      font-weight: 600;
-    }
-
-    .lose-text {
-      color: #f44336;
-      font-weight: 600;
-    }
-
-    .rules-diagram {
+    .slot-rules-container {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 30px;
-    }
-
-    .rules-container {
-      display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
+      align-items: center;
+      width: 100%;
       margin-top: 20px;
     }
 
-    .rule {
-      background-color: var(--bg-color);
+    #slot {
+      font-size: 50px;
+      margin: 0 20px;
+      height: 80px;
+      width: 80px;
+      overflow: hidden;
+      background-color: var(--background-color);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 5px 5px 10px var(--box-shadow-color-1), -5px -5px 10px var(--box-shadow-color-2);
+      border: 4px solid var(--border-color);
+    }
+
+    .reel {
+      height: 80px;
+      width: 80px;
+      overflow: hidden;
+      text-align: center;
+      box-sizing: border-box;
+      background-color: var(--background-color);
+      position: relative;
+      border-radius: 10px;
+      box-shadow: inset 2px 2px 5px var(--box-shadow-color-1), inset -2px -2px 5px var(--box-shadow-color-2);
+      border: 1px solid var(--reel-border-color);
+    }
+
+    .reel-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      transition: top 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .emoji {
+      height: 80px;
+      line-height: 80px;
+    }
+
+    .results {
+      text-align: center;
+      font-size: 1.3em;
+      min-height: 40px;
+    }
+
+    .scores {
+      display: flex;
+      justify-content: space-between;
+      width: 30%;
+      font-size: 1em;
+      background-color: var(--background-color);
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: inset 2px 2px 5px var(--box-shadow-color-1), inset -2px -2px 5px var(--box-shadow-color-2);
+      border: 2px solid var(--border-color);
+    }
+
+    h3 {
+      text-align: center;
+      color: var(--text-color-secondary:);
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px var(--text-shadow-color);
+    }
+
+    h4 {
+      text-align: center;
+      color: var(--text-color-secondary);
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 0px var(--text-shadow-color-secondary);
+    }
+
+    .rules {
+      margin: 0 20px;
+      text-align: left;
+      background-color: var(--background-color);
       border-radius: 10px;
       padding: 10px;
-      display: flex;
       align-items: center;
-      box-shadow:
-        3px 3px 6px var(--shadow-dark),
-        -3px -3px 6px var(--shadow-light);
-    }
-
-    .rule span {
-      font-size: 1.5em;
-      margin: 0 5px;
-    }
-
-    .rule-text {
-      font-size: 0.9em;
-      margin-left: 5px;
+      box-shadow: inset 2px 2px 5px var(--box-shadow-color-1), inset -2px -2px 5px var(--box-shadow-color-2);
+      border: 2px solid var(--border-color);
     }
   </style>
+
 </head>
 
 <body>
   <div class="container">
-    <h1>Rock, Paper, Scissors, Lizard, Spock</h1>
-    <div class="buttons">
-      <button class="choice-btn" id="rock">
-        <span>✊</span>
-        <small>Rock</small>
-      </button>
-      <button class="choice-btn" id="paper">
-        <span>✋</span>
-        <small>Paper</small>
-      </button>
-      <button class="choice-btn" id="scissors">
-        <span>✌️</span>
-        <small>Scissors</small>
-      </button>
-      <button class="choice-btn" id="lizard">
-        <span>🤏</span>
-        <small>Lizard</small>
-      </button>
-      <button class="choice-btn" id="spock">
-        <span>🖖</span>
-        <small>Spock</small>
-      </button>
+    <h3>Rock Paper Scissors Lizard Spock</h3>
+    <div class="player-choices">
+      <button class="choice-btn" data-choice="rock">✊</button>
+      <button class="choice-btn" data-choice="paper">✋</button>
+      <button class="choice-btn" data-choice="scissors">✌️</button>
+      <button class="choice-btn" data-choice="lizard">🤏</button>
+      <button class="choice-btn" data-choice="spock">🖖</button>
     </div>
-    <div class="results">
-      <p>Make your choice to start the game.</p>
-    </div>
-    <div class="scores">
-      <p>Your score: <span id="user-score">0</span></p>
-      <p>Computer score: <span id="computer-score">0</span></p>
-    </div>
-    <div class="chosen-options">
-      <div class="chosen-option" id="user-choice">
-        <p>👨🏻 Human:</p>
+    <div class="game-area">
+      <div class="slot-rules-container">
+        <div class="rules">
+          <span>✊ » ✌️ 🤏</span><br>
+          <span>✋ » ✊ 🖖</span><br>
+          <span>✌️ » ✋ 🤏</span><br>
+          <span>🤏 » 🖖 ✋</span><br>
+          <span>🖖 » ✌️ ✊</span>
+        </div>
+        <div id="slot">
+          <div class="reel">
+            <div class="reel-inner"></div>
+          </div>
+        </div>
       </div>
-      <div class="chosen-option" id="computer-choice">
-        <p>💻 Computer:</p>
+      <div class="results">
+        <p>Results</p>
       </div>
-    </div>
-    <div class="rules-diagram">
-      <h2>Game Rules</h2>
-      <div class="rules-container">
-        <div class="rule"><span>✊</span>beats<span>✌️</span><span>🤏</span></div>
-
-        <div class="rule"><span>✋</span>beats<span>✊</span><span>🖖</span></div>
-
-        <div class="rule"><span>✌️</span>beats<span>✋</span><span>🤏</span></div>
-
-        <div class="rule"><span>🤏</span>beats<span>🖖</span><span>✋</span></div>
-
-        <div class="rule"><span>🖖</span>beats<span>✌️</span><span>✊</span></div>
-
+      <div class="scores">
+        <p>👤<span id="player-score">0</span></p>
+        <p>💻<span id="computer-score">0</span></p>
       </div>
     </div>
   </div>
+  <div class="footer">
+    <h4>Created by Marc Sonne Dahl © 2024</h4>
+  </div>
 
   <script>
-    // The JavaScript remains the same as in the previous version
-    document.addEventListener('DOMContentLoaded', () => {
-      const choices = {
-        lizard: {
-          wins: ['spock', 'paper'],
-          loses: ['scissors', 'rock']
-        },
-        spock: {
-          wins: ['scissors', 'rock'],
-          loses: ['lizard', 'paper']
-        },
-        paper: {
-          wins: ['rock', 'spock'],
-          loses: ['scissors', 'lizard']
-        },
-        scissors: {
-          wins: ['paper', 'lizard'],
-          loses: ['rock', 'spock']
-        },
-        rock: {
-          wins: ['scissors', 'lizard'],
-          loses: ['paper', 'spock']
+    const choices = {
+      rock: {
+        emoji: '✊',
+        wins: ['scissors', 'lizard']
+      },
+      paper: {
+        emoji: '✋',
+        wins: ['rock', 'spock']
+      },
+      scissors: {
+        emoji: '✌️',
+        wins: ['paper', 'lizard']
+      },
+      lizard: {
+        emoji: '🤏',
+        wins: ['paper', 'spock']
+      },
+      spock: {
+        emoji: '🖖',
+        wins: ['scissors', 'rock']
+      }
+    };
+    const choiceButtons = document.querySelectorAll('.choice-btn');
+    const resultsDiv = document.querySelector('.results p');
+    const playerScoreSpan = document.getElementById('player-score');
+    const computerScoreSpan = document.getElementById('computer-score');
+    const reelInner = document.querySelector('.reel-inner');
+    let playerScore = 0;
+    let computerScore = 0;
+    let isSpinning = false;
+
+    function createReelContent() {
+      reelInner.innerHTML = '';
+      const reelContent = [];
+      for (let i = 0; i < 30; i++) {
+        const emoji = Object.values(choices)[Math.floor(Math.random() * 5)].emoji;
+        reelContent.push(emoji);
+      }
+      // Duplicate the content to create a seamless loop
+      reelInner.innerHTML = reelContent.concat(reelContent).map(emoji => `<div class="emoji">${emoji}</div>`).join('');
+    }
+    createReelContent();
+    choiceButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        if (!isSpinning) {
+          const playerChoice = button.dataset.choice;
+          spinAndPlay(playerChoice);
         }
-      };
-      const buttons = document.querySelectorAll('.choice-btn');
-      const resultsDiv = document.querySelector('.results p');
-      const userScoreSpan = document.getElementById('user-score');
-      const computerScoreSpan = document.getElementById('computer-score');
-      const userChoiceDiv = document.getElementById('user-choice');
-      const computerChoiceDiv = document.getElementById('computer-choice');
-      let userScore = 0;
-      let computerScore = 0;
-      buttons.forEach(button => {
-        button.addEventListener('click', () => {
-          const userChoice = button.id;
-          const computerChoice = getComputerChoice();
-          const result = getResult(userChoice, computerChoice);
-          updateScores(result);
-          displayResult(result, userChoice, computerChoice);
-          displayChoices(userChoice, computerChoice);
-        });
       });
-
-      function getComputerChoice() {
-        const keys = Object.keys(choices);
-        return keys[Math.floor(Math.random() * keys.length)];
-      }
-
-      function getResult(userChoice, computerChoice) {
-        if (userChoice === computerChoice) {
-          return 'draw';
-        } else if (choices[userChoice].wins.includes(computerChoice)) {
-          return 'win';
-        } else {
-          return 'lose';
-        }
-      }
-
-      function updateScores(result) {
-        if (result === 'win') {
-          userScore++;
-        } else if (result === 'lose') {
-          computerScore++;
-        }
-        userScoreSpan.textContent = userScore;
-        computerScoreSpan.textContent = computerScore;
-      }
-
-      function displayResult(result, userChoice, computerChoice) {
-        let resultText = '';
-        if (result === 'win') {
-          resultText = `You win! ${capitalize(userChoice)} beats ${computerChoice}.`;
-        } else if (result === 'lose') {
-          resultText = `You lose! ${capitalize(computerChoice)} beats ${userChoice}.`;
-        } else {
-          resultText = `It's a draw! You both chose ${capitalize(userChoice)}.`;
-        }
-        resultsDiv.textContent = resultText;
-        resultsDiv.className = result === 'win' ? 'win-text' : (result === 'lose' ? 'lose-text' : '');
-      }
-
-      function displayChoices(userChoice, computerChoice) {
-        userChoiceDiv.innerHTML = `<p>👨🏻 Human:</p><span>${getEmoji(userChoice)}</span>`;
-        computerChoiceDiv.innerHTML = `<p>💻 Computer:</p><span>${getEmoji(computerChoice)}</span>`;
-      }
-
-      function getEmoji(choice) {
-        const emojis = {
-          rock: '✊',
-          paper: '✋',
-          scissors: '✌️',
-          lizard: '🤏',
-          spock: '🖖'
-        };
-        return emojis[choice];
-      }
-
-      function capitalize(word) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      }
     });
+
+    function spin(duration) {
+      return new Promise((resolve) => {
+        const itemHeight = 80;
+        const totalItems = reelInner.children.length / 2; // We duplicated the content
+        // Calculate a random stopping position
+        const stopPosition = Math.floor(Math.random() * totalItems);
+        const spinDistance = (totalItems + stopPosition) * itemHeight;
+        reelInner.style.transition = `top ${duration}ms cubic-bezier(0.25, 0.1, 0.25, 1)`;
+        reelInner.style.top = `-${spinDistance}px`;
+        setTimeout(() => {
+          reelInner.style.transition = 'none';
+          reelInner.style.top = `-${stopPosition * itemHeight}px`;
+          const result = reelInner.children[stopPosition].textContent;
+          resolve(result);
+        }, duration);
+      });
+    }
+    async function spinAndPlay(playerChoice) {
+      isSpinning = true;
+      resultsDiv.textContent = 'Spinning...';
+      const computerEmoji = await spin(3000);
+      const computerChoice = Object.keys(choices).find(key => choices[key].emoji === computerEmoji);
+      const result = getResult(playerChoice, computerChoice);
+      updateScores(result);
+      displayResult(result, playerChoice, computerChoice);
+      isSpinning = false;
+    }
+
+    function getResult(playerChoice, computerChoice) {
+      if (playerChoice === computerChoice) return 'draw';
+      if (choices[playerChoice].wins.includes(computerChoice)) return 'win';
+      return 'lose';
+    }
+
+    function updateScores(result) {
+      if (result === 'win') playerScore++;
+      else if (result === 'lose') computerScore++;
+      playerScoreSpan.textContent = playerScore;
+      computerScoreSpan.textContent = computerScore;
+    }
+
+    function displayResult(result, playerChoice, computerChoice) {
+      const resultText = result === 'win' ? 'You win!' :
+        result === 'lose' ? 'You lose!' :
+        "It's a draw!";
+      resultsDiv.textContent = `${resultText} ${choices[playerChoice].emoji} vs ${choices[computerChoice].emoji}`;
+    }
   </script>
 </body>
 
