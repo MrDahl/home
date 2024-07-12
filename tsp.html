@@ -10,77 +10,71 @@ distance(): Helper function to calculate the distance between two points.
 This implementation is simplified and uses a basic heuristic for educational purposes. For more accurate TSP solutions, more sophisticated algorithms like dynamic programming or genetic algorithms can be implemented. -->
 
 <html lang="en">
-
 <head>
-  <!-- Copyright Marc Sonne Dahl - 2024 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Traveling Salesman Problem (TSP)</title>
+  <title>Enhanced Traveling Salesman Problem (TSP) with Background</title>
   <style>
-    html,
-    body {
+    html, body {
       user-select: none;
       height: 100%;
       margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      font-family: Arial, sans-serif;
     }
-
-    canvas {
-      border: none;
-      background: grey;
-      width: 100%;
-      height: calc(100% - 50px);
-    }
-
     .container {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      width: 100%;
       height: 100%;
     }
-
-    .button-container {
+    canvas {
+      flex-grow: 1;
+      background: #2c3e50;
+    }
+    .controls {
+      background: #34495e;
+      padding: 10px;
       display: flex;
       justify-content: space-between;
-      width: 100%;
+      align-items: center;
+      flex-wrap: wrap;
     }
-
     button {
-      width: 50%;
-      height: 50px;
-      background-color: darkgrey;
+      background-color: #3498db;
       border: none;
-      box-shadow: 5px 10px #888888;
       color: white;
-      font-weight: bold;
+      padding: 10px 20px;
       text-align: center;
       text-decoration: none;
       display: inline-block;
       font-size: 16px;
+      margin: 4px 2px;
       cursor: pointer;
-      margin: 0;
-      border-shadow: black;
-      text-shadow: inset 0px 2px #474747;
+      transition: background-color 0.3s;
     }
-
     button:hover {
-      background-color: grey;
-      box-shadow: inset 0px 1px 5px #474747;
-      text-shadow: 0px 2px #474747;
+      background-color: #2980b9;
+    }
+    #stats {
+      color: white;
+      margin-right: 10px;
+    }
+    #fileInput {
+      display: none;
     }
   </style>
 </head>
-
 <body>
   <div class="container">
     <canvas id="canvas"></canvas>
-    <div class="button-container">
-      <button id="routeBtn">Shortest route</button>
-      <button id="uploadBtn">Upload Background</button>
+    <div class="controls">
+      <div>
+        <button id="routeBtn">Calculate Route</button>
+        <button id="clearBtn">Clear Points</button>
+        <button id="randomBtn">Add Random Points</button>
+        <button id="uploadBtn">Upload Background</button>
+        <input type="file" id="fileInput" accept="image/*">
+      </div>
+      <div id="stats">Points: 0 | Distance: 0</div>
     </div>
   </div>
 
@@ -88,140 +82,139 @@ This implementation is simplified and uses a basic heuristic for educational pur
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const routeBtn = document.getElementById('routeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const randomBtn = document.getElementById('randomBtn');
     const uploadBtn = document.getElementById('uploadBtn');
-    let backgroundImage = null;
+    const fileInput = document.getElementById('fileInput');
+    const statsEl = document.getElementById('stats');
+
     let points = [];
+    let route = [];
+    let totalDistance = 0;
+    let backgroundImage = null;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight - routeBtn.offsetHeight;
+      canvas.height = window.innerHeight - 60;
       drawCanvas();
     }
+
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
+
     canvas.addEventListener('click', (event) => {
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
+      
       const clickedPointIndex = getClickedPointIndex(x, y);
       if (clickedPointIndex !== -1) {
         points.splice(clickedPointIndex, 1);
-        drawCanvas();
       } else {
-        points.push({
-          x,
-          y
-        });
-        drawCanvas();
+        points.push({ x, y });
       }
-    });
-    routeBtn.addEventListener('click', () => {
-      if (routeBtn.innerText === 'Shortest route') {
-        if (points.length > 1) {
-          const route = findShortestRoute(points);
-          drawRoute(route);
-        }
-        routeBtn.innerText = 'Reset';
-      } else {
-        points = [];
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawBackground();
-        routeBtn.innerText = 'Shortest route';
-      }
-    });
-    uploadBtn.addEventListener('click', () => {
-      if (uploadBtn.innerText === 'Upload Background') {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = handleFileUpload;
-        input.click();
-      } else {
-        backgroundImage = null;
-        drawBackground();
-        uploadBtn.innerText = 'Upload Background';
-      }
+      
+      route = [];
+      totalDistance = 0;
+      drawCanvas();
+      updateStats();
     });
 
-    function handleFileUpload(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        backgroundImage = new Image();
-        backgroundImage.onload = function() {
-          drawBackground();
-          uploadBtn.innerText = 'Remove Background';
-        };
-        backgroundImage.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
+    routeBtn.addEventListener('click', calculateRoute);
+    clearBtn.addEventListener('click', clearPoints);
+    randomBtn.addEventListener('click', addRandomPoints);
+    uploadBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', handleFileUpload);
 
     function drawCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawBackground();
       drawPoints();
+      if (route.length > 0) {
+        drawRoute();
+      }
+    }
+
+    function drawBackground() {
+      if (backgroundImage) {
+        ctx.globalAlpha = 0.5;
+        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+        ctx.globalAlpha = 1.0;
+      } else {
+        ctx.fillStyle = '#2c3e50';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
     }
 
     function drawPoints() {
       points.forEach((point, index) => {
         ctx.beginPath();
         ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
-        ctx.fillStyle = index === 0 ? 'orange' : 'white';
+        ctx.fillStyle = index === 0 ? '#e74c3c' : '#ecf0f1';
         ctx.fill();
         ctx.closePath();
       });
     }
 
-    function drawRoute(route) {
+    function drawRoute() {
       ctx.beginPath();
       ctx.moveTo(route[0].x, route[0].y);
       for (let i = 1; i < route.length; i++) {
         ctx.lineTo(route[i].x, route[i].y);
       }
-      ctx.lineTo(route[0].x, route[0].y); // Return to home
-      ctx.strokeStyle = 'white';
+      ctx.lineTo(route[0].x, route[0].y);
+      ctx.strokeStyle = '#2ecc71';
+      ctx.lineWidth = 2;
       ctx.stroke();
       ctx.closePath();
     }
 
-function drawBackground() {
-  if (backgroundImage) {
-    ctx.globalAlpha = 0.6; // Set transparency level
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-    ctx.globalAlpha = 1; // Reset global alpha
-  } else {
-    ctx.fillStyle = 'grey';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-}
+    function calculateRoute() {
+      if (points.length < 2) return;
+      
+      route = findShortestRoute(points);
+      totalDistance = calculateTotalDistance(route);
+      drawCanvas();
+      updateStats();
+    }
 
     function findShortestRoute(points) {
       const route = [points[0]];
-      const visited = new Set([0]);
-      while (route.length < points.length) {
-        let lastPoint = route[route.length - 1];
-        let nearestPoint = null;
-        let nearestIndex = -1;
-        let minDist = Infinity;
-        points.forEach((point, index) => {
-          if (!visited.has(index)) {
-            const dist = distance(lastPoint, point);
-            if (dist < minDist) {
-              minDist = dist;
-              nearestPoint = point;
-              nearestIndex = index;
-            }
+      const unvisited = points.slice(1);
+      
+      while (unvisited.length > 0) {
+        const lastPoint = route[route.length - 1];
+        let nearestPoint;
+        let nearestDistance = Infinity;
+        let nearestIndex;
+
+        unvisited.forEach((point, index) => {
+          const dist = distance(lastPoint, point);
+          if (dist < nearestDistance) {
+            nearestDistance = dist;
+            nearestPoint = point;
+            nearestIndex = index;
           }
         });
+
         route.push(nearestPoint);
-        visited.add(nearestIndex);
+        unvisited.splice(nearestIndex, 1);
       }
+
       return route;
     }
 
     function distance(point1, point2) {
       return Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2);
+    }
+
+    function calculateTotalDistance(route) {
+      let total = 0;
+      for (let i = 0; i < route.length; i++) {
+        const nextIndex = (i + 1) % route.length;
+        total += distance(route[i], route[nextIndex]);
+      }
+      return total;
     }
 
     function getClickedPointIndex(x, y) {
@@ -232,10 +225,53 @@ function drawBackground() {
           return i;
         }
       }
-      return -1; // No point clicked
+      return -1;
     }
-  </script>
-  <!-- Copyright Marc Sonne Dahl - 2024 -->
-</body>
 
+    function clearPoints() {
+      points = [];
+      route = [];
+      totalDistance = 0;
+      drawCanvas();
+      updateStats();
+    }
+
+    function addRandomPoints() {
+      const numPoints = 5;
+      for (let i = 0; i < numPoints; i++) {
+        points.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height
+        });
+      }
+      route = [];
+      totalDistance = 0;
+      drawCanvas();
+      updateStats();
+    }
+
+    function updateStats() {
+      statsEl.textContent = `Points: ${points.length} | Distance: ${totalDistance.toFixed(2)}`;
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          backgroundImage = new Image();
+          backgroundImage.onload = function() {
+            drawCanvas();
+          };
+          backgroundImage.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Initial draw
+    drawCanvas();
+    updateStats();
+  </script>
+</body>
 </html>
