@@ -12,14 +12,15 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #e0e5ec;
+      background: linear-gradient(135deg, #e0e5ec, #ffffff);
       font-family: Arial, sans-serif;
+      user-select: none;
     }
 
     #gameContainer {
       width: 300px;
       height: 600px;
-      background-color: #e0e5ec;
+      background: linear-gradient(145deg, #ffffff, #d1d9e6);
       border-radius: 20px;
       box-shadow: 8px 8px 15px #a3b1c6, -8px -8px 15px #ffffff;
       overflow: hidden;
@@ -50,20 +51,26 @@
       box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
     }
 
-    #lives {
+    #lives,
+    #level,
+    #score {
       position: absolute;
       top: 10px;
-      left: 10px;
       font-size: 16px;
       color: #333;
     }
 
+    #lives {
+      left: 10px;
+    }
+
     #level {
-      position: absolute;
-      top: 10px;
       right: 10px;
-      font-size: 16px;
-      color: #333;
+    }
+
+    #score {
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .paddle,
@@ -78,23 +85,20 @@
       height: 8px;
       width: 100px;
       bottom: 40px;
-      /* Adjust position as needed */
       border-radius: 10px;
     }
 
     .ball {
       width: 12px;
-      /* ball diameter */
       height: 12px;
       border-radius: 50%;
+      transition: transform 0.1s;
     }
 
     .brick {
       width: 18px;
       height: 18px;
       border-radius: 5px;
-      background-color: #e0e5ec;
-      box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
     }
   </style>
 </head>
@@ -106,9 +110,14 @@
     <button id="nextLevelButton" class="button" style="display: none;">Next Level</button>
     <div id="lives">Lives: 3</div>
     <div id="level">Level: 1</div>
+    <div id="score">Score: 0</div>
     <div id="paddle" class="paddle"></div>
     <div id="ball" class="ball"></div>
   </div>
+
+  <audio id="paddleSound" src="paddle.mp3"></audio>
+  <audio id="brickSound" src="brick.mp3"></audio>
+  <audio id="wallSound" src="wall.mp3"></audio>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -117,10 +126,13 @@
     const nextLevelButton = document.getElementById('nextLevelButton');
     const livesDisplay = document.getElementById('lives');
     const levelDisplay = document.getElementById('level');
+    const scoreDisplay = document.getElementById('score');
     const paddleElement = document.getElementById('paddle');
     const ballElement = document.getElementById('ball');
     const gameContainer = document.getElementById('gameContainer');
-    // Game variables
+    const paddleSound = document.getElementById('paddleSound');
+    const brickSound = document.getElementById('brickSound');
+    const wallSound = document.getElementById('wallSound');
     let paddleWidth = 100;
     let paddleHeight = 8;
     let paddleX = (canvas.width - paddleWidth) / 2;
@@ -134,7 +146,7 @@
     let currentLevel = 1;
     let ballSqueeze = 1;
     let squeezeFrames = 0;
-    // Define levels
+    let score = 0;
     const levels = [
       // Level 1
       [
@@ -171,9 +183,7 @@
         [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
         [0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0],
       ]
-      // Add more levels here following the same pattern
     ];
-    // Set up bricks based on current level
     let bricks = [];
 
     function setupBricks() {
@@ -220,7 +230,9 @@
           dy = -dy;
           gameContainer.removeChild(brick);
           bricks = bricks.filter(b => b !== brick);
-          squeezeFrames = 5; // Trigger squash animation
+          squeezeFrames = 5;
+          score += 10;
+          brickSound.play();
           if (checkLevelComplete()) {
             showNextLevelButton();
           }
@@ -245,6 +257,10 @@
       levelDisplay.textContent = `Level: ${currentLevel}`;
     }
 
+    function drawScore() {
+      scoreDisplay.textContent = `Score: ${score}`;
+    }
+
     function draw() {
       animateBallSquash();
       ballElement.style.left = `${x - ballRadius}px`;
@@ -252,21 +268,35 @@
       paddleElement.style.left = `${paddleX}px`;
       drawLives();
       drawLevel();
+      drawScore();
       collisionDetection();
+      // Wall collisions
       if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
         dx = -dx;
-        squeezeFrames = 5; // Trigger squash animation
+        squeezeFrames = 5;
+        wallSound.play();
       }
       if (y + dy < ballRadius) {
         dy = -dy;
-        squeezeFrames = 5; // Trigger squash animation
+        squeezeFrames = 5;
+        wallSound.play();
       } else if (y + dy > canvas.height - ballRadius - paddleHeight - 40) {
         if (x + ballRadius > paddleX - 10 && x - ballRadius < paddleX + paddleWidth + 10) {
+          // Paddle collision
           dy = -dy;
-          squeezeFrames = 5; // Trigger squash animation
+          squeezeFrames = 5;
+          paddleSound.play();
+          // Calculate new angle based on where the ball hit the paddle
+          let relativeIntersectX = (x - (paddleX + paddleWidth / 2)) / (paddleWidth / 2);
+          let bounceAngle = relativeIntersectX * (Math.PI / 3); // Max angle: 60 degrees
+          // Calculate new velocity components
+          let speed = Math.sqrt(dx * dx + dy * dy);
+          dx = speed * Math.sin(bounceAngle);
+          dy = -speed * Math.cos(bounceAngle);
         }
       }
-      if (y > canvas.height) { // Ball is out of the game board
+      // Ball out of bounds
+      if (y > canvas.height) {
         lives--;
         if (lives === 0) {
           gameRunning = false;
@@ -295,6 +325,7 @@
     function startGame() {
       gameRunning = true;
       lives = 3;
+      score = 0;
       currentLevel = 1;
       setupBricks();
       resetBallAndPaddle();
@@ -312,7 +343,6 @@
         gameRunning = true;
         draw();
       } else {
-        // Game completed
         alert("Congratulations! You've completed all levels!");
         startButton.style.display = 'block';
         startButton.textContent = 'Play Again';
@@ -329,10 +359,10 @@
     }, {
       passive: false
     });
-    // Initial setup
     setupBricks();
     drawLives();
     drawLevel();
+    drawScore();
   </script>
 </body>
 
