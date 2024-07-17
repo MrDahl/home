@@ -1,0 +1,615 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S.P.E.C.I.A.L Duels - The Game</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2a2a2a;
+      --secondary-color: #3a3a3a;
+      --accent-color: #00c6ff;
+      --text-color: #e0e0e0;
+      --shadow-color: rgba(0, 0, 0, 0.3);
+      --glass-bg: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--primary-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    .game-container {
+      background: linear-gradient(145deg, #2c2c2c, #323232);
+      border-radius: 20px;
+      box-shadow: 20px 20px 60px #1a1a1a, -20px -20px 60px #3a3a3a;
+      padding: 40px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent-color);
+      text-align: center;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px var(--shadow-color);
+    }
+
+    .special-stats,
+    .duel-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .special-stat,
+    .duel-option {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: inset 2px 2px 5px var(--shadow-color), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .special-stat:hover,
+    .duel-option:hover {
+      transform: translateY(-5px);
+      box-shadow: inset 2px 2px 5px var(--shadow-color), inset -2px -2px 5px rgba(255, 255, 255, 0.05), 0 8px 15px var(--shadow-color);
+    }
+
+    .special-stat label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: var(--accent-color);
+    }
+
+    .special-stat input {
+      width: 70px;
+      text-align: center;
+      font-size: 1.2em;
+      background: var(--secondary-color);
+      border: 2px solid var(--accent-color);
+      border-radius: 8px;
+      padding: 8px;
+      color: var(--text-color);
+    }
+
+    .duel-option {
+      cursor: pointer;
+      background: linear-gradient(145deg, #3a3a3a, #2c2c2c);
+      color: var(--accent-color);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .duel-option:hover {
+      background: linear-gradient(145deg, #2c2c2c, #3a3a3a);
+    }
+
+    button {
+      background: linear-gradient(145deg, var(--accent-color), #0099cc);
+      color: var(--primary-color);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background 0.3s, transform 0.3s;
+      box-shadow: 3px 3px 10px var(--shadow-color);
+    }
+
+    button:hover {
+      background: linear-gradient(145deg, #0099cc, var(--accent-color));
+      transform: translateY(-2px);
+      box-shadow: 5px 5px 15px var(--shadow-color);
+    }
+
+    #game-log {
+      margin-top: 30px;
+      border: 1px solid var(--accent-color);
+      padding: 20px;
+      height: 250px;
+      overflow-y: scroll;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      font-family: 'Courier New', monospace;
+      color: var(--text-color);
+    }
+
+    .stats-display {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 30px;
+    }
+
+    .stats-column {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: inset 2px 2px 5px var(--shadow-color), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+      flex: 1;
+      margin: 0 15px;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .overlay-content {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 0 30px var(--shadow-color);
+    }
+
+    .icon {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      color: var(--accent-color);
+    }
+
+    #points-remaining,
+    #current-level {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+
+    .adjust-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .adjust-buttons button {
+      padding: 8px 12px;
+      font-size: 1.2em;
+    }
+
+    .stat-adjust {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .stat-adjust button {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+
+    #distribute-points {
+      margin-top: 25px;
+      padding: 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      box-shadow: inset 2px 2px 5px var(--shadow-color), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+    }
+
+    /* Scrollbar Styles */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--secondary-color);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0099cc;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="game-container">
+    <h1><i class="fas fa-gamepad"></i> S.P.E.C.I.A.L Duels</h1>
+    <div id="character-creation">
+      <h2><i class="fas fa-user-plus"></i> Character Creation</h2>
+      <div class="special-stats">
+        <div class="special-stat">
+          <i class="icon fas fa-dumbbell"></i>
+          <label for="strength">Strength</label>
+          <div class="adjust-buttons">
+            <button class="decrement" data-stat="strength">-</button>
+            <input type="number" id="strength" min="0" max="12" value="0">
+            <button class="increment" data-stat="strength">+</button>
+          </div>
+        </div>
+        <div class="special-stat">
+          <i class="icon fas fa-eye"></i>
+          <label for="perception">Perception</label>
+          <div class="adjust-buttons">
+            <button class="decrement" data-stat="perception">-</button>
+            <input type="number" id="perception" min="0" max="12" value="0">
+            <button class="increment" data-stat="perception">+</button>
+          </div>
+        </div>
+        <div class="special-stat">
+          <i class="icon fas fa-heartbeat"></i>
+          <label for="endurance">Endurance</label>
+          <div class="adjust-buttons">
+            <button class="decrement" data-stat="endurance">-</button>
+            <input type="number" id="endurance" min="0" max="12" value="0">
+            <button class="increment" data-stat="endurance">+</button>
+          </div>
+        </div>
+        <div class="special-stat">
+          <i class="icon fas fa-comments"></i>
+          <label for="charisma">Charisma</label>
+          <div class="adjust-buttons">
+            <button class="decrement" data-stat="charisma">-</button>
+            <input type="number" id="charisma" min="0" max="12" value="0">
+            <button class="increment" data-stat="charisma">+</button>
+          </div>
+        </div>
+        <div class="special-stat">
+          <i class="icon fas fa-brain"></i>
+          <label for="intelligence">Intelligence</label>
+          <div class="adjust-buttons">
+            <button class="decrement" data-stat="intelligence">-</button>
+            <input type="number" id="intelligence" min="0" max="12" value="0">
+            <button class="increment" data-stat="intelligence">+</button>
+          </div>
+        </div>
+        <div class="special-stat">
+          <i class="icon fas fa-running"></i>
+          <label for="agility">Agility</label>
+          <div class="adjust-buttons">
+            <button class="decrement" data-stat="agility">-</button>
+            <input type="number" id="agility" min="0" max="12" value="0">
+            <button class="increment" data-stat="agility">+</button>
+          </div>
+        </div>
+        <div class="special-stat">
+          <i class="icon fas fa-clover"></i>
+          <label for="luck">Luck</label>
+          <div class="adjust-buttons">
+            <button class="decrement" data-stat="luck">-</button>
+            <input type="number" id="luck" min="0" max="12" value="0">
+            <button class="increment" data-stat="luck">+</button>
+          </div>
+        </div>
+      </div>
+      <p>Points remaining: <span id="points-remaining">18</span></p>
+      <button id="create-character"><i class="fas fa-user-check"></i> Create Character</button>
+    </div>
+    <div id="game-area" style="display: none;">
+      <h2>Level: <span id="current-level">1</span></h2>
+      <div class="stats-display">
+        <div class="stats-column">
+          <h3><i class="fas fa-user"></i> Your Stats</h3>
+          <div id="human-stats"></div>
+          <div id="distribute-points">
+            <p>Points to distribute: <span id="points-to-distribute">0</span></p>
+            <button id="confirm-distribution">Confirm Distribution</button>
+          </div>
+        </div>
+        <div class="stats-column">
+          <h3><i class="fas fa-robot"></i> Computer Stats</h3>
+          <div id="computer-stats"></div>
+        </div>
+      </div>
+      <h2><i class="fas fa-fist-raised"></i> Choose Your Duel</h2>
+      <div class="duel-options">
+        <button class="duel-option" data-duel="ArmWrestling"><i class="fas fa-hand-rock"></i> Arm Wrestling</button>
+        <button class="duel-option" data-duel="Darts"><i class="fas fa-bullseye"></i> Darts</button>
+        <button class="duel-option" data-duel="MarathonRun"><i class="fas fa-running"></i> Marathon Run</button>
+        <button class="duel-option" data-duel="PitchingIdea"><i class="fas fa-lightbulb"></i> Pitching Idea</button>
+        <button class="duel-option" data-duel="Chess"><i class="fas fa-chess"></i> Chess</button>
+        <button class="duel-option" data-duel="BootCamp"><i class="fas fa-campground"></i> Boot Camp</button>
+        <button class="duel-option" data-duel="Blackjack"><i class="fas fa-dice"></i> Blackjack</button>
+      </div>
+      <div id="game-log"></div>
+    </div>
+  </div>
+
+  <div id="game-over-overlay" class="overlay">
+    <div class="overlay-content">
+      <h2><i class="fas fa-skull-crossbones"></i> Game Over!</h2>
+      <button id="restart-game-over"><i class="fas fa-redo"></i> Restart Game</button>
+    </div>
+  </div>
+
+  <div id="you-won-overlay" class="overlay">
+    <div class="overlay-content">
+      <h2><i class="fas fa-crown"></i> You Won!</h2>
+      <button id="restart-you-won"><i class="fas fa-redo"></i> Restart Game</button>
+    </div>
+  </div>
+
+  <script>
+    const specialStats = ['strength', 'perception', 'endurance', 'charisma', 'intelligence', 'agility', 'luck'];
+    const duels = {
+      ArmWrestling: ['strength', 'endurance', 'agility'],
+      Darts: ['perception', 'agility', 'intelligence'],
+      MarathonRun: ['endurance', 'luck', 'strength'],
+      PitchingIdea: ['intelligence', 'charisma', 'perception'],
+      Chess: ['intelligence', 'charisma', 'luck'],
+      BootCamp: ['endurance', 'strength', 'agility'],
+      Blackjack: ['intelligence', 'luck', 'perception']
+    };
+    let human = {};
+    let computer = {};
+    let currentLevel = 1;
+    let pointsRemaining = 18;
+    let pointsToDistribute = 0;
+    let lossesAtCurrentLevel = 0;
+    document.getElementById('restart-game-over').addEventListener('click', restartGame);
+    document.getElementById('restart-you-won').addEventListener('click', restartGame);
+
+    function updatePointsRemaining() {
+      const usedPoints = specialStats.reduce((sum, stat) => sum + parseInt(document.getElementById(stat).value), 0);
+      pointsRemaining = 18 - usedPoints;
+      document.getElementById('points-remaining').textContent = pointsRemaining;
+    }
+    specialStats.forEach(stat => {
+      document.getElementById(stat).addEventListener('input', updatePointsRemaining);
+    });
+    document.querySelectorAll('.increment').forEach(button => {
+      button.addEventListener('click', () => adjustStat(button.dataset.stat, 1));
+    });
+    document.querySelectorAll('.decrement').forEach(button => {
+      button.addEventListener('click', () => adjustStat(button.dataset.stat, -1));
+    });
+
+    function adjustStat(stat, increment) {
+      const input = document.getElementById(stat);
+      const newValue = parseInt(input.value) + increment;
+      if (newValue >= 0 && newValue <= 12 && pointsRemaining - increment >= 0) {
+        input.value = newValue;
+        updatePointsRemaining();
+      }
+    }
+    document.getElementById('create-character').addEventListener('click', () => {
+      if (pointsRemaining !== 0) {
+        alert('Please use all 18 points before creating your character.');
+        return;
+      }
+      specialStats.forEach(stat => {
+        human[stat] = parseInt(document.getElementById(stat).value);
+      });
+      createComputerCharacter();
+      document.getElementById('character-creation').style.display = 'none';
+      document.getElementById('game-area').style.display = 'block';
+      updateStatsDisplay();
+      logMessage('Character created! Let the duels begin!');
+    });
+
+    function createComputerCharacter() {
+      const computerPoints = 18 + (currentLevel - 1) * 3;
+      specialStats.forEach(stat => {
+        computer[stat] = 0;
+      });
+      for (let i = 0; i < computerPoints; i++) {
+        const randomStat = specialStats[Math.floor(Math.random() * specialStats.length)];
+        if (computer[randomStat] < 12) {
+          computer[randomStat]++;
+        } else {
+          i--;
+        }
+      }
+    }
+
+    function updateStatsDisplay() {
+      const humanStatsDiv = document.getElementById('human-stats');
+      const computerStatsDiv = document.getElementById('computer-stats');
+      humanStatsDiv.innerHTML = '';
+      computerStatsDiv.innerHTML = '';
+      specialStats.forEach(stat => {
+        humanStatsDiv.innerHTML += `
+          <div class="stat-adjust">
+            <span>${stat.charAt(0).toUpperCase() + stat.slice(1)}: ${human[stat]}</span>
+            <div>
+              <button class="decrement-stat" data-stat="${stat}">-</button>
+              <button class="increment-stat" data-stat="${stat}">+</button>
+            </div>
+          </div>`;
+        computerStatsDiv.innerHTML += `<p>${stat.charAt(0).toUpperCase() + stat.slice(1)}: ${computer[stat]}</p>`;
+      });
+      document.getElementById('current-level').textContent = currentLevel;
+      // Add event listeners for stat adjustment buttons
+      document.querySelectorAll('.increment-stat').forEach(button => {
+        button.addEventListener('click', () => adjustStatDuringGame(button.dataset.stat, 1));
+      });
+      document.querySelectorAll('.decrement-stat').forEach(button => {
+        button.addEventListener('click', () => adjustStatDuringGame(button.dataset.stat, -1));
+      });
+    }
+
+    function adjustStatDuringGame(stat, increment) {
+      if (pointsToDistribute > 0 || increment < 0) {
+        if (human[stat] + increment >= 0 && human[stat] + increment <= 12) {
+          human[stat] += increment;
+          pointsToDistribute -= increment;
+          updateStatsDisplay();
+          document.getElementById('points-to-distribute').textContent = pointsToDistribute;
+        }
+      }
+    }
+    document.querySelectorAll('.duel-option').forEach(button => {
+      button.addEventListener('click', () => startDuel(button.dataset.duel));
+    });
+
+    function startDuel(humanChoice) {
+      const computerChoice = getBestDuelForComputer();
+      const diceRollHuman = Math.floor(Math.random() * 6) + 1;
+      const diceRollComputer = Math.floor(Math.random() * 6) + 1;
+      logMessage(`You chose ${humanChoice}. Computer chose ${computerChoice}.`);
+      logMessage(`You rolled a ${diceRollHuman}. Computer rolled a ${diceRollComputer}.`);
+      let chosenDuel;
+      if (diceRollHuman > diceRollComputer) {
+        chosenDuel = humanChoice;
+        logMessage('You won the dice roll! Your duel was chosen.');
+      } else if (diceRollComputer > diceRollHuman) {
+        chosenDuel = computerChoice;
+        logMessage('Computer won the dice roll! Computer\'s duel was chosen.');
+      } else {
+        chosenDuel = Object.keys(duels)[Math.floor(Math.random() * Object.keys(duels).length)];
+        logMessage(`It's a tie! A random duel was chosen: ${chosenDuel}`);
+      }
+      const result = calculateDuelResult(chosenDuel);
+      if (result > 0) {
+        logMessage('You won the duel!');
+        currentLevel++;
+        pointsToDistribute += 3;
+        lossesAtCurrentLevel = 0;
+        document.getElementById('distribute-points').style.display = 'block';
+        document.getElementById('points-to-distribute').textContent = pointsToDistribute;
+        updateStatsDisplay();
+        if (currentLevel > 10) {
+          logMessage('Congratulations! You won the tournament!');
+          showYouWonOverlay();
+          return;
+        }
+        createComputerCharacter();
+        updateStatsDisplay();
+        disableDuelButtons();
+      } else if (result < 0) {
+        logMessage('You lost the duel.');
+        applyPenalty();
+        lossesAtCurrentLevel++;
+        if (lossesAtCurrentLevel >= 3) {
+          showGameOverOverlay();
+          return;
+        }
+        if (currentLevel > 1) {
+          currentLevel--;
+        }
+        createComputerCharacter();
+        updateStatsDisplay();
+      } else {
+        logMessage('It\'s a draw! Choosing a new duel.');
+        startDuel(humanChoice);
+        return;
+      }
+      logMessage(`Current level: ${currentLevel}`);
+    }
+
+    function getBestDuelForComputer() {
+      let bestDuel = null;
+      let bestScore = -Infinity;
+      for (const [duel, stats] of Object.entries(duels)) {
+        const score = stats.reduce((sum, stat) => sum + computer[stat], 0);
+        if (score > bestScore) {
+          bestScore = score;
+          bestDuel = duel;
+        }
+      }
+      return bestDuel;
+    }
+
+    function calculateDuelResult(duel) {
+      const stats = duels[duel];
+      const humanScore = stats.reduce((sum, stat) => sum + human[stat], 0);
+      const computerScore = stats.reduce((sum, stat) => sum + computer[stat], 0);
+      return humanScore - computerScore;
+    }
+
+    function disableDuelButtons() {
+      document.querySelectorAll('.duel-option').forEach(button => {
+        button.disabled = true;
+      });
+    }
+
+    function enableDuelButtons() {
+      document.querySelectorAll('.duel-option').forEach(button => {
+        button.disabled = false;
+      });
+    }
+    document.getElementById('confirm-distribution').addEventListener('click', () => {
+      if (pointsToDistribute === 0) {
+        document.getElementById('distribute-points').style.display = 'none';
+        enableDuelButtons();
+        logMessage('Points distributed successfully. Choose your next duel!');
+      } else {
+        alert(`Please distribute all ${pointsToDistribute} points before confirming.`);
+      }
+    });
+
+    function applyPenalty() {
+      const randomStat = specialStats[Math.floor(Math.random() * specialStats.length)];
+      if (human[randomStat] > 0) {
+        human[randomStat]--;
+        logMessage(`Applied penalty: -1 to ${randomStat}. New value: ${human[randomStat]}`);
+      } else {
+        applyPenalty();
+      }
+    }
+
+    function logMessage(message) {
+      const gameLog = document.getElementById('game-log');
+      gameLog.innerHTML += `<p>${message}</p>`;
+      gameLog.scrollTop = gameLog.scrollHeight;
+    }
+
+    function showGameOverOverlay() {
+      document.getElementById('game-over-overlay').style.display = 'flex';
+    }
+
+    function showYouWonOverlay() {
+      document.getElementById('you-won-overlay').style.display = 'flex';
+    }
+
+    function hideOverlays() {
+      document.getElementById('game-over-overlay').style.display = 'none';
+      document.getElementById('you-won-overlay').style.display = 'none';
+    }
+
+    function restartGame() {
+      hideOverlays();
+      // Reset game state
+      human = {};
+      computer = {};
+      currentLevel = 1;
+      lossesAtCurrentLevel = 0;
+      pointsRemaining = 18;
+      pointsToDistribute = 0;
+      // Reset input fields
+      specialStats.forEach(stat => {
+        document.getElementById(stat).value = 0;
+      });
+      updatePointsRemaining();
+      // Show character creation section and hide game area
+      document.getElementById('character-creation').style.display = 'block';
+      document.getElementById('game-area').style.display = 'none';
+      // Enable duel buttons
+      enableDuelButtons();
+      document.getElementById('distribute-points').style.display = 'none';
+      logMessage('Game restarted. Create your character to begin again.');
+    }
+  </script>
+</body>
+
+</html>
