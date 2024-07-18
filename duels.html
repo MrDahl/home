@@ -139,7 +139,8 @@
 
     .stats-display {
       display: flex;
-      justify-content: space-around;
+      flex-direction: column;
+      gap: 20px;
       margin-bottom: 30px;
     }
 
@@ -149,12 +150,32 @@
       padding: 25px;
       border-radius: 15px;
       box-shadow: inset 2px 2px 5px var(--shadow-color), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
-      flex: 1;
-      margin: 0 15px;
+      width: 100%;
+    }
+
+    /* Add media query for larger screens */
+    @media (min-width: 768px) {
+      .stats-display {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .stats-column {
+        width: calc(50% - 10px);
+      }
     }
 
     .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
 
     .overlay-content {
@@ -164,6 +185,10 @@
       border-radius: 20px;
       text-align: center;
       box-shadow: 0 0 30px var(--shadow-color);
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     .icon {
@@ -229,11 +254,89 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #0099cc;
     }
+
+    .game-intro {
+      margin-bottom: 30px;
+    }
+
+    #game-title {
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    #game-title:hover {
+      color: #fff;
+    }
+
+    #game-rules {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      margin-top: 20px;
+      box-shadow: inset 2px 2px 5px var(--shadow-color), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+      transition: max-height 0.5s ease, opacity 0.5s ease, margin-top 0.5s ease;
+      overflow: hidden;
+    }
+
+    #game-rules.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      padding: 0;
+    }
+
+    #game-rules h2,
+    #game-rules h3,
+    #game-rules h4 {
+      color: var(--accent-color);
+      margin-top: 0;
+    }
+
+    #game-rules p,
+    #game-rules li {
+      line-height: 1.6;
+    }
+
+    #game-rules ol {
+      padding-left: 20px;
+    }
+
+    #game-rules li {
+      margin-bottom: 10px;
+    }
+
+    #game-rules strong {
+      color: var(--accent-color);
+    }
   </style>
 </head>
 
 <body>
   <div class="game-container">
+
+    <div class="game-intro">
+      <h2 id="game-title"><i class="fa-solid fa-circle-info"></i> Intro & Rules</h2>
+      <div id="game-rules" class="collapsed">
+        <h3>Welcome to S.P.E.C.I.A.L Duels!</h3>
+        <p>S.P.E.C.I.A.L Duels is a strategic character-building game where you compete against a computer opponent in various challenges.</p>
+
+        <h4>Game Rules:</h4>
+        <ol>
+          <li><strong>Character Creation:</strong> Distribute 18 points among seven S.P.E.C.I.A.L attributes (Strength, Perception, Endurance, Charisma, Intelligence, Agility, Luck).</li>
+          <li><strong>Leveling:</strong> The game has 10 levels. Win to progress, lose to regress.</li>
+          <li><strong>Duels:</strong> Each turn, you and the computer choose a duel. A dice roll determines whose choice is used.</li>
+          <li><strong>Duel Types:</strong> Different duels use different combinations of S.P.E.C.I.A.L attributes.</li>
+          <li><strong>Winning:</strong> The character with the higher total of relevant attributes wins the duel.</li>
+          <li><strong>Progression:</strong> Winning a duel increases your level and grants 3 points to distribute.</li>
+          <li><strong>Penalties:</strong> Losing a duel decreases your level and reduces a random attribute by 1.</li>
+          <li><strong>Game Over:</strong> Lose 3 times at the same level and you lose the tournament.</li>
+          <li><strong>Victory:</strong> Reach level 11 to win the tournament!</li>
+        </ol>
+
+        <p>Click the game title again to collapse this introduction. Good luck, and may the best S.P.E.C.I.A.L character win!</p>
+      </div>
+    </div>
     <h1><i class="fas fa-gamepad"></i> S.P.E.C.I.A.L Duels</h1>
     <div id="character-creation">
       <h2><i class="fas fa-user-plus"></i> Character Creation</h2>
@@ -335,14 +438,14 @@
     </div>
   </div>
 
-  <div id="game-over-overlay" class="overlay">
+  <div id="game-over-overlay" class="overlay hidden">
     <div class="overlay-content">
       <h2><i class="fas fa-skull-crossbones"></i> Game Over!</h2>
       <button id="restart-game-over"><i class="fas fa-redo"></i> Restart Game</button>
     </div>
   </div>
 
-  <div id="you-won-overlay" class="overlay">
+  <div id="you-won-overlay" class="overlay hidden">
     <div class="overlay-content">
       <h2><i class="fas fa-crown"></i> You Won!</h2>
       <button id="restart-you-won"><i class="fas fa-redo"></i> Restart Game</button>
@@ -608,6 +711,25 @@
       enableDuelButtons();
       document.getElementById('distribute-points').style.display = 'none';
       logMessage('Game restarted. Create your character to begin again.');
+    }
+    document.getElementById('game-title').addEventListener('click', function() {
+      const gameRules = document.getElementById('game-rules');
+      gameRules.classList.toggle('collapsed');
+    });
+
+    function hideOverlays() {
+      document.getElementById('game-over-overlay').classList.add('hidden');
+      document.getElementById('you-won-overlay').classList.add('hidden');
+    }
+
+    function showGameOverOverlay() {
+      document.getElementById('game-over-overlay').classList.remove('hidden');
+      document.getElementById('game-over-overlay').style.display = 'flex';
+    }
+
+    function showYouWonOverlay() {
+      document.getElementById('you-won-overlay').classList.remove('hidden');
+      document.getElementById('you-won-overlay').style.display = 'flex';
     }
   </script>
 </body>
