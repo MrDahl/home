@@ -1,84 +1,161 @@
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIvengers Gallery</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background-color: #e0e5ec;
-      font-family: Arial, sans-serif;
-      user-select: none;
-    }
-
-    .gallery {
-      max-width: 90vh;
-      width: 55vh;
-      max-height: 90vh;
-      height: 80vh;
-      position: relative;
-      perspective: 1000px;
-    }
-
-    .image-container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 20px;
-
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .image-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 20px;
-    }
-
-    .image-container:not(:first-child) {
-      transform: scale(0.98);
-      opacity: 0.8;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIvengers Gallery</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f4f8;
+            font-family: Arial, sans-serif;
+        }
+        .gallery-container {
+            width: 80vw;
+            height: 80vh;
+            max-width: 1200px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .gallery {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .image-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .image-container.active {
+            opacity: 1;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #333;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        #prevBtn {
+            left: 20px;
+        }
+        #nextBtn {
+            right: 20px;
+        }
+        .dots-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .dot.active {
+            background-color: white;
+        }
+    </style>
 </head>
-
 <body>
-  <div class="gallery" id="gallery">
-  </div>
+    <div class="gallery-container">
+        <div class="gallery" id="gallery"></div>
+        <button class="nav-button" id="prevBtn">&lt;</button>
+        <button class="nav-button" id="nextBtn">&gt;</button>
+        <div class="dots-container" id="dotsContainer"></div>
+    </div>
 
-  <script>
-    const images = [
-      "https://mrdahl.github.io/home/1.jpg",
-      "https://mrdahl.github.io/home/2.jpg",
-      "https://mrdahl.github.io/home/3.jpg",
-      "https://mrdahl.github.io/home/4.jpg",
-      "https://mrdahl.github.io/home/5.jpg",
-      "https://mrdahl.github.io/home/6.jpg"
-    ];
+    <script>
+        const images = [
+            "https://mrdahl.github.io/home/1.jpg",
+            "https://mrdahl.github.io/home/2.jpg",
+            "https://mrdahl.github.io/home/3.jpg",
+            "https://mrdahl.github.io/home/4.jpg",
+            "https://mrdahl.github.io/home/5.jpg",
+            "https://mrdahl.github.io/home/6.jpg"
+        ];
 
-    const gallery = document.getElementById('gallery');
+        let currentIndex = 0;
+        const gallery = document.getElementById('gallery');
+        const dotsContainer = document.getElementById('dotsContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
 
-    // Create image containers dynamically
-    images.forEach(src => {
-      const container = document.createElement('div');
-      container.className = 'image-container';
-      container.innerHTML = `<img src="${src}" alt="Image">`;
-      container.addEventListener('click', () => rotateImages());
-      gallery.appendChild(container);
-    });
+        function createGallery() {
+            images.forEach((src, index) => {
+                const container = document.createElement('div');
+                container.className = `image-container ${index === 0 ? 'active' : ''}`;
+                container.innerHTML = `<img src="${src}" alt="Image ${index + 1}">`;
+                gallery.appendChild(container);
 
-    function rotateImages() {
-      gallery.appendChild(gallery.firstElementChild);
-    }
-  </script>
+                const dot = document.createElement('div');
+                dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                dot.addEventListener('click', () => goToImage(index));
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function goToImage(index) {
+            const containers = document.querySelectorAll('.image-container');
+            const dots = document.querySelectorAll('.dot');
+            
+            containers[currentIndex].classList.remove('active');
+            dots[currentIndex].classList.remove('active');
+            
+            currentIndex = index;
+            
+            containers[currentIndex].classList.add('active');
+            dots[currentIndex].classList.add('active');
+        }
+
+        function nextImage() {
+            goToImage((currentIndex + 1) % images.length);
+        }
+
+        function prevImage() {
+            goToImage((currentIndex - 1 + images.length) % images.length);
+        }
+
+        createGallery();
+        prevBtn.addEventListener('click', prevImage);
+        nextBtn.addEventListener('click', nextImage);
+
+        // Auto-play functionality
+        let intervalId = setInterval(nextImage, 5000);
+
+        gallery.addEventListener('mouseenter', () => clearInterval(intervalId));
+        gallery.addEventListener('mouseleave', () => {
+            intervalId = setInterval(nextImage, 5000);
+        });
+    </script>
 </body>
-
 </html>
