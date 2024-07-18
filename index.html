@@ -1,142 +1,178 @@
 <html lang="da">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marc Sonne Dahl - Projects</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap');
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marc Sonne Dahl - Projects</title>
-  <style>
-    @import url("https://fonts.googleapis.com/css?family=Luckiest+Guy&display=swap");
+        :root {
+            --primary-color: #0078D7;
+            --accent-color: #FFB900;
+            --background-color: #000000;
+            --text-color: #FFFFFF;
+            --tile-color-1: #5133AB;
+            --tile-color-2: #107C10;
+            --tile-color-3: #D24726;
+            --tile-color-4: #008272;
+        }
 
-    body {
-      font-family: 'Roboto', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
-      color: #333;
-      user-select: none;
-    }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
 
-    .container {
-      max-width: 600px;
-      width: 100%;
-      padding: 20px;
-      text-align: center;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
 
-    .footer {
-      margin-top: 20px;
-      font-size: 12px;
-      color: #888;
-    }
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-    .button-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
-    }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 1rem 0;
+        }
 
-    .button-link {
-      display: inline-block;
-      padding: 12px 25px;
-      background-color: #007bff;
-      color: #fff;
-      text-decoration: none;
-      border: none;
-      border-radius: 25px;
-      box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
-      transition: all 0.3s ease;
-    }
+        .project-tile {
+            aspect-ratio: 1;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
 
-    .button-link:hover {
-      background-color: #FFFFFF;
-      color: #007bff;
-      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-      transform: translateY(-2px);
-    }
+        .project-tile:hover {
+            transform: scale(0.95);
+        }
 
-    h1 {
-      margin: 0;
-      font-size: 4em;
-      padding: 0;
-      font-family: "Luckiest Guy", cursive;
-      color: #007bff;
-      text-shadow: 0 0.1em 20px rgba(0, 0, 0, 1), 0.05em -0.03em 0 rgba(0, 0, 0, 1),
-        0.05em 0.005em 0 rgba(0, 0, 0, 1), 0em 0.08em 0 rgba(0, 0, 0, 1),
-        0.05em 0.08em 0 rgba(0, 0, 0, 1), 0px -0.03em 0 rgba(0, 0, 0, 1),
-        -0.03em -0.03em 0 rgba(0, 0, 0, 1), -0.03em 0.08em 0 rgba(0, 0, 0, 1), -0.03em 0 0 rgba(0, 0, 0, 1);
+        .project-tile a {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100%;
+            padding: 1rem;
+            text-decoration: none;
+            color: var(--text-color);
+            box-sizing: border-box;
+            transition: background-color 0.3s ease;
+        }
 
-      span {
-        transform: scale(0.9);
-        display: inline-block;
-      }
+        .project-tile h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
 
-      span:first-child {
-        animation: bop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards infinite alternate;
-      }
+        .project-tile p {
+            margin: 0.5rem 0 0;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
 
-      span:last-child {
-        animation: bopB 1s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards infinite alternate;
-      }
-    }
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-top: 2rem;
+        }
 
-    @keyframes bop {
-      0% {
-        transform: scale(0.9);
-      }
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
 
-      50%,
-      100% {
-        transform: scale(1);
-      }
-    }
+            h1 {
+                font-size: 2.5rem;
+            }
 
-    @keyframes bopB {
-      0% {
-        transform: scale(0.9);
-      }
-
-      80%,
-      100% {
-        transform: scale(1) rotateZ(-3deg);
-      }
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <d class="container">
-    <h1><span>"Marcs</span><span>Projects"</span></h1>
-    <div class="button-container">
-      <a href="https://mrdahl.github.io/home/faktura.html" class="button-link">Faktura / Tilbud generator</a>
-      <a href="https://mrdahl.github.io/home/choice.html" class="button-link">Choice Forge / Valg hjælper</a>
-    <a href="https://mrdahl.github.io/home/duels.html" class="button-link">S.P.E.C.I.A.L Duels</a>
-    <a href="https://mrdahl.github.io/home/arkanoid.html" class="button-link">Neumorphic Arkanoid</a>
-      <a href="https://mrdahl.github.io/home/vtv.html" class="button-link">Velfærdsteknologisk Vurdering</a>
-      <a href="https://mrdahl.github.io/home/mf.html" class="button-link">Vedligeholdelsesfaktor Udregner</a>
-    <a href="https://mrdahl.github.io/home/slots.html" class="button-link">Slot Machine</a>
-      <a href="https://mrdahl.github.io/home/music.html" class="button-link">Music Styring</a>
-      <a href="https://mrdahl.github.io/home/dnd.html" class="button-link">DnD / D2 til D100</a>
-      <a href="https://mrdahl.github.io/home/tsp.html" class="button-link">Traveling Salesman Problem</a>
-      <a href="https://mrdahl.github.io/home/mesh.html" class="button-link">Mesh Generator</a>
-      <a href="https://mrdahl.github.io/home/snails.html" class="button-link">Sneglespil</a>
-      <a href="https://mrdahl.github.io/home/snake.html" class="button-link">Snake</a>
-      <a href="https://mrdahl.github.io/home/avengers.html" class="button-link">Avengers Gallery</a>
-      <a href="https://mrdahl.github.io/home/voodoo.html" class="button-link">Voodoo Rush / Kort Blander</a>
-      <a href="https://mrdahl.github.io/home/rockpaper.html" class="button-link">Sten, Saks, Papir v.2</a>
-      <a href="https://mrdahl.github.io/home/emojimatch.html" class="button-link">Emoji Match / Huske Spil</a>
+    <div class="container">
+        <h1>Marc's Projects</h1>
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Projects will be dynamically added here -->
+        </div>
     </div>
-    <div class="footer">Copyright © 2024 Marc Sonne Dahl. All rights reserved.</div>
-    </div>
-</body>
+    <footer class="footer">
+        <p>Copyright © 2024 Marc Sonne Dahl. All rights reserved.</p>
+    </footer>
 
+    <script>
+        const projects = [
+            { name: "Faktura generator", url: "https://mrdahl.github.io/home/faktura.html", description: "Generate invoices easily" },
+            { name: "Choice Forge", url: "https://mrdahl.github.io/home/choice.html", description: "Decision-making tool" },
+            { name: "S.P.E.C.I.A.L Duels", url: "https://mrdahl.github.io/home/duels.html", description: "Fallout-style duels" },
+            { name: "Arkanoid", url: "https://mrdahl.github.io/home/arkanoid.html", description: "Modern Arkanoid game" },
+            { name: "VTV", url: "https://mrdahl.github.io/home/vtv.html", description: "Tech assessment" },
+            { name: "MF Calculator", url: "https://mrdahl.github.io/home/mf.html", description: "Maintenance factor" },
+            { name: "Slot Machine", url: "https://mrdahl.github.io/home/slots.html", description: "Virtual slots" },
+            { name: "Music Control", url: "https://mrdahl.github.io/home/music.html", description: "Music management" },
+            { name: "DnD Dice", url: "https://mrdahl.github.io/home/dnd.html", description: "D2 to D100 roller" },
+            { name: "TSP Solver", url: "https://mrdahl.github.io/home/tsp.html", description: "Traveling Salesman" },
+            { name: "Mesh Generator", url: "https://mrdahl.github.io/home/mesh.html", description: "Network visualizer" },
+            { name: "Snail Game", url: "https://mrdahl.github.io/home/snails.html", description: "Snail-themed game" },
+            { name: "Snake", url: "https://mrdahl.github.io/home/snake.html", description: "Classic Snake" },
+            { name: "Avengers", url: "https://mrdahl.github.io/home/avengers.html", description: "Character gallery" },
+            { name: "Voodoo Rush", url: "https://mrdahl.github.io/home/voodoo.html", description: "Card game helper" },
+            { name: "Rock Paper Scissors", url: "https://mrdahl.github.io/home/rockpaper.html", description: "RPS game v2" },
+            { name: "Emoji Match", url: "https://mrdahl.github.io/home/emojimatch.html", description: "Memory game" },
+
+{ name: "Project Comming Soon", url: "https://mrdahl.github.io/home/index.html", description: "Under Consttuction" },
+
+{ name: "Project Comming Soon", url: "https://mrdahl.github.io/home/index.html", description: "Under Consttuction" },
+
+{ name: "Project Comming Soon", url: "https://mrdahl.github.io/home/index.html", description: "Under Consttuction" },
+
+        ];
+
+        const projectsGrid = document.getElementById('projectsGrid');
+        const tileColors = ['var(--tile-color-1)', 'var(--tile-color-2)', 'var(--tile-color-3)', 'var(--tile-color-4)'];
+        const tileSizes = ['1', '1', '1', '2']; // 1 for normal, 2 for double width
+
+        projects.forEach((project, index) => {
+            const tile = document.createElement('div');
+            tile.className = 'project-tile';
+            
+            // Randomly assign color and size
+            const colorIndex = Math.floor(Math.random() * tileColors.length);
+            const sizeIndex = Math.floor(Math.random() * tileSizes.length);
+            
+            tile.style.backgroundColor = tileColors[colorIndex];
+            tile.style.gridColumn = `span ${tileSizes[sizeIndex]}`;
+            
+            tile.innerHTML = `
+                <a href="${project.url}">
+                    <h3>${project.name}</h3>
+                    <p>${project.description}</p>
+                </a>
+            `;
+            projectsGrid.appendChild(tile);
+        });
+
+        // Randomize tile order
+        const tiles = Array.from(projectsGrid.children);
+        tiles.sort(() => Math.random() - 0.5);
+        tiles.forEach(tile => projectsGrid.appendChild(tile));
+    </script>
+</body>
 </html>
