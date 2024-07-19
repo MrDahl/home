@@ -1,10 +1,10 @@
-<!DOCTYPE html>
 <html lang="da">
 <!-- Copyright Marc Sonne Dahl - Created July 2024 -->
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voodoo Rush</title>
+  <title>Voodoo Rush Fitness</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Concert+One">
   <style>
     :root {
@@ -22,7 +22,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 80vh;
+      min-height: 100vh;
       margin: 0;
       font-family: "Concert One", sans-serif;
       background-color: var(--primary-color);
@@ -34,7 +34,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100%;
       width: 100%;
       padding: 20px;
       box-sizing: border-box;
@@ -55,7 +54,7 @@
       color: var(--on-primary-color);
       cursor: pointer;
       box-shadow: 9px 9px 16px var(--shadow-color),
-                  -9px -9px 16px var(--highlight-color);
+        -9px -9px 16px var(--highlight-color);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -70,7 +69,7 @@
       left: -1%;
       background-color: var(--primary-color);
       box-shadow: 4px 4px 6px var(--shadow-color),
-                  -4px -4px 6px var(--highlight-color);
+        -4px -4px 6px var(--highlight-color);
     }
 
     .card .top-left-text,
@@ -99,7 +98,7 @@
       margin-top: 20px;
       overflow: hidden;
       box-shadow: inset 4px 4px 6px var(--shadow-color),
-                  inset -4px -4px 6px var(--highlight-color);
+        inset -4px -4px 6px var(--highlight-color);
     }
 
     .progress-bar {
@@ -108,7 +107,7 @@
       background: rgba(68, 117, 151, 1);
       transition: width 0.3s ease;
       box-shadow: inset 4px 4px 6px var(--shadow-color),
-                  inset -1px -1px 1px var(--highlight-color);
+        inset -1px -1px 1px var(--highlight-color);
     }
 
     .controls {
@@ -127,12 +126,52 @@
       font-size: 16px;
       cursor: pointer;
       box-shadow: 4px 4px 6px var(--shadow-color),
-                  -4px -4px 6px var(--highlight-color);
+        -4px -4px 6px var(--highlight-color);
       transition: background-color 0.3s ease;
     }
 
     .button:hover {
       background-color: #d0d0d0;
+    }
+
+    .workout-inputs {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+      width: var(--card-width - 30px);
+      margin-left: -1vh;
+    }
+
+    .workout-input {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .workout-input label {
+      margin-right: 10px;
+      font-size: 20px;
+    }
+
+    .workout-input input {
+      flex-grow: 1;
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--primary-color);
+      box-shadow: inset 2px 2px 4px var(--shadow-color),
+        inset -2px -2px 4px var(--highlight-color);
+    }
+
+    .timer,
+    .score {
+      font-size: 24px;
+      margin-top: 10px;
+      color: rgba(0, 0, 0, .2);
+      background-color: transparent;
+      text-shadow: rgba(255, 255, 255, .3) 1px 1px 1px;
     }
 
     @media (max-width: 480px) {
@@ -142,6 +181,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="game-container">
     <div id="deck" class="card" onclick="pickCard()">
@@ -149,6 +189,26 @@
     </div>
     <div class="progress-container">
       <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <div class="timer" id="timer">Time: 00:00</div>
+    <div class="score" id="score">Score: 0</div>
+    <div class="workout-inputs">
+      <div class="workout-input">
+        <label>♦</label>
+        <input type="text" id="diamonds-workout" placeholder="Diamonds workout">
+      </div>
+      <div class="workout-input">
+        <label>♣</label>
+        <input type="text" id="clubs-workout" placeholder="Clubs workout">
+      </div>
+      <div class="workout-input">
+        <label>♥</label>
+        <input type="text" id="hearts-workout" placeholder="Hearts workout">
+      </div>
+      <div class="workout-input">
+        <label>♠</label>
+        <input type="text" id="spades-workout" placeholder="Spades workout">
+      </div>
     </div>
     <div class="controls">
       <button class="button" onclick="resetGame()">✖️ Reset</button>
@@ -159,9 +219,13 @@
     const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
     const originalDeck = [...suits.flatMap(suit => values.map(value => `${value}<br>${suit}`)), 'JKR<br>⚜️', 'JKR<br>🔱'];
     let currentDeck = [];
-
     const deckElement = document.getElementById('deck');
     const progressBar = document.getElementById('progress-bar');
+    const timerElement = document.getElementById('timer');
+    const scoreElement = document.getElementById('score');
+    let startTime;
+    let timerInterval;
+    let currentScore = 0;
 
     function shuffleDeck() {
       currentDeck = [...originalDeck].sort(() => Math.random() - 0.5);
@@ -176,29 +240,91 @@
       progressBar.style.width = `${progress}%`;
     }
 
+    function getWorkout(suit) {
+      const workouts = {
+        '♦': document.getElementById('diamonds-workout').value || 'Diamonds workout',
+        '♣': document.getElementById('clubs-workout').value || 'Clubs workout',
+        '♥': document.getElementById('hearts-workout').value || 'Hearts workout',
+        '♠': document.getElementById('spades-workout').value || 'Spades workout'
+      };
+      return workouts[suit] || 'Joker - Choose your workout!';
+    }
+
+    function startTimer() {
+      startTime = Date.now();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+      const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+      const seconds = (elapsedTime % 60).toString().padStart(2, '0');
+      timerElement.textContent = `Time: ${minutes}:${seconds}`;
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function calculateCardScore(card) {
+      const [value, suit] = card.split('<br>');
+      let score = 0;
+      if (value === 'JKR') {
+        score = 20;
+      } else if (value === 'A') {
+        score = 15;
+      } else if (['J', 'Q', 'K'].includes(value)) {
+        score = 12;
+      } else {
+        score = parseInt(value) || 10;
+      }
+      return score;
+    }
+
+    function updateScore(card) {
+      const cardScore = calculateCardScore(card);
+      const timeMultiplier = Math.max(1, 2 - (Date.now() - startTime) / 60000);
+      const scoreGain = Math.round(cardScore * timeMultiplier);
+      currentScore += scoreGain;
+      scoreElement.textContent = `Score: ${currentScore}`;
+    }
+
     function pickCard() {
+      if (currentDeck.length === originalDeck.length) {
+        startTimer();
+      }
       if (currentDeck.length === 0) {
-        updateCardContent('🏆<br>Finish');
+        stopTimer();
+        const finalTime = timerElement.textContent.split(': ')[1];
+        updateCardContent(`🏆<br>Finish<br>Final Score: ${currentScore}<br>Time: ${finalTime}`);
         return;
       }
       const card = currentDeck.pop();
       const [value, suit] = card.split('<br>');
       const suitColor = '♦♥'.includes(suit) ? 'red' : 'black';
+      const workout = getWorkout(suit);
       updateCardContent(`
         <span class="middle-suit" style="color: ${suitColor};">${suit}</span>
         <span class="top-left-text">${card}</span>
         <span class="bottom-right-text">${card}</span>
+        <br>
+        <span style="font-size: 0.5em;">${workout}</span>
       `);
       updateProgressBar();
+      updateScore(card);
     }
 
     function resetGame() {
       shuffleDeck();
       updateCardContent('🪬<br>Start');
       progressBar.style.width = '0';
+      stopTimer();
+      timerElement.textContent = 'Time: 00:00';
+      currentScore = 0;
+      scoreElement.textContent = 'Score: 0';
     }
-
     window.onload = resetGame;
   </script>
 </body>
+
 </html>
