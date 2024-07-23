@@ -3,39 +3,80 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enhanced Snake Game with Levels</title>
+  <title>Enhanced Snake Game</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      max-height: 90vh;
+      justify-content: center;
+      height: 100vh;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #e94560;
+    }
+
+    #controls {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 0.1rem;
+      box-sizing: border-box;
+    }
+
+    .game-button,
+    #skin-select {
+      flex: 1;
+      margin: 0.5rem;
+      max-width: 50%;
+      text-align: center;
+      padding: 0.8rem 0.5rem;
+      font-size: 1rem;
+      background-color: #0f3460;
+      color: #e94560;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .game-button:hover,
+    #skin-select:hover {
+      background-color: #16213e;
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #skin-select {
+      appearance: none;
+      padding-right: 2.5rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e94560' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.7rem top 50%;
+      background-size: 1.2rem auto;
     }
 
     #game-container {
       position: relative;
       width: 90vmin;
       height: 90vmin;
-      background-color: rgba(30, 30, 46, 0.7);
+      background-color: rgba(15, 52, 96, 0.6);
       border: 2px solid #e94560;
-      box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+      box-shadow: 0 0 20px rgba(233, 69, 96, 0.3);
       border-radius: 15px;
       overflow: hidden;
       backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     #game-board {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       display: grid;
-      background-color: rgba(43, 43, 67, 0.5);
+      background-color: rgba(22, 33, 62, 0.7);
       background-image:
         linear-gradient(rgba(233, 69, 96, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(233, 69, 96, 0.1) 1px, transparent 1px);
@@ -48,30 +89,30 @@
     }
 
     .snake {
-      background-color: #e94560;
-      box-shadow: 0 0 10px #e94560, 0 0 20px #e94560;
+      background-color: var(--snake-color);
+      box-shadow: 0 0 10px var(--snake-color), 0 0 20px var(--snake-color);
       border-radius: 30%;
       transform: scale(0.9);
     }
 
     .food {
-      background-color: #0ead69;
-      box-shadow: 0 0 10px #0ead69, 0 0 20px #0ead69;
+      background-color: #4ecca3;
+      box-shadow: 0 0 10px #4ecca3, 0 0 20px #4ecca3;
       border-radius: 50%;
       transform: scale(0.8);
       animation: pulse 1s infinite alternate;
     }
 
     .obstacle {
-      background-color: #4a47a3;
-      box-shadow: 0 0 10px #4a47a3, 0 0 20px #4a47a3;
+      background-color: #e94560;
+      box-shadow: 0 0 10px #e94560, 0 0 20px #e94560;
       clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
       transform: scale(0.85) rotate(45deg);
     }
 
     .powerup {
-      background-color: #f9c74f;
-      box-shadow: 0 0 10px #f9c74f, 0 0 20px #f9c74f;
+      background-color: #ffd460;
+      box-shadow: 0 0 10px #ffd460, 0 0 20px #ffd460;
       border-radius: 25%;
       transform: scale(0.75);
       animation: rotate 3s linear infinite;
@@ -103,40 +144,36 @@
       left: 50%;
       transform: translate(-50%, -50%);
       color: #e94560;
-      font-size: 2.5vmin;
+      font-size: 1.5vmin;
       text-align: center;
       display: none;
-      background-color: rgba(26, 26, 46, 0.9);
+      background-color: rgba(22, 33, 62, 0.9);
       padding: 3vmin;
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+      box-shadow: 0 0 20px rgba(233, 69, 96, 0.3);
       backdrop-filter: blur(5px);
       z-index: 10;
     }
 
-    #score,
-    #high-score,
-    #level {
-      position: absolute;
-      color: #e94560;
-      font-size: 1.8vmin;
+    #game-stats {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+      background-color: rgba(15, 52, 96, 0.6);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-size: 1.2rem;
       font-weight: bold;
       text-shadow: 0 0 10px rgba(233, 69, 96, 0.7);
     }
 
-    #score {
-      top: 2vmin;
-      right: 2vmin;
-    }
-
-    #high-score {
-      top: 2vmin;
-      left: 2vmin;
-    }
-
-    #level {
-      top: 5.5vmin;
-      right: 2vmin;
+    #score,
+    #high-score,
+    #level,
+    #timer {
+      margin: 0 1vmin;
     }
 
     #start-button {
@@ -147,23 +184,39 @@
       background-color: #e94560;
       color: #1a1a2e;
       border: none;
-      padding: 1.5vmin 3vmin;
+      padding: 1rem 2rem;
       text-align: center;
       text-decoration: none;
       display: inline-block;
-      font-size: 2vmin;
+      font-size: 1.5rem;
       font-weight: bold;
       cursor: pointer;
       border-radius: 50px;
-      box-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
       z-index: 10;
     }
 
     #start-button:hover {
       background-color: #ff6b6b;
-      box-shadow: 0 0 30px rgba(233, 69, 96, 0.7);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
       transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    .obstacle-powerup {
+      background-color: #ffd700;
+      box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+      border-radius: 15%;
+      transform: scale(0.75);
+      animation: pulse 1s infinite alternate;
+    }
+
+    .obstacle-food {
+      background-color: #4ecca3;
+      box-shadow: 0 0 10px #4ecca3, 0 0 20px #4ecca3;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      transform: scale(0.85) rotate(45deg);
+      animation: pulse 1s infinite alternate;
     }
 
     @media (max-width: 600px) {
@@ -172,26 +225,40 @@
         height: 95vw;
       }
 
-      #score,
-      #high-score,
-      #level {
-        font-size: 3vmin;
+      #game-stats {
+        font-size: 2.5vmin;
       }
 
       #start-button {
         font-size: 3vmin;
         padding: 2vmin 4vmin;
       }
+
+      .game-button,
+      #skin-select {
+        font-size: 1rem;
+        padding: 0.6rem 0.3rem;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div id="controls">
+    <button id="pause-button" class="game-button">Pause</button>
+    <select id="skin-select" class="game-button">
+      <option value="red">Red</option>
+      <option value="blue">Blue</option>
+      <option value="green">Green</option>
+    </select>
+  </div>
+  <div id="game-stats">
+    <span id="score">Score: 0</span>
+    <span id="high-score">High Score: 0</span>
+    <span id="level">Level: 1</span>
+  </div>
   <div id="game-container">
     <div id="game-board"></div>
-    <div id="score">Score: 0</div>
-    <div id="high-score">High Score: 0</div>
-    <div id="level">Level: 1</div>
     <button id="start-button">Start</button>
     <div id="game-over">
       Game Over!<br>
@@ -200,6 +267,8 @@
   </div>
 
   <script>
+    let snakeColor = 'red';
+    document.documentElement.style.setProperty('--snake-color', snakeColor);
     const gameContainer = document.getElementById('game-container');
     const gameBoard = document.getElementById('game-board');
     const gameOverScreen = document.getElementById('game-over');
@@ -207,6 +276,8 @@
     const highScoreDisplay = document.getElementById('high-score');
     const levelDisplay = document.getElementById('level');
     const startButton = document.getElementById('start-button');
+    const pauseButton = document.getElementById('pause-button');
+    const skinSelect = document.getElementById('skin-select');
     let snake = [{
       x: 10,
       y: 10
@@ -217,6 +288,7 @@
     };
     let obstacles = [];
     let powerup = null;
+    let obstaclePowerup = null;
     let direction = {
       x: 1,
       y: 0
@@ -234,20 +306,29 @@
     let gameSpeed = 150;
     let powerupActive = false;
     let powerupTimer = null;
+    let obstaclePowerupActive = false;
+    let obstaclePowerupTimer = null;
     let touchStartX, touchStartY;
     let lastTouchTime = 0;
     const touchThreshold = 20;
     const touchCooldown = 100;
+    let isPaused = false;
 
     function initGame() {
       updateBoardSize();
       createBoard();
       placeFood();
+      placeObstaclePowerup();
       document.addEventListener('keydown', changeDirection);
       gameContainer.addEventListener('touchstart', handleTouchStart);
       gameContainer.addEventListener('touchmove', handleTouchMove);
       gameContainer.addEventListener('touchend', handleTouchEnd);
       startButton.addEventListener('click', startGame);
+      pauseButton.addEventListener('click', togglePause);
+      skinSelect.addEventListener('change', (event) => {
+        snakeColor = event.target.value;
+        document.documentElement.style.setProperty('--snake-color', snakeColor);
+      });
       loadHighScore();
     }
 
@@ -267,14 +348,19 @@
       gameSpeed = 150;
       obstacles = [];
       powerup = null;
+      obstaclePowerup = null;
       powerupActive = false;
+      obstaclePowerupActive = false;
+      isPaused = false;
       if (powerupTimer) clearTimeout(powerupTimer);
+      if (obstaclePowerupTimer) clearTimeout(obstaclePowerupTimer);
       updateScore();
       updateLevel();
       gameOverScreen.style.display = 'none';
       startButton.style.display = 'none';
       placeFood();
       placeObstacles();
+      placeObstaclePowerup();
       gameLoop = setInterval(gameTick, gameSpeed);
     }
 
@@ -313,7 +399,7 @@
     }
 
     function placePowerup() {
-      if (Math.random() < 0.1 && !powerup) {
+      if (!powerup && Math.random() < 0.1) {
         do {
           powerup = {
             x: Math.floor(Math.random() * boardSize.width),
@@ -324,6 +410,24 @@
           obstacles.some(obstacle => obstacle.x === powerup.x && obstacle.y === powerup.y) ||
           (food.x === powerup.x && food.y === powerup.y)
         );
+      }
+    }
+
+    function placeObstaclePowerup() {
+      if (Math.random() < 0.05) { // 5% chance to spawn
+        do {
+          obstaclePowerup = {
+            x: Math.floor(Math.random() * boardSize.width),
+            y: Math.floor(Math.random() * boardSize.height)
+          };
+        } while (
+          snake.some(segment => segment.x === obstaclePowerup.x && segment.y === obstaclePowerup.y) ||
+          obstacles.some(obstacle => obstacle.x === obstaclePowerup.x && obstacle.y === obstaclePowerup.y) ||
+          (food.x === obstaclePowerup.x && food.y === obstaclePowerup.y) ||
+          (powerup && powerup.x === obstaclePowerup.x && powerup.y === obstaclePowerup.y)
+        );
+      } else {
+        obstaclePowerup = null;
       }
     }
 
@@ -347,9 +451,11 @@
     }
 
     function gameTick() {
-      moveSnake();
-      if (!gameOver) {
-        updateBoard();
+      if (!isPaused) {
+        moveSnake();
+        if (!gameOver) {
+          updateBoard();
+        }
       }
     }
 
@@ -362,7 +468,7 @@
       head.y = (head.y + boardSize.height) % boardSize.height;
       if (
         snake.some(segment => segment.x === head.x && segment.y === head.y) ||
-        (!powerupActive && obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y))
+        (!powerupActive && !obstaclePowerupActive && obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y))
       ) {
         gameOver = true;
         gameOverScreen.style.display = 'block';
@@ -373,24 +479,31 @@
       }
       snake.unshift(head);
       if (head.x === food.x && head.y === food.y) {
-        score += 10;
-        updateScore();
-        placeFood();
-        placePowerup();
-        if (snake.length % 5 === 0) {
-          levelUp();
-        }
+        eatFood();
       } else if (powerup && head.x === powerup.x && head.y === powerup.y) {
         activatePowerup();
+      } else if (obstaclePowerup && head.x === obstaclePowerup.x && head.y === obstaclePowerup.y) {
+        activateObstaclePowerup();
       } else {
         snake.pop();
+      }
+    }
+
+    function eatFood() {
+      score += 10;
+      updateScore();
+      placeFood();
+      placePowerup();
+      placeObstaclePowerup();
+      if (snake.length % 5 === 0) {
+        levelUp();
       }
     }
 
     function updateBoard() {
       const cells = document.getElementsByClassName('cell');
       for (let i = 0; i < cells.length; i++) {
-        cells[i].classList.remove('snake', 'food', 'obstacle', 'powerup');
+        cells[i].classList.remove('snake', 'food', 'obstacle', 'powerup', 'obstacle-powerup', 'obstacle-food');
       }
       snake.forEach(segment => {
         const index = segment.y * boardSize.width + segment.x;
@@ -400,11 +513,15 @@
       cells[foodIndex].classList.add('food');
       obstacles.forEach(obstacle => {
         const index = obstacle.y * boardSize.width + obstacle.x;
-        cells[index].classList.add('obstacle');
+        cells[index].classList.add(obstacle.isFood ? 'obstacle-food' : 'obstacle');
       });
       if (powerup) {
         const powerupIndex = powerup.y * boardSize.width + powerup.x;
         cells[powerupIndex].classList.add('powerup');
+      }
+      if (obstaclePowerup) {
+        const obstaclePowerupIndex = obstaclePowerup.y * boardSize.width + obstaclePowerup.x;
+        cells[obstaclePowerupIndex].classList.add('obstacle-powerup');
       }
     }
 
@@ -446,13 +563,39 @@
       powerup = null;
       score += 50;
       updateScore();
-      // Visual feedback for powerup activation
       gameBoard.style.boxShadow = '0 0 20px #2196F3';
       if (powerupTimer) clearTimeout(powerupTimer);
       powerupTimer = setTimeout(() => {
         powerupActive = false;
         gameBoard.style.boxShadow = 'none';
-      }, 5000);
+      }, 10000); // Powerup active for 10 seconds
+    }
+
+    function activateObstaclePowerup() {
+      obstaclePowerupActive = true;
+      obstaclePowerup = null;
+      score += 100;
+      updateScore();
+      gameBoard.style.boxShadow = '0 0 20px #ffd700';
+      convertObstaclesToFood();
+      if (obstaclePowerupTimer) clearTimeout(obstaclePowerupTimer);
+      obstaclePowerupTimer = setTimeout(() => {
+        obstaclePowerupActive = false;
+        gameBoard.style.boxShadow = 'none';
+        restoreObstacles();
+      }, 10000); // Powerup active for 10 seconds
+    }
+
+    function convertObstaclesToFood() {
+      obstacles.forEach(obstacle => {
+        obstacle.isFood = true;
+      });
+    }
+
+    function restoreObstacles() {
+      obstacles.forEach(obstacle => {
+        delete obstacle.isFood;
+      });
     }
 
     function changeDirection(event) {
@@ -541,6 +684,16 @@
       touchStartX = null;
       touchStartY = null;
     }
+
+    function togglePause() {
+      isPaused = !isPaused;
+      pauseButton.textContent = isPaused ? 'Resume' : 'Pause';
+      if (!isPaused) {
+        gameLoop = setInterval(gameTick, gameSpeed);
+      } else {
+        clearInterval(gameLoop);
+      }
+    }
     window.addEventListener('resize', () => {
       updateBoardSize();
       createBoard();
@@ -551,7 +704,6 @@
     });
     initGame();
   </script>
-
 </body>
 
 </html>
