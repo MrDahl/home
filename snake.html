@@ -1,8 +1,9 @@
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Snake Game</title>
+  <title>Enhanced Snake Game with Levels</title>
   <style>
     body {
       margin: 0;
@@ -51,6 +52,17 @@
       border-radius: 50%;
     }
 
+    .obstacle {
+      background-color: #FF5722;
+      box-shadow: 0 0 5px #FF5722, 0 0 10px #FF5722;
+    }
+
+    .powerup {
+      background-color: #2196F3;
+      box-shadow: 0 0 5px #2196F3, 0 0 10px #2196F3;
+      border-radius: 25%;
+    }
+
     #game-over {
       position: absolute;
       top: 50%;
@@ -65,16 +77,30 @@
       border-radius: 10px;
     }
 
-    #score {
+    #score,
+    #high-score,
+    #level {
       position: absolute;
-      top: 10px;
-      right: 10px;
       color: #FFF;
       font-size: 18px;
     }
 
+    #score {
+      top: 10px;
+      right: 10px;
+    }
+
+    #high-score {
+      top: 10px;
+      left: 10px;
+    }
+
+    #level {
+      top: 40px;
+      right: 10px;
+    }
+
     #start-button {
-      position: absolute;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -97,6 +123,8 @@
   <div id="game-container">
     <div id="game-board"></div>
     <div id="score">Score: 0</div>
+    <div id="high-score">High Score: 0</div>
+    <div id="level">Level: 1</div>
     <button id="start-button">Start</button>
     <div id="game-over">
       Game Over!<br>
@@ -109,6 +137,8 @@
     const gameBoard = document.getElementById('game-board');
     const gameOverScreen = document.getElementById('game-over');
     const scoreDisplay = document.getElementById('score');
+    const highScoreDisplay = document.getElementById('high-score');
+    const levelDisplay = document.getElementById('level');
     const startButton = document.getElementById('start-button');
     let snake = [{
       x: 10,
@@ -118,6 +148,8 @@
       x: 15,
       y: 15
     };
+    let obstacles = [];
+    let powerup = null;
     let direction = {
       x: 1,
       y: 0
@@ -129,11 +161,17 @@
     };
     let cellSize = 20;
     let score = 0;
+    let highScore = 0;
+    let level = 1;
     let gameLoop;
+    let gameSpeed = 150;
+    let powerupActive = false;
+    let powerupTimer = null;
     let touchStartX, touchStartY;
     let lastTouchTime = 0;
-    const touchThreshold = 20; // Minimum swipe distance to trigger direction change
-    const touchCooldown = 100; // Minimum time between touch events in milliseconds
+    const touchThreshold = 20;
+    const touchCooldown = 100;
+
     function initGame() {
       updateBoardSize();
       createBoard();
@@ -143,6 +181,7 @@
       gameContainer.addEventListener('touchmove', handleTouchMove);
       gameContainer.addEventListener('touchend', handleTouchEnd);
       startButton.addEventListener('click', startGame);
+      loadHighScore();
     }
 
     function startGame() {
@@ -157,11 +196,19 @@
       };
       gameOver = false;
       score = 0;
+      level = 1;
+      gameSpeed = 150;
+      obstacles = [];
+      powerup = null;
+      powerupActive = false;
+      if (powerupTimer) clearTimeout(powerupTimer);
       updateScore();
+      updateLevel();
       gameOverScreen.style.display = 'none';
       startButton.style.display = 'none';
       placeFood();
-      gameLoop = setInterval(gameTick, 100);
+      placeObstacles();
+      gameLoop = setInterval(gameTick, gameSpeed);
     }
 
     function updateBoardSize() {
@@ -192,7 +239,44 @@
           x: Math.floor(Math.random() * boardSize.width),
           y: Math.floor(Math.random() * boardSize.height)
         };
-      } while (snake.some(segment => segment.x === food.x && segment.y === food.y));
+      } while (
+        snake.some(segment => segment.x === food.x && segment.y === food.y) ||
+        obstacles.some(obstacle => obstacle.x === food.x && obstacle.y === food.y)
+      );
+    }
+
+    function placePowerup() {
+      if (Math.random() < 0.1 && !powerup) {
+        do {
+          powerup = {
+            x: Math.floor(Math.random() * boardSize.width),
+            y: Math.floor(Math.random() * boardSize.height)
+          };
+        } while (
+          snake.some(segment => segment.x === powerup.x && segment.y === powerup.y) ||
+          obstacles.some(obstacle => obstacle.x === powerup.x && obstacle.y === powerup.y) ||
+          (food.x === powerup.x && food.y === powerup.y)
+        );
+      }
+    }
+
+    function placeObstacles() {
+      obstacles = [];
+      const numObstacles = Math.min(5 + level, 15);
+      for (let i = 0; i < numObstacles; i++) {
+        let obstacle;
+        do {
+          obstacle = {
+            x: Math.floor(Math.random() * boardSize.width),
+            y: Math.floor(Math.random() * boardSize.height)
+          };
+        } while (
+          snake.some(segment => segment.x === obstacle.x && segment.y === obstacle.y) ||
+          (food.x === obstacle.x && food.y === obstacle.y) ||
+          obstacles.some(existingObstacle => existingObstacle.x === obstacle.x && existingObstacle.y === obstacle.y)
+        );
+        obstacles.push(obstacle);
+      }
     }
 
     function gameTick() {
@@ -209,11 +293,15 @@
       };
       head.x = (head.x + boardSize.width) % boardSize.width;
       head.y = (head.y + boardSize.height) % boardSize.height;
-      if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+      if (
+        snake.some(segment => segment.x === head.x && segment.y === head.y) ||
+        (!powerupActive && obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y))
+      ) {
         gameOver = true;
         gameOverScreen.style.display = 'block';
         startButton.style.display = 'block';
         clearInterval(gameLoop);
+        updateHighScore();
         return;
       }
       snake.unshift(head);
@@ -221,6 +309,12 @@
         score += 10;
         updateScore();
         placeFood();
+        placePowerup();
+        if (snake.length % 5 === 0) {
+          levelUp();
+        }
+      } else if (powerup && head.x === powerup.x && head.y === powerup.y) {
+        activatePowerup();
       } else {
         snake.pop();
       }
@@ -229,7 +323,7 @@
     function updateBoard() {
       const cells = document.getElementsByClassName('cell');
       for (let i = 0; i < cells.length; i++) {
-        cells[i].classList.remove('snake', 'food');
+        cells[i].classList.remove('snake', 'food', 'obstacle', 'powerup');
       }
       snake.forEach(segment => {
         const index = segment.y * boardSize.width + segment.x;
@@ -237,10 +331,61 @@
       });
       const foodIndex = food.y * boardSize.width + food.x;
       cells[foodIndex].classList.add('food');
+      obstacles.forEach(obstacle => {
+        const index = obstacle.y * boardSize.width + obstacle.x;
+        cells[index].classList.add('obstacle');
+      });
+      if (powerup) {
+        const powerupIndex = powerup.y * boardSize.width + powerup.x;
+        cells[powerupIndex].classList.add('powerup');
+      }
     }
 
     function updateScore() {
       scoreDisplay.textContent = `Score: ${score}`;
+    }
+
+    function updateHighScore() {
+      if (score > highScore) {
+        highScore = score;
+        highScoreDisplay.textContent = `High Score: ${highScore}`;
+        localStorage.setItem('snakeHighScore', highScore);
+      }
+    }
+
+    function loadHighScore() {
+      const savedHighScore = localStorage.getItem('snakeHighScore');
+      if (savedHighScore) {
+        highScore = parseInt(savedHighScore);
+        highScoreDisplay.textContent = `High Score: ${highScore}`;
+      }
+    }
+
+    function updateLevel() {
+      levelDisplay.textContent = `Level: ${level}`;
+    }
+
+    function levelUp() {
+      level++;
+      updateLevel();
+      gameSpeed = Math.max(50, gameSpeed - 10);
+      clearInterval(gameLoop);
+      gameLoop = setInterval(gameTick, gameSpeed);
+      placeObstacles();
+    }
+
+    function activatePowerup() {
+      powerupActive = true;
+      powerup = null;
+      score += 50;
+      updateScore();
+      // Visual feedback for powerup activation
+      gameBoard.style.boxShadow = '0 0 20px #2196F3';
+      if (powerupTimer) clearTimeout(powerupTimer);
+      powerupTimer = setTimeout(() => {
+        powerupActive = false;
+        gameBoard.style.boxShadow = 'none';
+      }, 5000);
     }
 
     function changeDirection(event) {
@@ -339,5 +484,7 @@
     });
     initGame();
   </script>
+
 </body>
+
 </html>
