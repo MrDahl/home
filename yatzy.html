@@ -1,0 +1,425 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yatzy!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      user-select: none;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      background-image: linear-gradient(to right, #e3f2fd, #bbdefb);
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1,
+    h2 {
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      text-align: center;
+      color: #0277bd;
+    }
+
+    .tile {
+      background-color: #ffffff;
+      color: #333;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn {
+      background-color: #0277bd;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 18px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 25px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #01579b;
+      transform: scale(1.05);
+    }
+
+    .btn:disabled {
+      background-color: #999999;
+      cursor: not-allowed;
+    }
+
+    #dice {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 5px 0;
+    }
+
+    .die {
+      width: 80px;
+      height: 80px;
+      margin: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 36px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: transparent;
+      color: #333;
+      transition: transform 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease;
+      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .die.kept {
+      color: #0288d1;
+      transform: scale(1.1);
+      background-color: transparent;
+      text-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    #scorecard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+
+    #scorecard button {
+      background-color: #0277bd;
+      color: #ffffff;
+      border: none;
+      padding: 12px 16px;
+      font-size: 16px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    #scorecard button:hover:not(:disabled) {
+      background-color: #01579b;
+      transform: scale(1.05);
+    }
+
+    #scorecard button:disabled {
+      background-color: #999999;
+      cursor: not-allowed;
+    }
+
+    #players {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .player-name {
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: #0288d1;
+      font-size: 18px;
+      color: #ffffff;
+      border-radius: 25px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .player-name.current-player {
+      background-color: #0277bd;
+      font-weight: bold;
+      transform: scale(1.1);
+    }
+
+    #add-player-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    #new-player-name {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #0288d1;
+      margin-right: 10px;
+      border-radius: 25px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #end-turn-btn {
+      display: block;
+      margin: 30px auto;
+    }
+
+    .winner {
+      font-weight: bold;
+      font-size: 20px;
+      color: #ff6f00;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+
+      #scorecard {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 0.6fr));
+      }
+
+      .die {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        padding: -2px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+
+      #new-player-name {
+        padding: 8px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="start-screen" class="tile">
+      <h1><i class="fa-solid fa-dice"></i> Yatzy!</h1>
+      <div id="add-player-container">
+        <input type="text" id="new-player-name" placeholder="Enter player name">
+        <button class="btn" onclick="addPlayer()"><i class="fa-duotone fa-solid fa-user-plus fa-flip-horizontal "></i></button>
+      </div>
+      <div id="players"></div>
+      <button class="btn" onclick="startGame()" id="start-game-btn" style="display: none;"><i class="fa-solid fa-gamepad fa-xl"></i> Start Game</button>
+    </div>
+
+    <div id="game" style="display: none;">
+      <h1><i class="fa-solid fa-dice"></i> Yatzy!</h1>
+      <div id="current-player"></div>
+      <div id="dice" class="tile"></div>
+      <button id="rollBtn" class="btn" onclick="rollDice()">Roll (3)</button>
+      <div id="scorecard" class="tile"></div>
+      <button id="end-turn-btn" class="btn" onclick="nextTurn()" style="display: none;"><i class="fa-solid fa-skull-crossbones"></i> End Turn</button>
+    </div>
+
+    <div id="end-screen" class="tile" style="display: none;">
+      <h2><i class="fa-duotone fa-solid fa-ranking-star"></i></h2>
+      <h2>Game Over!</h2>
+      <div id="final-scores"></div>
+      <button class="btn" onclick="resetGame()">New Game</button>
+    </div>
+  </div>
+
+  <script>
+    const categories = [
+      'Ones', 'Twos', 'Threes', 'Fours', 'Fives', 'Sixes',
+      'Three of a Kind', 'Four of a Kind', 'Full House',
+      'Small Straight', 'Large Straight', 'Yatzy', 'Chance'
+    ];
+    let players = [];
+    let currentPlayer = 0;
+    let dice = [1, 1, 1, 1, 1];
+    let keptDice = [false, false, false, false, false];
+    let rollsLeft = 3;
+
+    function updatePlayersUI() {
+      const playersEl = document.getElementById('players');
+      playersEl.innerHTML = players.map((player, index) =>
+        `<span class="player-name ${currentPlayer === index ? 'current-player' : ''}">${player.name}</span>`
+      ).join('');
+      document.getElementById('start-game-btn').style.display = players.length >= 1 ? 'block' : 'none';
+    }
+
+    function updateCurrentPlayerUI() {
+      const currentPlayerEl = document.getElementById('current-player');
+      currentPlayerEl.innerHTML = `<h2>Current Player: ${players[currentPlayer].name}</h2>`;
+    }
+
+    function updateDiceUI() {
+      const diceEl = document.getElementById('dice');
+      diceEl.innerHTML = dice.map((die, index) =>
+        `<span class="die ${keptDice[index] ? 'kept' : ''}" onclick="toggleKeepDie(${index})">
+      <i class="fa-solid fa-dice-${['one', 'two', 'three', 'four', 'five', 'six'][die - 1]} fa-xl"></i>
+    </span>`
+      ).join('');
+    }
+
+    function updateScorecardUI() {
+      const scorecardEl = document.getElementById('scorecard');
+      scorecardEl.innerHTML = categories.map(category =>
+        `<button class="btn" onclick="selectCategory('${category}')" ${players[currentPlayer].scorecard[category] !== undefined ? 'disabled' : ''}>
+      ${category}: ${players[currentPlayer].scorecard[category] !== undefined ? players[currentPlayer].scorecard[category] : '-'}
+    </button>`
+      ).join('');
+    }
+
+    function rollDice() {
+      if (rollsLeft > 0) {
+        dice = dice.map((die, index) => keptDice[index] ? die : Math.floor(Math.random() * 6) + 1);
+        rollsLeft--;
+        document.getElementById('rollBtn').textContent = `Roll (${rollsLeft})`;
+        updateDiceUI();
+        document.getElementById('end-turn-btn').style.display = 'block';
+      }
+    }
+
+    function toggleKeepDie(index) {
+      if (rollsLeft < 3) {
+        keptDice[index] = !keptDice[index];
+        updateDiceUI();
+      }
+    }
+
+    function selectCategory(category) {
+      if (players[currentPlayer].scorecard[category] === undefined) {
+        players[currentPlayer].scorecard[category] = calculateScore(category);
+        updateScorecardUI();
+        document.getElementById('rollBtn').disabled = true;
+        document.querySelectorAll('#scorecard button').forEach(btn => btn.disabled = true);
+        document.getElementById('end-turn-btn').disabled = false;
+      }
+    }
+
+    function calculateScore(category) {
+      const counts = dice.reduce((acc, die) => {
+        acc[die] = (acc[die] || 0) + 1;
+        return acc;
+      }, {});
+      const sum = dice.reduce((a, b) => a + b, 0);
+      switch (category) {
+        case 'Ones':
+        case 'Twos':
+        case 'Threes':
+        case 'Fours':
+        case 'Fives':
+        case 'Sixes':
+          const number = categories.indexOf(category) + 1;
+          return dice.filter(d => d === number).reduce((a, b) => a + b, 0);
+        case 'Three of a Kind':
+          return Object.values(counts).some(count => count >= 3) ? sum : 0;
+        case 'Four of a Kind':
+          return Object.values(counts).some(count => count >= 4) ? sum : 0;
+        case 'Full House':
+          const hasThree = Object.values(counts).some(count => count === 3);
+          const hasTwo = Object.values(counts).some(count => count === 2);
+          return hasThree && hasTwo ? 25 : 0;
+        case 'Small Straight':
+          const uniqueSorted = [...new Set(dice)].sort((a, b) => a - b);
+          return uniqueSorted.some((_, i, arr) =>
+            arr.slice(i, i + 4).every((v, j) => j === 0 || v === arr[i + j - 1] + 1)
+          ) ? 30 : 0;
+        case 'Large Straight':
+          const sortedDice = [...dice].sort((a, b) => a - b);
+          return sortedDice.every((die, index) => index === 0 || die === sortedDice[index - 1] + 1) ? 40 : 0;
+        case 'Yatzy':
+          return Object.values(counts).some(count => count === 5) ? 50 : 0;
+        case 'Chance':
+          return sum;
+      }
+    }
+
+    function nextTurn() {
+      rollsLeft = 3;
+      keptDice = [false, false, false, false, false];
+      dice = [1, 1, 1, 1, 1];
+      document.getElementById('rollBtn').textContent = `Roll (${rollsLeft})`;
+      document.getElementById('rollBtn').disabled = false;
+      document.getElementById('end-turn-btn').style.display = 'none';
+      document.getElementById('end-turn-btn').disabled = true;
+      currentPlayer = (currentPlayer + 1) % players.length;
+      if (isGameOver()) {
+        endGame();
+      } else {
+        updateCurrentPlayerUI();
+        updateDiceUI();
+        updateScorecardUI();
+        rollDice(); // Automatically roll dice at the start of each turn
+      }
+    }
+
+    function isGameOver() {
+      return players.every(player =>
+        Object.keys(player.scorecard).length === categories.length
+      );
+    }
+
+    function endGame() {
+      const gameEl = document.getElementById('game');
+      const endScreenEl = document.getElementById('end-screen');
+      const finalScoresEl = document.getElementById('final-scores');
+      gameEl.style.display = 'none';
+      endScreenEl.style.display = 'block';
+      const sortedPlayers = [...players].sort((a, b) =>
+        calculateTotalScore(b.scorecard) - calculateTotalScore(a.scorecard)
+      );
+      finalScoresEl.innerHTML = sortedPlayers.map((player, index) =>
+        `<div class="${index === 0 ? 'winner' : ''}">
+      ${player.name}: ${calculateTotalScore(player.scorecard)} points ${index === 0 ? ' (Winner!)' : ''}
+    </div>`
+      ).join('');
+    }
+
+    function calculateTotalScore(scorecard) {
+      return Object.values(scorecard).reduce((a, b) => a + b, 0);
+    }
+
+    function resetGame() {
+      players = [];
+      currentPlayer = 0;
+      dice = [1, 1, 1, 1, 1];
+      keptDice = [false, false, false, false, false];
+      rollsLeft = 3;
+      document.getElementById('start-screen').style.display = 'block';
+      document.getElementById('game').style.display = 'none';
+      document.getElementById('end-screen').style.display = 'none';
+      document.getElementById('players').innerHTML = '';
+      document.getElementById('start-game-btn').style.display = 'none';
+    }
+
+    function addPlayer() {
+      const newPlayerName = document.getElementById('new-player-name').value.trim();
+      if (newPlayerName) {
+        players.push({
+          name: newPlayerName,
+          scorecard: {}
+        });
+        document.getElementById('new-player-name').value = '';
+        updatePlayersUI();
+      }
+    }
+
+    function startGame() {
+      if (players.length >= 1) {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        updateCurrentPlayerUI();
+        updateScorecardUI();
+        rollDice(); // Automatically roll dice at the start of the game
+      } else {
+        alert('Please add at least 1 player to start the game.');
+      }
+    }
+    // Initialize the game
+    document.getElementById('start-screen').style.display = 'block';
+  </script>
+</body>
+
+</html>
