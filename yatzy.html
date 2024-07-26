@@ -170,6 +170,17 @@
       color: #ff6f00;
     }
 
+    #rollBtn {
+      display: block;
+      margin: 20px auto;
+      font-size: 18px;
+      padding: 12px 24px;
+    }
+
+    #rollBtn i {
+      margin-right: 8px;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 10px;
@@ -215,7 +226,7 @@
       <h1><i class="fa-solid fa-dice"></i> Yatzy!</h1>
       <div id="current-player"></div>
       <div id="dice" class="tile"></div>
-      <button id="rollBtn" class="btn" onclick="rollDice()">Roll (3)</button>
+      <button id="rollBtn" class="btn" onclick="rollDice()"><i class="fa-solid fa-dice"></i> Roll (3)</button>
       <div id="scorecard" class="tile"></div>
       <button id="end-turn-btn" class="btn" onclick="nextTurn()" style="display: none;"><i class="fa-solid fa-skull-crossbones"></i> End Turn</button>
     </div>
@@ -275,7 +286,7 @@
       if (rollsLeft > 0) {
         dice = dice.map((die, index) => keptDice[index] ? die : Math.floor(Math.random() * 6) + 1);
         rollsLeft--;
-        document.getElementById('rollBtn').textContent = `Roll (${rollsLeft})`;
+        document.getElementById('rollBtn').innerHTML = `<i class="fa-solid fa-dice"></i> Roll (${rollsLeft})`;
         updateDiceUI();
         document.getElementById('end-turn-btn').style.display = 'block';
       }
@@ -340,7 +351,7 @@
       rollsLeft = 3;
       keptDice = [false, false, false, false, false];
       dice = [1, 1, 1, 1, 1];
-      document.getElementById('rollBtn').textContent = `Roll (${rollsLeft})`;
+      document.getElementById('rollBtn').innerHTML = `<i class="fa-solid fa-dice"></i> Roll (${rollsLeft})`;
       document.getElementById('rollBtn').disabled = false;
       document.getElementById('end-turn-btn').style.display = 'none';
       document.getElementById('end-turn-btn').disabled = true;
@@ -372,7 +383,9 @@
       );
       finalScoresEl.innerHTML = sortedPlayers.map((player, index) =>
         `<div class="${index === 0 ? 'winner' : ''}">
+
       ${player.name}: ${calculateTotalScore(player.scorecard)} points ${index === 0 ? ' (Winner!)' : ''}
+
     </div>`
       ).join('');
     }
@@ -420,6 +433,7 @@
     // Initialize the game
     document.getElementById('start-screen').style.display = 'block';
   </script>
+
 </body>
 
 </html>
