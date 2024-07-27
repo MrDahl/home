@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -9,25 +10,26 @@
       --background-color: #131419;
       --box-shadow-color-1: rgba(0, 0, 0, .51);
       --box-shadow-color-2: rgba(255, 255, 255, .05);
-      --border-color: none;
-      --text-color-primary: #0081cb;
-      --text-color-secondary: rgba(255, 255, 255, 0.1);
-      --text-shadow-color: #000;
-      --text-shadow-color-secondary: #000;
-      --hover-border-color: red;
+      --border-color: #0081cb;
+      --text-color-primary: #ffffff;
+      --text-color-secondary: #0081cb;
+      --hover-border-color: #ff4081;
       --reel-border-color: #131419;
+      --primary-gradient: linear-gradient(145deg, #1f1f25, #0e0e12);
+      --secondary-gradient: linear-gradient(145deg, #0e0e12, #1f1f25);
     }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       margin: 0;
-      background-color: var(--background-color);
+      background: var(--primary-gradient);
       user-select: none;
       flex-direction: column;
-      height: 90vh;
+      height: 100vh;
+      color: var(--text-color-primary);
     }
 
     .container {
@@ -35,12 +37,24 @@
       flex-direction: column;
       align-items: center;
       max-width: 400px;
-      background-color: var(--background-color);
+      background: var(--secondary-gradient);
       border-radius: 20px;
       padding: 20px;
       box-shadow: 8px 8px 15px var(--box-shadow-color-1), -8px -8px 15px var(--box-shadow-color-2);
       border: 2px solid var(--border-color);
       color: var(--text-color-primary);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .player-choices {
@@ -56,7 +70,7 @@
       height: 60px;
       border: none;
       border-radius: 15px;
-      background-color: var(--background-color);
+      background: var(--primary-gradient);
       font-size: 1.5em;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -67,6 +81,7 @@
     .choice-btn:hover {
       box-shadow: inset 5px 5px 10px var(--box-shadow-color-1), inset -5px -5px 10px var(--box-shadow-color-2);
       border: 4px solid var(--hover-border-color);
+      transform: scale(1.1);
     }
 
     .game-area {
@@ -90,7 +105,7 @@
       height: 80px;
       width: 80px;
       overflow: hidden;
-      background-color: var(--background-color);
+      background: var(--primary-gradient);
       border-radius: 20px;
       padding: 20px;
       box-shadow: 5px 5px 10px var(--box-shadow-color-1), -5px -5px 10px var(--box-shadow-color-2);
@@ -103,7 +118,7 @@
       overflow: hidden;
       text-align: center;
       box-sizing: border-box;
-      background-color: var(--background-color);
+      background: var(--secondary-gradient);
       position: relative;
       border-radius: 10px;
       box-shadow: inset 2px 2px 5px var(--box-shadow-color-1), inset -2px -2px 5px var(--box-shadow-color-2);
@@ -125,25 +140,27 @@
 
     .results {
       text-align: center;
-      font-size: 1.3em;
+      font-size: 1.5em;
       min-height: 40px;
+      margin-top: 10px;
     }
 
     .scores {
       display: flex;
       justify-content: space-between;
-      width: 30%;
-      font-size: 1em;
-      background-color: var(--background-color);
+      width: 40%;
+      font-size: 1.2em;
+      background: var(--secondary-gradient);
       padding: 10px 20px;
       border-radius: 10px;
       box-shadow: inset 2px 2px 5px var(--box-shadow-color-1), inset -2px -2px 5px var(--box-shadow-color-2);
       border: 2px solid var(--border-color);
+      margin-top: 10px;
     }
 
     h3 {
       text-align: center;
-      color: var(--text-color-secondary:);
+      color: var(--text-color-secondary);
       margin-bottom: 20px;
       text-shadow: 1px 1px 2px var(--text-shadow-color);
     }
@@ -151,22 +168,26 @@
     h4 {
       text-align: center;
       color: var(--text-color-secondary);
-      margin-bottom: 20px;
+      margin-top: 20px;
       text-shadow: 1px 1px 0px var(--text-shadow-color-secondary);
     }
 
     .rules {
       margin: 0 20px;
       text-align: left;
-      background-color: var(--background-color);
+      background: var(--primary-gradient);
       border-radius: 10px;
       padding: 10px;
       align-items: center;
       box-shadow: inset 2px 2px 5px var(--box-shadow-color-1), inset -2px -2px 5px var(--box-shadow-color-2);
       border: 2px solid var(--border-color);
     }
-  </style>
 
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 
 <body>
