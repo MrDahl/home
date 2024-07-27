@@ -181,6 +181,37 @@
       margin-right: 8px;
     }
 
+    #rules-toggle {
+      display: block;
+      margin: 20px auto;
+      cursor: pointer;
+      font-size: 18px;
+      color: #0277bd;
+    }
+
+    #rules-content {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 10px;
+    }
+
+    #rules-content h3 {
+      margin-top: 0;
+    }
+
+    #rules-content ul {
+      padding-left: 20px;
+    }
+
+    #final-scores {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 10px;
@@ -216,7 +247,7 @@
       <h1><i class="fa-solid fa-dice"></i> Yatzy!</h1>
       <div id="add-player-container">
         <input type="text" id="new-player-name" placeholder="Enter player name">
-        <button class="btn" onclick="addPlayer()"><i class="fa-duotone fa-solid fa-user-plus fa-flip-horizontal "></i></button>
+        <button class="btn" id="add-player-btn"><i class="fa-duotone fa-solid fa-user-plus fa-flip-horizontal"></i></button>
       </div>
       <div id="players"></div>
       <button class="btn" onclick="startGame()" id="start-game-btn" style="display: none;"><i class="fa-solid fa-gamepad fa-xl"></i> Start Game</button>
@@ -224,6 +255,22 @@
 
     <div id="game" style="display: none;">
       <h1><i class="fa-solid fa-dice"></i> Yatzy!</h1>
+      <div id="rules-toggle" onclick="toggleRules()">
+        <i class="fa-solid fa-scale-balanced"></i> Show/Hide Rules
+      </div>
+      <div id="rules-content">
+        <h3>Yatzy Rules:</h3>
+        <ul>
+          <li>Ones to Sixes: Sum of the specified die face</li>
+          <li>Three of a Kind: Sum of all dice if 3+ of one face</li>
+          <li>Four of a Kind: Sum of all dice if 4+ of one face</li>
+          <li>Full House: 25 points for 3 of one face and 2 of another</li>
+          <li>Small Straight: 30 points for 4 sequential dice</li>
+          <li>Large Straight: 40 points for 5 sequential dice</li>
+          <li>Yatzy: 50 points for 5 of the same face</li>
+          <li>Chance: Sum of all dice</li>
+        </ul>
+      </div>
       <div id="current-player"></div>
       <div id="dice" class="tile"></div>
       <button id="rollBtn" class="btn" onclick="rollDice()"><i class="fa-solid fa-dice"></i> Roll (3)</button>
@@ -240,6 +287,9 @@
   </div>
 
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('add-player-btn').addEventListener('click', addPlayer);
+    });
     const categories = [
       'Ones', 'Twos', 'Threes', 'Fours', 'Fives', 'Sixes',
       'Three of a Kind', 'Four of a Kind', 'Full House',
@@ -247,9 +297,14 @@
     ];
     let players = [];
     let currentPlayer = 0;
-    let dice = [1, 1, 1, 1, 1];
+    let dice = [0, 0, 0, 0, 0];
     let keptDice = [false, false, false, false, false];
     let rollsLeft = 3;
+
+    function toggleRules() {
+      const rulesContent = document.getElementById('rules-content');
+      rulesContent.style.display = rulesContent.style.display === 'none' ? 'block' : 'none';
+    }
 
     function updatePlayersUI() {
       const playersEl = document.getElementById('players');
@@ -268,17 +323,17 @@
       const diceEl = document.getElementById('dice');
       diceEl.innerHTML = dice.map((die, index) =>
         `<span class="die ${keptDice[index] ? 'kept' : ''}" onclick="toggleKeepDie(${index})">
-      <i class="fa-solid fa-dice-${['one', 'two', 'three', 'four', 'five', 'six'][die - 1]} fa-xl"></i>
-    </span>`
+          ${die === 0 ? '<i class="fa-solid fa-square"></i>' : `<i class="fa-solid fa-dice-${['one', 'two', 'three', 'four', 'five', 'six'][die - 1]} fa-xl"></i>`}
+        </span>`
       ).join('');
     }
 
     function updateScorecardUI() {
       const scorecardEl = document.getElementById('scorecard');
       scorecardEl.innerHTML = categories.map(category =>
-        `<button class="btn" onclick="selectCategory('${category}')" ${players[currentPlayer].scorecard[category] !== undefined ? 'disabled' : ''}>
-      ${category}: ${players[currentPlayer].scorecard[category] !== undefined ? players[currentPlayer].scorecard[category] : '-'}
-    </button>`
+        `<button class="btn" onclick="selectCategory('${category}')" disabled>
+          ${category}: ${players[currentPlayer].scorecard[category] !== undefined ? players[currentPlayer].scorecard[category] : '-'}
+        </button>`
       ).join('');
     }
 
@@ -288,12 +343,13 @@
         rollsLeft--;
         document.getElementById('rollBtn').innerHTML = `<i class="fa-solid fa-dice"></i> Roll (${rollsLeft})`;
         updateDiceUI();
+        document.querySelectorAll('#scorecard button').forEach(btn => btn.disabled = false); // Enable scorecard buttons
         document.getElementById('end-turn-btn').style.display = 'block';
       }
     }
 
     function toggleKeepDie(index) {
-      if (rollsLeft < 3) {
+      if (rollsLeft < 3 && dice[index] !== 0) {
         keptDice[index] = !keptDice[index];
         updateDiceUI();
       }
@@ -350,7 +406,7 @@
     function nextTurn() {
       rollsLeft = 3;
       keptDice = [false, false, false, false, false];
-      dice = [1, 1, 1, 1, 1];
+      dice = [0, 0, 0, 0, 0];
       document.getElementById('rollBtn').innerHTML = `<i class="fa-solid fa-dice"></i> Roll (${rollsLeft})`;
       document.getElementById('rollBtn').disabled = false;
       document.getElementById('end-turn-btn').style.display = 'none';
@@ -362,7 +418,6 @@
         updateCurrentPlayerUI();
         updateDiceUI();
         updateScorecardUI();
-        rollDice(); // Automatically roll dice at the start of each turn
       }
     }
 
@@ -383,10 +438,8 @@
       );
       finalScoresEl.innerHTML = sortedPlayers.map((player, index) =>
         `<div class="${index === 0 ? 'winner' : ''}">
-
-      ${player.name}: ${calculateTotalScore(player.scorecard)} points ${index === 0 ? ' (Winner!)' : ''}
-
-    </div>`
+          ${player.name}: ${calculateTotalScore(player.scorecard)} points ${index === 0 ? ' (Winner!)' : ''}
+        </div>`
       ).join('');
     }
 
@@ -397,7 +450,7 @@
     function resetGame() {
       players = [];
       currentPlayer = 0;
-      dice = [1, 1, 1, 1, 1];
+      dice = [0, 0, 0, 0, 0];
       keptDice = [false, false, false, false, false];
       rollsLeft = 3;
       document.getElementById('start-screen').style.display = 'block';
@@ -414,8 +467,11 @@
           name: newPlayerName,
           scorecard: {}
         });
+        console.log('Player added:', newPlayerName);
         document.getElementById('new-player-name').value = '';
         updatePlayersUI();
+      } else {
+        console.log('Player name is empty');
       }
     }
 
@@ -424,8 +480,8 @@
         document.getElementById('start-screen').style.display = 'none';
         document.getElementById('game').style.display = 'block';
         updateCurrentPlayerUI();
+        updateDiceUI();
         updateScorecardUI();
-        rollDice(); // Automatically roll dice at the start of the game
       } else {
         alert('Please add at least 1 player to start the game.');
       }
@@ -433,7 +489,6 @@
     // Initialize the game
     document.getElementById('start-screen').style.display = 'block';
   </script>
-
 </body>
 
 </html>
