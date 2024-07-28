@@ -7,11 +7,14 @@
   <title>Time Traveler's Dilemmas</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f0f0f0;
+      background: linear-gradient(135deg, #1c2331, #0f172a);
+      color: #e2e8f0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,24 +23,31 @@
     }
 
     .game-container {
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
       padding: 2rem;
-      max-width: 600px;
-      width: 100%;
+      max-width: 800px;
+      width: 90%;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
 
     h1 {
-      color: #2c3e50;
-      margin-bottom: 1rem;
+      font-family: 'Orbitron', sans-serif;
+      color: #60a5fa;
+      margin-bottom: 2rem;
+      font-size: 2.5em;
+      text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
     }
 
     #game-status {
       display: flex;
       justify-content: space-around;
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
+      background-color: rgba(0, 0, 0, 0.2);
+      padding: 1rem;
+      border-radius: 10px;
     }
 
     .status-item {
@@ -48,60 +58,86 @@
 
     .status-label {
       font-size: 0.9rem;
-      color: #7f8c8d;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .status-value {
       font-size: 1.2rem;
       font-weight: bold;
-      color: #2c3e50;
+      color: #60a5fa;
+      margin-top: 0.5rem;
     }
 
     #scenario {
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-      color: #34495e;
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+      color: #e2e8f0;
+      line-height: 1.6;
     }
 
     #choices {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
 
     button {
-      background-color: #3498db;
+      background-color: #3b82f6;
       color: white;
       border: none;
-      padding: 0.8rem;
+      padding: 1rem;
       font-size: 1rem;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     button:hover {
-      background-color: #2980b9;
+      background-color: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(59, 130, 246, 0.4);
+    }
+
+    #choices button {
+      background-color: #4b5563;
+      border-left: 5px solid #3b82f6;
+    }
+
+    #choices button:hover {
+      background-color: #374151;
+      border-left-color: #2563eb;
     }
 
     #next-period,
     #restart-game {
-      margin-top: 1rem;
-      background-color: #2ecc71;
+      background-color: #10b981;
     }
 
     #next-period:hover,
     #restart-game:hover {
-      background-color: #27ae60;
+      background-color: #059669;
     }
 
     #transfer-energy {
-      margin-top: 1rem;
-      background-color: #e74c3c;
+      background-color: #ef4444;
     }
 
     #transfer-energy:hover {
-      background-color: #c0392b;
+      background-color: #dc2626;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
     }
 
     .fa {
@@ -113,12 +149,50 @@
     }
 
     #start-game {
-      margin-top: 1rem;
+      margin-top: 2rem;
     }
 
     img {
       max-width: 100%;
-      max-height: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    #epoch {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #60a5fa;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    #scenario-image {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .game-container {
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      #game-status {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      button {
+        padding: 0.8rem;
+      }
     }
   </style>
 </head>
@@ -128,15 +202,20 @@
     <div id="title-screen">
       <h1>Time Traveler's Dilemmas</h1>
       <h1><i class="fa-solid fa-code-branch fa-rotate-90 fa-xl"></i></h1>
-      <p>You are a time traveler tasked with fixing the timeline. Navigate through different historical periods, make crucial decisions, and maintain the stability of time itself.</p>
+      <p>You are a time traveler tasked with fixing the timeline, that is started to deviate from it's vector. </p>
+      <p>Navigate through different historical periods, make crucial decisions, and maintain the stability of time itself.</p>
       <p>Be careful with your Temporal Energy - if it runs out, you'll be lost in the void of time forever! You can recharge your Temporal Energy, by sacrificing the Timeline Stability.</p>
       <p> Make sure to balance your energy and stability of the timeline, otherwise you will be faced with the consequences of your actions.</p>
-      <p>Hint: <i>All the choices you make affect the timeline differently. Make sure you understand which timeperiod you are in.</i></p>
-      <img src="https://mrdahl.github.io/home/time_intro.jpeg" alt="Time Traveler's Dilemmas">
+      <p>Hint: <i>All the choices you make affect the timeline differently. Make sure you understand which timeperiod you are in. And what kind of world you want to live in when you get back to your own time after your mission.</i></p>
+      <img src="https://mrdahl.github.io/home/title.jpeg" alt="Time Traveler's Dilemmas">
       <button id="start-game">Start Game</button>
     </div>
     <div id="game-content" style="display: none;">
       <div id="game-status">
+        <div class="status-item">
+          <span class="status-label">Epoch</span>
+          <span id="current-epoch" class="status-value"></span>
+        </div>
         <div class="status-item">
           <span class="status-label">Timeline Stability</span>
           <span id="timeline-stability" class="status-value">100%</span>
@@ -146,19 +225,25 @@
           <span id="temporal-energy" class="status-value">100%</span>
         </div>
       </div>
+      <img id="scenario-image" src="" alt="Scenario Image">
       <p id="scenario"></p>
       <div id="choices"></div>
-      <button id="next-period" style="display: none;">Next Period</button>
-      <button id="transfer-energy" style="display: none;">Transfer Energy</button>
+      <div class="button-container">
+        <button id="next-period" style="display: none;">Next Period</button>
+        <button id="transfer-energy" style="display: none;">Transfer Energy</button>
+      </div>
     </div>
     <button id="restart-game" style="display: none;">Restart Game</button>
+  </div>
+  <button id="restart-game" style="display: none;">Restart Game</button>
   </div>
   <script>
     const gameData = {
       periods: [{
           name: "Stone Age",
+          image: "https://mrdahl.github.io/home/stone.jpeg",
           scenarios: [{
-              description: "A neighboring tribe is planning to attack your village. How do you handle it?",
+              description: "Tribal Conflict: The leader of a Neolithic settlement in the fertile crescent of Mesopotamia, received alarming news. The aggressive Ubaid tribe from the south is planning to attack the village, seeking to expand their territory and steal the bountiful harvest. People, skilled in agriculture but inexperienced in warfare, look to you for guidance. The future of their civilization hangs in the balance.",
               choices: [{
                   text: "Negotiate peace with the tribe.",
                   effect: {
@@ -198,7 +283,7 @@
               ]
             },
             {
-              description: "A harsh winter is approaching and your village is low on supplies.",
+              description: "Harsh Winter: The wheel has just been invented, but the settlement near modern-day Çatalhöyük is facing a crisis. An unusually harsh winter is approaching, and the food stores are dangerously low. The cave paintings that usually bring hope now seem to mock tribemens predicament. As the first frost settles on the ground, the tribe looks at you to find a way to ensure their survival through the long, cold months ahead.",
               choices: [{
                   text: "Trade with neighboring tribes for resources.",
                   effect: {
@@ -241,8 +326,9 @@
         },
         {
           name: "Bronze Age Mesopotamia",
+          image: "https://mrdahl.github.io/home/bronze.jpeg",
           scenarios: [{
-              description: "A drought is causing severe famine in the region.",
+              description: "The Great Drought: In the shadow of the great ziggurat of Ur, a severe drought threatens to bring the mighty Sumerian civilization to its knees. The once-mighty Euphrates has shrunk to a trickle, and the fields lie parched and barren. King Shulgi, asks you for help to find a way to save his people from starvation and maintain the glory of the Third Dynasty of Ur.",
               choices: [{
                   text: "Negotiate water-sharing agreements.",
                   effect: {
@@ -282,7 +368,7 @@
               ]
             },
             {
-              description: "A neighboring city-state is threatening war over territorial disputes.",
+              description: "City-State Rivalry: The year is 2350 BCE, and tensions are high between the city-states of Lagash and Umma. A long-standing border dispute over the fertile Gu'edena region has escalated, and war seems imminent. The High Priest of Enlil, prays you to settle the conflict between the two rulers. The decisions you make now will shape the future of Sumer and perhaps all of Mesopotamia.",
               choices: [{
                   text: "Propose a peaceful resolution.",
                   effect: {
@@ -325,8 +411,9 @@
         },
         {
           name: "Ancient China",
+          image: "https://mrdahl.github.io/home/china.jpeg",
           scenarios: [{
-              description: "The Great Wall construction is facing significant delays due to labor disputes.",
+              description: "The Great Wall Dilemma: It's 215 BCE, and Emperor Qin Shi Huang's ambitious project to unite existing fortifications into a Great Wall is facing a crisis. At a section near the Ordos Loop, workers are rebelling against the harsh conditions and forced labor. Emperor's trusted advisor, begs for your help to find a way to complete this monumental task without losing the Mandate of Heaven.",
               choices: [{
                   text: "Negotiate better working conditions for laborers.",
                   effect: {
@@ -366,7 +453,7 @@
               ]
             },
             {
-              description: "A neighboring kingdom threatens to invade.",
+              description: "Threat of Invasion: The year is 200 BCE, and the newly established Han Dynasty faces its greatest challenge. The Xiongnu confederation, led by the charismatic Modu Chanyu, is amassing a great army on the northern borders. Emperor Gaozu looks to you, to save the empire from this existential threat.",
               choices: [{
                   text: "Propose an alliance through diplomacy.",
                   effect: {
@@ -409,8 +496,9 @@
         },
         {
           name: "Ancient Egypt",
+          image: "https://mrdahl.github.io/home/egypt.jpeg",
           scenarios: [{
-              description: "A group of assassins is plotting against Pharaoh Tutankhamun.",
+              description: "Pharaoh in Peril: In the opulent royal palace of Thebes, 1323 BCE, a sinister plot unfolds. A group of disgruntled priests and nobles, threatened by the young Pharaoh Tutankhamun's efforts to restore the old gods, are planning his assassination. Paraoh's most loyal scribe and confidant, insists you must act quickly to save the boy king and preserve the delicate balance of power in the Two Lands.",
               choices: [{
                   text: "Convince the assassins to abandon their plot.",
                   effect: {
@@ -450,7 +538,7 @@
               ]
             },
             {
-              description: "A major drought threatens to cause famine.",
+              description: "Nile's Fury: The year is 2450 BCE, during the reign of Pharaoh Khafre. The annual flooding of the Nile, usually a blessing, has become a curse. Unusually high waters threaten to destroy crops, villages, and even damage the Great Sphinx under construction. The high priest of Ra, demands of you to find a way to appease the gods and save Egypt from this calamity.",
               choices: [{
                   text: "Negotiate with neighboring regions for food.",
                   effect: {
@@ -493,8 +581,9 @@
         },
         {
           name: "Ancient Rome",
+          image: "https://mrdahl.github.io/home/rome.jpeg",
           scenarios: [{
-              description: "A coup is being planned to overthrow the current emperor.",
+              description: "Ides of March: It's the early morning of March 15, 44 BCE in Rome. You've uncovered a plot to assassinate Julius Caesar later this day at the Theatre of Pompey. A trusted ally of Caesar, is afraid that you have mere hours to prevent this conspiracy that could plunge the Republic into chaos.",
               choices: [{
                   text: "Negotiate with the conspirators.",
                   effect: {
@@ -534,7 +623,7 @@
               ]
             },
             {
-              description: "A devastating fire breaks out in the city.",
+              description: "The Great Fire: July 18, 64 CE: A small fire that started in the shops around the Circus Maximus has rapidly spread, threatening to engulf all of Rome. Nero's chief advisor, is asking you to coordinate efforts to contain the blaze and maintain order. Your actions now will determine whether this disaster becomes an opportunity for renewal or the beginning of the empire's decline.",
               choices: [{
                   text: "Coordinate a city-wide evacuation and aid.",
                   effect: {
@@ -577,8 +666,9 @@
         },
         {
           name: "Ancient Russia",
+          image: "https://mrdahl.github.io/home/russia.jpeg",
           scenarios: [{
-              description: "A powerful noble is planning a rebellion.",
+              description: "Kievan Rus' Rebellion: It's 970 CE in Kiev, the capital of the flourishing Kievan Rus'. Prince Sviatoslav's extended military campaigns have left the city vulnerable. You have uncovered a plot by a powerful boyar to overthrow the Rurik Dynasty. With Sviatoslav away, his advisers ask you, to act decisively to preserve the unity of the Rus'.",
               choices: [{
                   text: "Attempt to negotiate peace.",
                   effect: {
@@ -618,7 +708,7 @@
               ]
             },
             {
-              description: "A severe winter is causing widespread famine.",
+              description: "The Long Winter: In the fortified city of Novgorod, 1215 CE, an unusually severe winter has descended upon the land. The frozen Volkhov River has halted trade, and food supplies are running critically low. The elected posadnik (mayor) of the Novgorod Republic, must find a way to feed his people and maintain order until the spring thaw. What are you going to do?",
               choices: [{
                   text: "Organize relief efforts with diplomacy.",
                   effect: {
@@ -661,8 +751,9 @@
         },
         {
           name: "Dark Ages",
+          image: "https://mrdahl.github.io/home/darkage.jpeg",
           scenarios: [{
-              description: "A plague is spreading through the land.",
+              description: "The Black Death: It's 1348, and the devastating plague has reached the gates of Paris. Panic grips the city as the disease spreads rapidly through the crowded streets. The chief physician to King Philip VI, asks of yor assistance to find a way to contain the outbreak and maintain order in the face of this unprecedented crisis.",
               choices: [{
                   text: "Organize quarantine zones to contain the plague.",
                   effect: {
@@ -702,7 +793,7 @@
               ]
             },
             {
-              description: "A warlord is trying to seize control of the region.",
+              description: "Rise of a Warlord: In the chaos following the fall of the Western Roman Empire, 476 CE, a charismatic warlord named Odoacer is rallying various Germanic tribes to seize control of Italy. Many different Roman senators try to advise you, while you are navigating this dangerous political landscape to either preserve what remains of Roman civilization and power, or for it to be crushed once and for all.",
               choices: [{
                   text: "Negotiate a truce with the warlord.",
                   effect: {
@@ -745,8 +836,9 @@
         },
         {
           name: "Renaissance Italy",
+          image: "https://mrdahl.github.io/home/italy.jpeg",
           scenarios: [{
-              description: "A conspiracy to overthrow the Medici family is underway.",
+              description: "Medici Conspiracy: Florence, 1478: The powerful Pazzi family, backed by Pope Sixtus IV, is plotting to overthrow Lorenzo de' Medici and seize control of Florence. A close friend of Lorenzo and a respected humanist scholar, caught wind of this conspiracy, asks for your help. Your actions will determine the future of Florence and the course of the Renaissance itself.",
               choices: [{
                   text: "Mediate between the conspirators and the Medici.",
                   effect: {
@@ -786,7 +878,7 @@
               ]
             },
             {
-              description: "Leonardo da Vinci is about to unveil his latest invention, but there's a risk it will be misused.",
+              description: "Da Vinci's Dangerous Invention: Milan, 1485: Leonardo da Vinci, under the patronage of Ludovico Sforza, is about to unveil his latest military invention - an early prototype of a tank. However, you foresee that this weapon could bring untold destruction if it falls into the wrong hands. As you need to bring balance to the timeline, you must decide how to handle this potentially world-changing invention.",
               choices: [{
                   text: "Discuss the ethical implications with da Vinci.",
                   effect: {
@@ -829,8 +921,9 @@
         },
         {
           name: "Industrial Revolution",
+          image: "https://mrdahl.github.io/home/industry.jpeg",
           scenarios: [{
-              description: "A workers' strike is brewing due to poor conditions in the factories.",
+              description: "The Luddite Uprising: Manchester, England, 1812: The introduction of power looms and other machinery has led to widespread unemployment and unrest among textile workers. A group calling themselves the Luddites is destroying machines and threatening factory owners. As a prominent industrialist, you must find a way to address the workers' concerns while safeguarding the future of industrial progress.",
               choices: [{
                   text: "Negotiate better conditions with factory owners.",
                   effect: {
@@ -870,7 +963,7 @@
               ]
             },
             {
-              description: "A new steam engine design could revolutionize industry, but it's untested and dangerous.",
+              description: "The Great Exhibition: London, 1851: Prince Albert's dream of showcasing the world's industrial and cultural achievements is about to become a reality with the Great Exhibition. However, a revolutionary new steam engine design, set to be the centerpiece of the British display, has shown dangerous instabilities in testing. The chief engineer of the project, must decide whether to unveil this groundbreaking but risky technology to the world. Your intefference is needed in this matter.",
               choices: [{
                   text: "Conduct a public test to prove its safety.",
                   effect: {
@@ -913,8 +1006,9 @@
         },
         {
           name: "World War 1",
+          image: "https://mrdahl.github.io/home/ww1.jpeg",
           scenarios: [{
-              description: "The Western Front is at a stalemate and morale is low.",
+              description: "Trench Warfare Dilemma: Western Front, 1916: The Battle of Verdun has been raging for months, with massive casualties on both sides. Morale is at an all-time low, and soldiers are beginning to question the purpose of the war. A high-ranking officer, is seeking for your advice, to find a way to break the stalemate and boost morale before the entire front collapses.",
               choices: [{
                   text: "Negotiate a temporary truce to boost morale.",
                   effect: {
@@ -954,7 +1048,7 @@
               ]
             },
             {
-              description: "A major flu epidemic is spreading through the troops.",
+              description: "The Spanish Flu Crisis: France, 1918: As the war nears its end, a deadly influenza epidemic is sweeping through the Allied forces. With medical resources stretched thin and the need to maintain military strength for the final push, the chief medical officer, must make difficult decisions to contain the outbreak without compromising the war effort, and asks for your aid.",
               choices: [{
                   text: "Negotiate with medical authorities for better treatment.",
                   effect: {
@@ -997,8 +1091,9 @@
         },
         {
           name: "World War 2",
+          image: "https://mrdahl.github.io/home/ww2.jpeg",
           scenarios: [{
-              description: "A crucial battle is imminent, and the outcome could turn the tide of the war.",
+              description: "D-Day Deception: London, June 1944: Operation Overlord, the Allied invasion of Nazi-occupied France, is about to begin. A key member of the British intelligence service, had tasked you with coordinating the final stages of Operation Bodyguard, the deception plan to mislead the Germans about the time and place of the invasion. The success of D-Day, and perhaps the entire war, hinges on your decision and will to outmaneuver German intelligence.",
               choices: [{
                   text: "Use diplomacy to gather intelligence and allies.",
                   effect: {
@@ -1038,9 +1133,9 @@
               ]
             },
             {
-              description: "An important figure in the resistance movement has been captured.",
+              description: "Manhattan Project Dilemma: Los Alamos, New Mexico, July 1945: The first atomic bomb has been successfully tested at Trinity Site. A senior scientist on the Manhattan Project, is now grappling with the moral implications of this weapon of unprecedented destructive power. With Japan still refusing to surrender, you must advise him on whether to use the bomb, potentially saving Allied lives but at a terrible cost.",
               choices: [{
-                  text: "Negotiate for their release.",
+                  text: "Advice on using the bomb.",
                   effect: {
                     stability: 5,
                     energy: -10,
@@ -1049,7 +1144,7 @@
                   icon: "fa-handshake"
                 },
                 {
-                  text: "Plan a daring rescue operation.",
+                  text: "Decide to not use the bombs.",
                   effect: {
                     stability: 10,
                     energy: -10,
@@ -1058,7 +1153,7 @@
                   icon: "fa-shield-alt"
                 },
                 {
-                  text: "Use espionage techniques to free them.",
+                  text: "Create the Atomic-Peace-Organisation, that prevents any future exploration on atomic energy.",
                   effect: {
                     stability: 22,
                     energy: -10,
@@ -1067,7 +1162,7 @@
                   icon: "fa-flask"
                 },
                 {
-                  text: "Apply historical knowledge of resistance tactics.",
+                  text: "Advice on dropping two bombs.",
                   effect: {
                     stability: 1,
                     energy: -10,
@@ -1081,8 +1176,9 @@
         },
         {
           name: "The Space Race and The Cold War",
+          image: "https://mrdahl.github.io/home/coldwar.jpeg",
           scenarios: [{
-              description: "A critical satellite launch is at risk of failure.",
+              description: "Apollo 13 Crisis: Houston, April 1970: - (Houston, we've had a problem.) These words from the Apollo 13 spacecraft signal the beginning of a desperate race against time. The flight director at Mission Control, needs your help to bring three astronauts safely back to Earth with limited power, dwindling oxygen, and failing systems.",
               choices: [{
                   text: "Negotiate with other nations for support.",
                   effect: {
@@ -1093,7 +1189,7 @@
                   icon: "fa-comments"
                 },
                 {
-                  text: "Lead a team to ensure the launch's success.",
+                  text: "Lead a team to ensure the missions success.",
                   effect: {
                     stability: 20,
                     energy: -10,
@@ -1102,7 +1198,7 @@
                   icon: "fa-person-rifle"
                 },
                 {
-                  text: "Develop new technologies to guarantee the launch.",
+                  text: "Develop new technologies to retrieve the austronauts.",
                   effect: {
                     stability: 10,
                     energy: -10,
@@ -1122,38 +1218,38 @@
               ]
             },
             {
-              description: "A spy ring is operating within your organization.",
+              description: "Cuban Missile Crisis: Washington D.C., October 1962: Soviet missiles have been discovered in Cuba, bringing the world to the brink of nuclear war. The key advisor to President Kennedy must navigate this crisis, balancing the need to stand firm against Soviet aggression with the imperative to avoid a catastrophic conflict. How are you going to aid him?",
               choices: [{
-                  text: "Use diplomacy to turn the spies into double agents.",
+                  text: "Use diplomacy to sign a non-atomic treaty.",
                   effect: {
-                    stability: 0,
+                    stability: 20,
                     energy: -10,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
                 },
                 {
-                  text: "Expose and arrest the spies.",
+                  text: "Launch everything you've got.",
                   effect: {
-                    stability: 10,
+                    stability: -37,
                     energy: -10,
                     skill: "combat"
                   },
                   icon: "fa-shield-alt"
                 },
                 {
-                  text: "Develop advanced counter-espionage techniques.",
+                  text: "Develop advanced spying techniques to infiltrate and disable Soviet bases.",
                   effect: {
-                    stability: 18,
+                    stability: -6,
                     energy: -10,
                     skill: "technology"
                   },
                   icon: "fa-flask"
                 },
                 {
-                  text: "Draw on historical espionage cases.",
+                  text: "Let Soviets take over Cuba.",
                   effect: {
-                    stability: 1,
+                    stability: -12,
                     energy: -10,
                     skill: "historicalKnowledge"
                   },
@@ -1165,28 +1261,29 @@
         },
         {
           name: "Computer Age",
+          image: "https://mrdahl.github.io/home/compage.jpeg",
           scenarios: [{
-              description: "A major cyber attack threatens national security.",
+              description: "Y2K Countdown: New York City, December 31, 1999: As the world prepares to celebrate the new millennium, fear of the Y2K bug threatens to cause global panic. The head of a major tech company, needs your help to prevent potential system failures while also managing public fear and misinformation.",
               choices: [{
-                  text: "Negotiate with the attackers to stop the attack.",
+                  text: "Educate the population on the matter.",
                   effect: {
-                    stability: 15,
+                    stability: 25,
                     energy: -10,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
                 },
                 {
-                  text: "Launch a counter-attack to neutralize the threat.",
+                  text: "Implement a glitch to disable all the computers at midnight.",
                   effect: {
-                    stability: 13,
+                    stability: -20,
                     energy: -10,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
                 },
                 {
-                  text: "Develop new cybersecurity measures.",
+                  text: "Develop a protocol on how to react if the systems crash.",
                   effect: {
                     stability: 25,
                     energy: -10,
@@ -1195,9 +1292,9 @@
                   icon: "fa-lightbulb"
                 },
                 {
-                  text: "Apply historical knowledge of cyber attacks.",
+                  text: "Navigate humanity towards quantum computing instead.",
                   effect: {
-                    stability: 3,
+                    stability: -17,
                     energy: -10,
                     skill: "historicalKnowledge"
                   },
@@ -1206,11 +1303,11 @@
               ]
             },
             {
-              description: "A breakthrough in AI development could change the world.",
+              description: "Rise of Social Media: Silicon Valley, 2004: The founder of a promising new social media platform just discovered that their creation can be easily manipulated to spread misinformation and influence elections. With user numbers growing exponentially, they need your expertise to decide how to address these ethical concerns without stifling the platform's potential for global connectivity.",
               choices: [{
                   text: "Discuss the ethical implications with developers.",
                   effect: {
-                    stability: 5,
+                    stability: -15,
                     energy: -10,
                     skill: "diplomacy"
                   },
@@ -1219,7 +1316,7 @@
                 {
                   text: "Sabotage the project to prevent potential dangers.",
                   effect: {
-                    stability: -35,
+                    stability: 5,
                     energy: -10,
                     skill: "combat"
                   },
@@ -1263,6 +1360,7 @@
     function updateGameStatus() {
       document.getElementById("timeline-stability").innerText = `${gameData.timelineStability}%`;
       document.getElementById("temporal-energy").innerText = `${gameData.temporalEnergy}%`;
+      document.getElementById("current-epoch").innerText = gameData.periods[currentPeriodIndex].name;
     }
 
     function shuffleArray(array) {
@@ -1276,6 +1374,7 @@
       const period = gameData.periods[currentPeriodIndex];
       const scenario = period.scenarios[currentScenarioIndex];
       document.getElementById("scenario").innerText = scenario.description;
+      document.getElementById("scenario-image").src = period.image;
       const choicesContainer = document.getElementById("choices");
       choicesContainer.innerHTML = "";
       const choices = [...scenario.choices];
@@ -1286,6 +1385,7 @@
         button.onclick = () => makeChoice(index);
         choicesContainer.appendChild(button);
       });
+      updateGameStatus();
     }
 
     function makeChoice(choiceIndex) {
@@ -1335,7 +1435,7 @@
       let imageUrl = "";
       if (outOfEnergy) {
         endMessage = "Your time machine has run out of Temporal Energy. You are now floating alone in the vast nothingness of time, destined to drift until the heat death of the universe claims you. Your journey ends here, lost in the cosmic tapestry of eternity.";
-        imageUrl = "https://mrdahl.github.io/home/time_over.jpeg";
+        imageUrl = "https://mrdahl.github.io/home/void.jpeg";
       } else if (gameData.timelineStability <= 20) {
         endMessage = "The world has descended into apocalyptic chaos. Civilization as we know it has collapsed.";
         imageUrl = "https://mrdahl.github.io/home/20.jpeg";
@@ -1407,20 +1507,28 @@
       document.getElementById("title-screen").style.display = "block";
       document.getElementById("game-content").style.display = "none";
       document.getElementById("game-content").innerHTML = `
-    <div id="game-status">
-      <div class="status-item">
-        <span class="status-label">Timeline Stability</span>
-        <span id="timeline-stability" class="status-value">100%</span>
+      <div id="game-status">
+        <div class="status-item">
+          <span class="status-label">Epoch</span>
+          <span id="current-epoch" class="status-value"></span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Timeline Stability</span>
+          <span id="timeline-stability" class="status-value">100%</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Temporal Energy</span>
+          <span id="temporal-energy" class="status-value">100%</span>
+        </div>
       </div>
-      <div class="status-item">
-        <span class="status-label">Temporal Energy</span>
-        <span id="temporal-energy" class="status-value">100%</span>
-      </div>
-    </div>
-    <p id="scenario"></p>
+      <img id="scenario-image" src="" alt="Scenario Image">
+      <p id="scenario"></p>
     <div id="choices"></div>
-    <button id="next-period" style="display: none;">Next Period</button>
-    <button id="transfer-energy" style="display: none;">Transfer Energy</button>
+      <div class="button-container">
+        <button id="next-period" style="display: none;">Next Period</button>
+        <button id="transfer-energy" style="display: none;">Transfer Energy</button>
+      </div>
+
   `;
       assignEventListeners();
     }
