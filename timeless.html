@@ -1,0 +1,1441 @@
+<html lang="en">
+
+<head>
+  <!-- Made by Marc Sonne Dahl © 2024 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Traveler's Dilemmas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      user-select: none;
+    }
+
+    .game-container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+
+    #game-status {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+    }
+
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .status-label {
+      font-size: 0.9rem;
+      color: #7f8c8d;
+    }
+
+    .status-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    #scenario {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      color: #34495e;
+    }
+
+    #choices {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #next-period,
+    #restart-game {
+      margin-top: 1rem;
+      background-color: #2ecc71;
+    }
+
+    #next-period:hover,
+    #restart-game:hover {
+      background-color: #27ae60;
+    }
+
+    #transfer-energy {
+      margin-top: 1rem;
+      background-color: #e74c3c;
+    }
+
+    #transfer-energy:hover {
+      background-color: #c0392b;
+    }
+
+    .fa {
+      margin-right: 0.5rem;
+    }
+
+    #title-screen {
+      text-align: center;
+    }
+
+    #start-game {
+      margin-top: 1rem;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="game-container">
+    <div id="title-screen">
+      <h1>Time Traveler's Dilemmas</h1>
+      <h1><i class="fa-solid fa-code-branch fa-rotate-90 fa-xl"></i></h1>
+      <p>You are a time traveler tasked with fixing the timeline. Navigate through different historical periods, make crucial decisions, and maintain the stability of time itself.</p>
+      <p>Be careful with your Temporal Energy - if it runs out, you'll be lost in the void of time forever! You can recharge your Temporal Energy, by sacrificing the Timeline Stability.</p>
+      <p> Make sure to balance your energy and stability of the timeline, otherwise you will be faced with the consequences of your actions.</p>
+      <p>Hint: <i>All the choices you make affect the timeline differently. Make sure you understand which timeperiod you are in.</i></p>
+      <img src="https://mrdahl.github.io/home/time_intro.jpeg" alt="Time Traveler's Dilemmas">
+      <button id="start-game">Start Game</button>
+    </div>
+    <div id="game-content" style="display: none;">
+      <div id="game-status">
+        <div class="status-item">
+          <span class="status-label">Timeline Stability</span>
+          <span id="timeline-stability" class="status-value">100%</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Temporal Energy</span>
+          <span id="temporal-energy" class="status-value">100%</span>
+        </div>
+      </div>
+      <p id="scenario"></p>
+      <div id="choices"></div>
+      <button id="next-period" style="display: none;">Next Period</button>
+      <button id="transfer-energy" style="display: none;">Transfer Energy</button>
+    </div>
+    <button id="restart-game" style="display: none;">Restart Game</button>
+  </div>
+  <script>
+    const gameData = {
+      periods: [{
+          name: "Stone Age",
+          scenarios: [{
+              description: "A neighboring tribe is planning to attack your village. How do you handle it?",
+              choices: [{
+                  text: "Negotiate peace with the tribe.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Prepare your warriors for battle.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Innovate new defensive technologies.",
+                  effect: {
+                    stability: 8,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Use historical knowledge to anticipate their moves.",
+                  effect: {
+                    stability: 7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A harsh winter is approaching and your village is low on supplies.",
+              choices: [{
+                  text: "Trade with neighboring tribes for resources.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Lead a hunting party to gather more food.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-paw"
+                },
+                {
+                  text: "Create new storage techniques to preserve food.",
+                  effect: {
+                    stability: 8,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Consult ancient knowledge on surviving winters.",
+                  effect: {
+                    stability: 7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Bronze Age Mesopotamia",
+          scenarios: [{
+              description: "A drought is causing severe famine in the region.",
+              choices: [{
+                  text: "Negotiate water-sharing agreements.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Use force to take water from others.",
+                  effect: {
+                    stability: -10,
+                    energy: -20,
+                    skill: "combat"
+                  },
+                  icon: "fa-fist-raised"
+                },
+                {
+                  text: "Develop irrigation systems to conserve water.",
+                  effect: {
+                    stability: 30,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-water"
+                },
+                {
+                  text: "Consult ancient texts for solutions.",
+                  effect: {
+                    stability: 7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A neighboring city-state is threatening war over territorial disputes.",
+              choices: [{
+                  text: "Propose a peaceful resolution.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-peace"
+                },
+                {
+                  text: "Prepare your armies for defense.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-shield-alt"
+                },
+                {
+                  text: "Create advanced weapons for your soldiers.",
+                  effect: {
+                    stability: -18,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-hammer"
+                },
+                {
+                  text: "Use historical strategies to outmaneuver them.",
+                  effect: {
+                    stability: 17,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-brain"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Ancient China",
+          scenarios: [{
+              description: "The Great Wall construction is facing significant delays due to labor disputes.",
+              choices: [{
+                  text: "Negotiate better working conditions for laborers.",
+                  effect: {
+                    stability: -5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Use force to suppress the disputes.",
+                  effect: {
+                    stability: 25,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Introduce technological advancements to speed up construction.",
+                  effect: {
+                    stability: -10,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Apply historical methods of labor management.",
+                  effect: {
+                    stability: -7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A neighboring kingdom threatens to invade.",
+              choices: [{
+                  text: "Propose an alliance through diplomacy.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Mobilize the army to defend the borders.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-shield-alt"
+                },
+                {
+                  text: "Utilize new military technologies for defense.",
+                  effect: {
+                    stability: 4,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Use ancient military tactics to prepare for battle.",
+                  effect: {
+                    stability: 17,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Ancient Egypt",
+          scenarios: [{
+              description: "A group of assassins is plotting against Pharaoh Tutankhamun.",
+              choices: [{
+                  text: "Convince the assassins to abandon their plot.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Neutralize the threat directly with force.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Set up an early warning system using technology.",
+                  effect: {
+                    stability: -8,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Subtly guide events to protect the pharaoh.",
+                  effect: {
+                    stability: 37,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A major drought threatens to cause famine.",
+              choices: [{
+                  text: "Negotiate with neighboring regions for food.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Organize a raid to steal supplies.",
+                  effect: {
+                    stability: -10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-fist-raised"
+                },
+                {
+                  text: "Implement new irrigation techniques.",
+                  effect: {
+                    stability: 14,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-water"
+                },
+                {
+                  text: "Advise the pharaoh using historical knowledge.",
+                  effect: {
+                    stability: 7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Ancient Rome",
+          scenarios: [{
+              description: "A coup is being planned to overthrow the current emperor.",
+              choices: [{
+                  text: "Negotiate with the conspirators.",
+                  effect: {
+                    stability: 15,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Expose the plot and arrest the conspirators.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Use advanced technology to secure the emperor's safety.",
+                  effect: {
+                    stability: 28,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Employ historical strategies to counter the coup.",
+                  effect: {
+                    stability: -7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A devastating fire breaks out in the city.",
+              choices: [{
+                  text: "Coordinate a city-wide evacuation and aid.",
+                  effect: {
+                    stability: 25,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Mobilize the military to maintain order.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-shield-alt"
+                },
+                {
+                  text: "Use engineering skills to rebuild quickly.",
+                  effect: {
+                    stability: 13,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Rely on historical fire management techniques.",
+                  effect: {
+                    stability: -7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Ancient Russia",
+          scenarios: [{
+              description: "A powerful noble is planning a rebellion.",
+              choices: [{
+                  text: "Attempt to negotiate peace.",
+                  effect: {
+                    stability: -5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Crush the rebellion with military force.",
+                  effect: {
+                    stability: 22,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Use technology to monitor and disrupt the rebels.",
+                  effect: {
+                    stability: -25,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Use historical knowledge to prevent the rebellion.",
+                  effect: {
+                    stability: 2,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A severe winter is causing widespread famine.",
+              choices: [{
+                  text: "Organize relief efforts with diplomacy.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Seize food supplies from the wealthy.",
+                  effect: {
+                    stability: -10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-fist-raised"
+                },
+                {
+                  text: "Implement new agricultural techniques.",
+                  effect: {
+                    stability: -10,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Consult historical records on surviving famines.",
+                  effect: {
+                    stability: 17,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Dark Ages",
+          scenarios: [{
+              description: "A plague is spreading through the land.",
+              choices: [{
+                  text: "Organize quarantine zones to contain the plague.",
+                  effect: {
+                    stability: 25,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Enforce strict measures to isolate the infected.",
+                  effect: {
+                    stability: 1,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Develop new medical techniques to combat the plague.",
+                  effect: {
+                    stability: 3,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Use historical knowledge of previous plagues.",
+                  effect: {
+                    stability: 17,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A warlord is trying to seize control of the region.",
+              choices: [{
+                  text: "Negotiate a truce with the warlord.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Rally the local populace to fight back.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-shield-alt"
+                },
+                {
+                  text: "Use advanced fortification techniques.",
+                  effect: {
+                    stability: -8,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Apply historical strategies to outmaneuver the warlord.",
+                  effect: {
+                    stability: 27,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Renaissance Italy",
+          scenarios: [{
+              description: "A conspiracy to overthrow the Medici family is underway.",
+              choices: [{
+                  text: "Mediate between the conspirators and the Medici.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Expose the conspirators to the Medici guards.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Develop a covert communication system to warn the Medici.",
+                  effect: {
+                    stability: 8,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Draw on your knowledge of similar historical plots.",
+                  effect: {
+                    stability: 3,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "Leonardo da Vinci is about to unveil his latest invention, but there's a risk it will be misused.",
+              choices: [{
+                  text: "Discuss the ethical implications with da Vinci.",
+                  effect: {
+                    stability: 15,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Sabotage the invention to prevent misuse.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-fist-raised"
+                },
+                {
+                  text: "Secure the invention and hide its key components.",
+                  effect: {
+                    stability: 8,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Consult your historical knowledge to advise da Vinci on safe use.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Industrial Revolution",
+          scenarios: [{
+              description: "A workers' strike is brewing due to poor conditions in the factories.",
+              choices: [{
+                  text: "Negotiate better conditions with factory owners.",
+                  effect: {
+                    stability: -5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Form a militia to keep the peace.",
+                  effect: {
+                    stability: 15,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Introduce new technology to improve working conditions.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Educate the workers on historical labor movements.",
+                  effect: {
+                    stability: 27,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A new steam engine design could revolutionize industry, but it's untested and dangerous.",
+              choices: [{
+                  text: "Conduct a public test to prove its safety.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Destroy the prototype to prevent accidents.",
+                  effect: {
+                    stability: -10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-fist-raised"
+                },
+                {
+                  text: "Enhance the design with your knowledge of modern engineering.",
+                  effect: {
+                    stability: 16,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Advise based on historical accidents and safety improvements.",
+                  effect: {
+                    stability: 4,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "World War 1",
+          scenarios: [{
+              description: "The Western Front is at a stalemate and morale is low.",
+              choices: [{
+                  text: "Negotiate a temporary truce to boost morale.",
+                  effect: {
+                    stability: -5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Lead a surprise offensive to break the stalemate.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Develop new technologies to gain an advantage.",
+                  effect: {
+                    stability: 18,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Use historical strategies to improve tactics.",
+                  effect: {
+                    stability: 7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A major flu epidemic is spreading through the troops.",
+              choices: [{
+                  text: "Negotiate with medical authorities for better treatment.",
+                  effect: {
+                    stability: 14,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Implement strict quarantine measures.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-shield-alt"
+                },
+                {
+                  text: "Use modern medical technology to combat the flu.",
+                  effect: {
+                    stability: -8,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Apply historical knowledge of past epidemics.",
+                  effect: {
+                    stability: 7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "World War 2",
+          scenarios: [{
+              description: "A crucial battle is imminent, and the outcome could turn the tide of the war.",
+              choices: [{
+                  text: "Use diplomacy to gather intelligence and allies.",
+                  effect: {
+                    stability: 15,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Lead a strategic offensive to win the battle.",
+                  effect: {
+                    stability: -10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Introduce new military technologies for an edge.",
+                  effect: {
+                    stability: 18,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Draw on historical battle strategies.",
+                  effect: {
+                    stability: 12,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "An important figure in the resistance movement has been captured.",
+              choices: [{
+                  text: "Negotiate for their release.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Plan a daring rescue operation.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-shield-alt"
+                },
+                {
+                  text: "Use espionage techniques to free them.",
+                  effect: {
+                    stability: 22,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Apply historical knowledge of resistance tactics.",
+                  effect: {
+                    stability: 1,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "The Space Race and The Cold War",
+          scenarios: [{
+              description: "A critical satellite launch is at risk of failure.",
+              choices: [{
+                  text: "Negotiate with other nations for support.",
+                  effect: {
+                    stability: -15,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Lead a team to ensure the launch's success.",
+                  effect: {
+                    stability: 20,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Develop new technologies to guarantee the launch.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Use historical knowledge of past launches.",
+                  effect: {
+                    stability: -25,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A spy ring is operating within your organization.",
+              choices: [{
+                  text: "Use diplomacy to turn the spies into double agents.",
+                  effect: {
+                    stability: 0,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Expose and arrest the spies.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-shield-alt"
+                },
+                {
+                  text: "Develop advanced counter-espionage techniques.",
+                  effect: {
+                    stability: 18,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Draw on historical espionage cases.",
+                  effect: {
+                    stability: 1,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Computer Age",
+          scenarios: [{
+              description: "A major cyber attack threatens national security.",
+              choices: [{
+                  text: "Negotiate with the attackers to stop the attack.",
+                  effect: {
+                    stability: 15,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-comments"
+                },
+                {
+                  text: "Launch a counter-attack to neutralize the threat.",
+                  effect: {
+                    stability: 13,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-person-rifle"
+                },
+                {
+                  text: "Develop new cybersecurity measures.",
+                  effect: {
+                    stability: 25,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-lightbulb"
+                },
+                {
+                  text: "Apply historical knowledge of cyber attacks.",
+                  effect: {
+                    stability: 3,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-book"
+                }
+              ]
+            },
+            {
+              description: "A breakthrough in AI development could change the world.",
+              choices: [{
+                  text: "Discuss the ethical implications with developers.",
+                  effect: {
+                    stability: 5,
+                    energy: -10,
+                    skill: "diplomacy"
+                  },
+                  icon: "fa-handshake"
+                },
+                {
+                  text: "Sabotage the project to prevent potential dangers.",
+                  effect: {
+                    stability: -35,
+                    energy: -10,
+                    skill: "combat"
+                  },
+                  icon: "fa-fist-raised"
+                },
+                {
+                  text: "Enhance the project with your technological knowledge.",
+                  effect: {
+                    stability: 10,
+                    energy: -10,
+                    skill: "technology"
+                  },
+                  icon: "fa-flask"
+                },
+                {
+                  text: "Consult historical knowledge of technological advances.",
+                  effect: {
+                    stability: -7,
+                    energy: -10,
+                    skill: "historicalKnowledge"
+                  },
+                  icon: "fa-scroll"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      skills: {
+        diplomacy: 0,
+        technology: 0,
+        combat: 0,
+        historicalKnowledge: 0
+      },
+      timelineStability: 100,
+      temporalEnergy: 100
+    };
+    let currentPeriodIndex = 0;
+    let currentScenarioIndex = 0;
+
+    function updateGameStatus() {
+      document.getElementById("timeline-stability").innerText = `${gameData.timelineStability}%`;
+      document.getElementById("temporal-energy").innerText = `${gameData.temporalEnergy}%`;
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function loadScenario() {
+      const period = gameData.periods[currentPeriodIndex];
+      const scenario = period.scenarios[currentScenarioIndex];
+      document.getElementById("scenario").innerText = scenario.description;
+      const choicesContainer = document.getElementById("choices");
+      choicesContainer.innerHTML = "";
+      const choices = [...scenario.choices];
+      shuffleArray(choices);
+      choices.forEach((choice, index) => {
+        const button = document.createElement("button");
+        button.innerHTML = `<i class="fa ${choice.icon}"></i> ${choice.text}`;
+        button.onclick = () => makeChoice(index);
+        choicesContainer.appendChild(button);
+      });
+    }
+
+    function makeChoice(choiceIndex) {
+      const period = gameData.periods[currentPeriodIndex];
+      const scenario = period.scenarios[currentScenarioIndex];
+      const choice = scenario.choices[choiceIndex];
+      gameData.timelineStability = Math.max(0, Math.min(100, gameData.timelineStability + choice.effect.stability));
+      gameData.temporalEnergy = Math.max(0, gameData.temporalEnergy + choice.effect.energy);
+      gameData.skills[choice.effect.skill]++;
+      updateGameStatus();
+      if (gameData.temporalEnergy <= 0) {
+        endGame(true);
+        return;
+      }
+      currentScenarioIndex++;
+      if (currentScenarioIndex >= period.scenarios.length) {
+        document.getElementById("next-period").style.display = "block";
+        document.getElementById("transfer-energy").style.display = "block";
+      } else {
+        loadScenario();
+      }
+    }
+
+    function nextPeriod() {
+      currentPeriodIndex++;
+      currentScenarioIndex = 0;
+      document.getElementById("next-period").style.display = "none";
+      document.getElementById("transfer-energy").style.display = "none";
+      if (currentPeriodIndex >= gameData.periods.length) {
+        endGame(false);
+      } else {
+        loadScenario();
+      }
+    }
+
+    function transferEnergy() {
+      const transferAmount = Math.min(20, gameData.timelineStability);
+      gameData.timelineStability -= transferAmount;
+      gameData.temporalEnergy = Math.min(100, gameData.temporalEnergy + transferAmount);
+      updateGameStatus();
+      document.getElementById("transfer-energy").style.display = "none";
+    }
+
+    function endGame(outOfEnergy) {
+      const content = document.getElementById("game-content");
+      let endMessage = "";
+      let imageUrl = "";
+      if (outOfEnergy) {
+        endMessage = "Your time machine has run out of Temporal Energy. You are now floating alone in the vast nothingness of time, destined to drift until the heat death of the universe claims you. Your journey ends here, lost in the cosmic tapestry of eternity.";
+        imageUrl = "https://mrdahl.github.io/home/time_over.jpeg";
+      } else if (gameData.timelineStability <= 20) {
+        endMessage = "The world has descended into apocalyptic chaos. Civilization as we know it has collapsed.";
+        imageUrl = "https://mrdahl.github.io/home/20.jpeg";
+      } else if (gameData.timelineStability <= 40) {
+        endMessage = "The timeline is in shambles, with countless lives lost and widespread despair.";
+        imageUrl = "https://mrdahl.github.io/home/40.jpeg";
+      } else if (gameData.timelineStability <= 60) {
+        endMessage = "The world is in a state of chaos. While civilization persists, stability is a distant dream.";
+        imageUrl = "https://mrdahl.github.io/home/60.jpeg";
+      } else if (gameData.timelineStability <= 80) {
+        endMessage = "The timeline is relatively stable. The world is much like it is today, with both challenges and progress.";
+        imageUrl = "https://mrdahl.github.io/home/80.jpeg";
+      } else {
+        endMessage = "You have created a utopian future. The world is at peace, and humanity thrives in harmony.";
+        imageUrl = "https://mrdahl.github.io/home/100.jpeg";
+      }
+      content.innerHTML = `
+    <p>Game Over! Your final Timeline Stability is ${gameData.timelineStability}% and you have ${gameData.temporalEnergy}% Temporal Energy remaining.</p>
+    <p>${endMessage}</p>
+    <img src="${imageUrl}" alt="Time Traveler's Dilemmas" style="max-width: 100%; height: auto;">
+  `;
+      document.getElementById("restart-game").style.display = "block";
+    }
+
+    function startGame() {
+      resetGameState();
+      document.getElementById("title-screen").style.display = "none";
+      document.getElementById("game-content").style.display = "block";
+      document.getElementById("restart-game").style.display = "none";
+      shuffleArray(gameData.periods);
+      updateGameStatus();
+      loadScenario();
+    }
+
+    function restartGame() {
+      document.getElementById("restart-game").style.display = "none";
+      document.getElementById("title-screen").style.display = "block";
+      document.getElementById("game-content").style.display = "none";
+    }
+
+    function resetGameState() {
+      gameData.timelineStability = 75;
+      gameData.temporalEnergy = 100;
+      gameData.skills = {
+        diplomacy: 0,
+        technology: 0,
+        combat: 0,
+        historicalKnowledge: 0
+      };
+      currentPeriodIndex = 0;
+      currentScenarioIndex = 0;
+    }
+
+    function startGame() {
+      resetGameState();
+      document.getElementById("title-screen").style.display = "none";
+      document.getElementById("game-content").style.display = "block";
+      document.getElementById("restart-game").style.display = "none";
+      document.getElementById("next-period").style.display = "none";
+      document.getElementById("transfer-energy").style.display = "none";
+      shuffleArray(gameData.periods);
+      updateGameStatus();
+      loadScenario();
+    }
+
+    function restartGame() {
+      resetGameState(); // Ensure the game state is reset
+      document.getElementById("restart-game").style.display = "none";
+      document.getElementById("title-screen").style.display = "block";
+      document.getElementById("game-content").style.display = "none";
+      document.getElementById("game-content").innerHTML = `
+    <div id="game-status">
+      <div class="status-item">
+        <span class="status-label">Timeline Stability</span>
+        <span id="timeline-stability" class="status-value">100%</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Temporal Energy</span>
+        <span id="temporal-energy" class="status-value">100%</span>
+      </div>
+    </div>
+    <p id="scenario"></p>
+    <div id="choices"></div>
+    <button id="next-period" style="display: none;">Next Period</button>
+    <button id="transfer-energy" style="display: none;">Transfer Energy</button>
+  `;
+      assignEventListeners();
+    }
+
+    function assignEventListeners() {
+      document.getElementById("start-game").onclick = startGame;
+      document.getElementById("next-period").onclick = nextPeriod;
+      document.getElementById("transfer-energy").onclick = transferEnergy;
+      document.getElementById("restart-game").onclick = restartGame;
+    }
+    document.addEventListener('DOMContentLoaded', (event) => {
+      assignEventListeners();
+    });
+  </script>
+</body>
+<!-- Made by Marc Sonne Dahl © 2024 -->
+
+</html>
