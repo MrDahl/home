@@ -1,0 +1,359 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tag Filtering Tool</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f0f4f8;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-weight: 300;
+      font-size: 2.5em;
+    }
+
+    .input-group,
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input,
+    button {
+      padding: 12px;
+      border: 1px solid #bdc3c7;
+      border-radius: 5px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+    }
+
+    input {
+      flex-grow: 1;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      border: none;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #nameList,
+    #tagList {
+      margin-top: 30px;
+    }
+
+    .name-item {
+      background-color: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .name-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .tag {
+      padding: 5px 10px;
+      margin: 5px;
+      display: inline-block;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .tag.selected {
+      transform: scale(1.1);
+    }
+
+    .edit-tags {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .edit-tags input {
+      flex-grow: 1;
+    }
+
+    .delete-button {
+      color: #000;
+      background-color: transparent;
+      float: right;
+      width: 30px;
+      height: 30px;
+      margin-top: -5px;
+      text-align: center;
+      line-height: 0px;
+    }
+
+    .delete-button:hover {
+      background-color: #c0392b;
+    }
+
+    .tag-delete {
+      cursor: pointer;
+      color: #e74c3c;
+      margin-left: 5px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.7rem;
+      color: #ccc;
+      opacity: 0.7;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 600px) {
+
+      .input-group,
+      .button-group {
+        flex-direction: column;
+      }
+
+      input,
+      button {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1><i class="fa-solid fa-tags"></i> Tag Filtering Tool</h1>
+
+  <div class="input-group">
+    <input type="text" id="nameInput" placeholder="👤 Enter a subject">
+    <input type="text" id="tagInput" placeholder="🏷️ Enter tags (comma-separated)">
+    <button onclick="addName()"><i class="fa-solid fa-circle-plus"></i> Add Subject</button>
+  </div>
+
+  <div class="button-group">
+    <button onclick="exportData()"><i class="fa-solid fa-file-export"></i> Export Data</button>
+    <input type="file" id="fileInput" onchange="importData(event)" style="display: none;">
+    <button onclick="document.getElementById('fileInput').click()"><i class="fa-solid fa-file-import"></i> Import Data</button>
+  </div>
+
+  <div id="tagList">
+    <h3><i class="fa-solid fa-filter"></i> Filter tags:</h3>
+  </div>
+
+  <div id="nameList"></div>
+  <footer class="footer">
+    <p>Copyright © 2024 Marc Sonne Dahl. All rights reserved.</p>
+  </footer>
+  <script>
+    let names = [];
+    let allTags = new Set();
+    let tagColors = {};
+    let colorIndex = 0;
+    const colors = [
+      '#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA', '#FFDFBA',
+      '#E0BBE4', '#957DAD', '#D291BC', '#FEC8D8', '#FFDFD3'
+    ];
+
+    function getTagColor(tag) {
+      if (!tagColors[tag]) {
+        tagColors[tag] = colors[colorIndex % colors.length];
+        colorIndex++;
+      }
+      return tagColors[tag];
+    }
+
+    function addName() {
+      const nameInput = document.getElementById('nameInput');
+      const tagInput = document.getElementById('tagInput');
+      const name = nameInput.value.trim();
+      const tags = tagInput.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+      if (name) {
+        names.push({
+          name,
+          tags
+        });
+        updateAllTags(tags);
+        nameInput.value = '';
+        tagInput.value = '';
+        displayNames();
+        displayTags();
+      }
+    }
+
+    function updateAllTags(newTags) {
+      newTags.forEach(tag => {
+        if (!allTags.has(tag)) {
+          allTags.add(tag);
+          getTagColor(tag);
+        }
+      });
+    }
+
+    function displayNames() {
+      const nameList = document.getElementById('nameList');
+      nameList.innerHTML = '';
+      names.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'name-item';
+        div.innerHTML = `
+          <strong>${item.name}</strong>
+          <button class="delete-button" onclick="deleteSubject(${index})"><i class="fa-regular fa-trash-can"></i></button><br>
+          ${item.tags.map(tag => `<span class="tag" style="background-color: ${getTagColor(tag)};">${tag}<span class="tag-delete" onclick="deleteTag(${index}, '${tag}')">&times;</span></span>`).join(' ')}
+          <div class="edit-tags">
+            <input type="text" id="editTags${index}" placeholder="Add/edit tags">
+            <button onclick="updateTags(${index})"><i class="fa-solid fa-pen-to-square"></i> Update Tags</button>
+          </div>
+        `;
+        nameList.appendChild(div);
+      });
+    }
+
+    function deleteSubject(index) {
+      names.splice(index, 1);
+      updateAllTagsFromNames();
+      displayNames();
+      displayTags();
+    }
+
+    function deleteTag(subjectIndex, tagToDelete) {
+      names[subjectIndex].tags = names[subjectIndex].tags.filter(tag => tag !== tagToDelete);
+      updateAllTagsFromNames();
+      displayNames();
+      displayTags();
+    }
+
+    function updateAllTagsFromNames() {
+      allTags = new Set(names.flatMap(item => item.tags));
+    }
+
+    function updateTags(index) {
+      const editInput = document.getElementById(`editTags${index}`);
+      const newTags = editInput.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+      names[index].tags = [...new Set([...names[index].tags, ...newTags])];
+      updateAllTags(newTags);
+      displayNames();
+      displayTags();
+      editInput.value = '';
+    }
+
+    function displayTags() {
+      const tagList = document.getElementById('tagList');
+      const tagsHeader = tagList.querySelector('h3');
+      tagList.innerHTML = '';
+      tagList.appendChild(tagsHeader);
+      Array.from(allTags).sort().forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'tag';
+        span.textContent = tag;
+        span.style.backgroundColor = getTagColor(tag);
+        span.onclick = () => toggleTagFilter(tag, span);
+        tagList.appendChild(span);
+      });
+    }
+
+    function toggleTagFilter(tag, element) {
+      element.classList.toggle('selected');
+      filterNames();
+    }
+
+    function filterNames() {
+      const selectedTags = Array.from(document.querySelectorAll('#tagList .tag.selected')).map(el => el.textContent);
+      if (selectedTags.length === 0) {
+        displayNames();
+        return;
+      }
+      const filteredNames = names.filter(item =>
+        selectedTags.every(filterTag =>
+          item.tags.some(tag => tag.toLowerCase() === filterTag.toLowerCase())
+        )
+      );
+      displayFilteredNames(filteredNames);
+    }
+
+    function displayFilteredNames(filteredNames) {
+      const nameList = document.getElementById('nameList');
+      nameList.innerHTML = '';
+      filteredNames.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'name-item';
+        div.innerHTML = `
+          <strong>${item.name}</strong>
+          <button class="delete-button" onclick="deleteSubject(${names.indexOf(item)})"><i class="fa-regular fa-trash-can"></i></button><br>
+          ${item.tags.map(tag => `<span class="tag" style="background-color: ${getTagColor(tag)};">${tag}<span class="tag-delete" onclick="deleteTag(${names.indexOf(item)}, '${tag}')">&times;</span></span>`).join(' ')}
+          <div class="edit-tags">
+            <input type="text" id="editTags${index}" placeholder="Add/edit tags">
+            <button onclick="updateTags(${names.indexOf(item)})"><i class="fa-solid fa-pen-to-square"></i> Update Tags</button>
+          </div>
+        `;
+        nameList.appendChild(div);
+      });
+    }
+
+    function exportData() {
+      const data = {
+        names,
+        tagColors
+      };
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], {
+        type: 'application/json'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tag_filtering_tool_data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const data = JSON.parse(e.target.result);
+          names = data.names || [];
+          tagColors = data.tagColors || {};
+          updateAllTagsFromNames();
+          displayNames();
+          displayTags();
+        };
+        reader.readAsText(file);
+      }
+    }
+    // Initialize tags display
+    displayTags();
+  </script>
+</body>
+
+</html>
