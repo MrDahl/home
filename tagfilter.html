@@ -27,6 +27,7 @@
       background-color: var(--background-color);
       color: var(--text-color);
       line-height: 1.6;
+      user-select: none;
     }
 
     h1 {
@@ -114,9 +115,10 @@
     }
 
     .tag.selected {
-      transform: scale(1.1);
       background-color: transparent;
+      text-decoration: italic;
       color: var(--input-bg-color);
+      box-shadow: inset 0px 0px 0px 100em #001861;
     }
 
     .edit-tags {
@@ -142,8 +144,7 @@
     }
 
     .delete-button:hover {
-      background-color: var(--delete-color);
-      color: white;
+      background-color: #fff;
     }
 
     .tag-delete {
@@ -237,8 +238,7 @@
     let tagColors = JSON.parse(localStorage.getItem('tagColors')) || {};
     let colorIndex = Object.keys(tagColors).length;
     const colors = [
-      '#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA', '#FFDFBA',
-      '#E0BBE4', '#957DAD', '#D291BC', '#FEC8D8', '#FFDFD3'
+      '#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA', '#FFDFBA', '#E0BBE4', '#957DAD', '#D291BC', '#FEC8D8', '#FFDFD3', '#A0E7E5', '#B4F8C8', '#FFE4E1', '#FFABAB', '#C2C2F0', '#FFD1DC', '#9AE6B4', '#FFCAD4', '#B5EAD7', '#E6E6FA'
     ];
 
     function getTagColor(tag) {
