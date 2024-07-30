@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enhanced Snake Game</title>
+  <title>Snake Game v 3.0</title>
   <style>
     body {
       margin: 0;
@@ -11,29 +11,30 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 90vh;
+      justify-content: space-between;
+      height: 100vh;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #e94560;
+      overflow: hidden;
     }
 
     #controls {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      padding: 0 0.1rem;
+      padding: 0.5rem;
       box-sizing: border-box;
     }
 
     .game-button,
     #skin-select {
       flex: 1;
-      margin: 0.5rem;
+      margin: 0 0.25rem;
       max-width: 50%;
       text-align: center;
-      padding: 0.8rem 0.5rem;
-      font-size: 1rem;
+      padding: 0.5rem;
+      font-size: 0.9rem;
       background-color: #0f3460;
       color: #e94560;
       border: none;
@@ -52,17 +53,18 @@
 
     #skin-select {
       appearance: none;
-      padding-right: 2.5rem;
+      padding-right: 1.5rem;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e94560' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 0.7rem top 50%;
-      background-size: 1.2rem auto;
+      background-position: right 0.5rem top 50%;
+      background-size: 1rem auto;
     }
 
     #game-container {
       position: relative;
       width: 90vmin;
       height: 90vmin;
+      max-height: calc(100vh - 11rem);
       background-color: rgba(15, 52, 96, 0.6);
       border: 2px solid #e94560;
       box-shadow: 0 0 20px rgba(233, 69, 96, 0.3);
@@ -159,12 +161,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 1rem;
-      gap: 1rem;
+      margin-bottom: 0.5rem;
+      gap: 0.5rem;
       background-color: rgba(15, 52, 96, 0.6);
-      padding: 0.5rem 1rem;
+      padding: 0.25rem 0.5rem;
       border-radius: 10px;
-      font-size: 1.2rem;
+      font-size: 0.9rem;
       font-weight: bold;
       text-shadow: 0 0 10px rgba(233, 69, 96, 0.7);
     }
@@ -173,7 +175,7 @@
     #high-score,
     #level,
     #timer {
-      margin: 0 1vmin;
+      margin: 0 0.5vmin;
     }
 
     #start-button {
@@ -219,25 +221,81 @@
       animation: pulse 1s infinite alternate;
     }
 
+    #d-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 0.5rem;
+      width: 90vmin;
+      max-width: 200px;
+      margin-top: 1rem;
+    }
+
+    .d-pad-button {
+      background-color: #0f3460;
+      color: #e94560;
+      border: none;
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .d-pad-button:hover {
+      background-color: #16213e;
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #up {
+      grid-column: 2;
+    }
+
+    #left {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    #right {
+      grid-column: 3;
+      grid-row: 2;
+    }
+
+    #down {
+      grid-column: 2;
+      grid-row: 3;
+    }
+
     @media (max-width: 600px) {
       #game-container {
         width: 95vw;
         height: 95vw;
+        max-height: calc(100vh - 12rem);
       }
 
       #game-stats {
-        font-size: 2.5vmin;
+        font-size: 0.8rem;
       }
 
       #start-button {
-        font-size: 3vmin;
-        padding: 2vmin 4vmin;
+        font-size: 1.2rem;
+        padding: 0.8rem 1.6rem;
       }
 
       .game-button,
       #skin-select {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.2rem;
+      }
+
+      #d-pad {
+        max-width: 150px;
+      }
+
+      .d-pad-button {
         font-size: 1rem;
-        padding: 0.6rem 0.3rem;
+        padding: 0.4rem;
       }
     }
   </style>
@@ -265,8 +323,15 @@
       Tap to restart
     </div>
   </div>
+  <div id="d-pad">
+    <button id="up" class="d-pad-button">↑</button>
+    <button id="left" class="d-pad-button">←</button>
+    <button id="right" class="d-pad-button">→</button>
+    <button id="down" class="d-pad-button">↓</button>
+  </div>
 
   <script>
+    // ... (previous JavaScript code remains the same)
     let snakeColor = 'red';
     document.documentElement.style.setProperty('--snake-color', snakeColor);
     const gameContainer = document.getElementById('game-container');
@@ -330,6 +395,46 @@
         document.documentElement.style.setProperty('--snake-color', snakeColor);
       });
       loadHighScore();
+      // Add D-pad button event listeners
+      document.getElementById('up').addEventListener('click', () => changeDirectionDPad('ArrowUp'));
+      document.getElementById('down').addEventListener('click', () => changeDirectionDPad('ArrowDown'));
+      document.getElementById('left').addEventListener('click', () => changeDirectionDPad('ArrowLeft'));
+      document.getElementById('right').addEventListener('click', () => changeDirectionDPad('ArrowRight'));
+    }
+
+    function changeDirectionDPad(key) {
+      let newDirection = {
+        ...direction
+      };
+      switch (key) {
+        case 'ArrowUp':
+          if (direction.y === 0) newDirection = {
+            x: 0,
+            y: -1
+          };
+          break;
+        case 'ArrowDown':
+          if (direction.y === 0) newDirection = {
+            x: 0,
+            y: 1
+          };
+          break;
+        case 'ArrowLeft':
+          if (direction.x === 0) newDirection = {
+            x: -1,
+            y: 0
+          };
+          break;
+        case 'ArrowRight':
+          if (direction.x === 0) newDirection = {
+            x: 1,
+            y: 0
+          };
+          break;
+      }
+      if (newDirection.x !== -direction.x || newDirection.y !== -direction.y) {
+        direction = newDirection;
+      }
     }
 
     function startGame() {
