@@ -1,0 +1,339 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neumorphic Pascal's Triangle</title>
+  <style>
+    :root {
+      --bg-color: #e0e5ec;
+      --shadow-light: #ffffff;
+      --shadow-dark: #a3b1c6;
+      --text-color: #4a4a4a;
+      --accent-color: #6d5dfc;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    #gameContainer {
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    canvas {
+      border-radius: 20px;
+      background-color: var(--bg-color);
+      box-shadow: 
+        8px 8px 16px var(--shadow-dark),
+        -8px -8px 16px var(--shadow-light);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .neumorphic-btn {
+      padding: 15px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      box-shadow: 
+        5px 5px 10px var(--shadow-dark),
+        -5px -5px 10px var(--shadow-light);
+      transition: all 0.2s ease;
+    }
+
+    .neumorphic-btn:hover {
+      box-shadow: 
+        3px 3px 6px var(--shadow-dark),
+        -3px -3px 6px var(--shadow-light);
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 
+        3px 3px 6px var(--shadow-dark),
+        inset -3px -3px 6px var(--shadow-light);
+    }
+
+    .neumorphic-input {
+      width: 70px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      box-shadow: inset 
+        3px 3px 6px var(--shadow-dark),
+        inset -3px -3px 6px var(--shadow-light);
+    }
+
+    @media (max-width: 600px) {
+      .controls {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .neumorphic-btn,
+      .neumorphic-input {
+        width: 100%;
+        max-width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+    <div class="controls">
+      <button id="dropBall" class="neumorphic-btn">Drop Ball</button>
+      <button id="reset" class="neumorphic-btn">Reset Game</button>
+      <div>
+        <label for="ballCount">Balls to drop:</label>
+        <input type="number" id="ballCount" value="1" min="1" max="100" class="neumorphic-input">
+      </div>
+      <button id="dropMultiple" class="neumorphic-btn">Drop Multiple</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const dropBallButton = document.getElementById('dropBall');
+    const resetButton = document.getElementById('reset');
+    const ballCountInput = document.getElementById('ballCount');
+    const dropMultipleButton = document.getElementById('dropMultiple');
+    const LEVELS = 10;
+    let PEG_RADIUS, BALL_RADIUS, BUCKET_WIDTH, BUCKET_HEIGHT;
+    let GAME_WIDTH, GAME_HEIGHT;
+    let pegs = [];
+    let balls = [];
+    let buckets = Array(LEVELS).fill(0);
+    let totalBalls = 0;
+    let trianglePoints = [];
+
+    function resizeGame() {
+      const gameContainer = document.getElementById('gameContainer');
+      const containerWidth = gameContainer.clientWidth;
+      const containerHeight = window.innerHeight * 0.8;
+      const aspectRatio = 4 / 3;
+      if (containerWidth / containerHeight > aspectRatio) {
+        GAME_HEIGHT = containerHeight;
+        GAME_WIDTH = containerHeight * aspectRatio;
+      } else {
+        GAME_WIDTH = containerWidth;
+        GAME_HEIGHT = containerWidth / aspectRatio;
+      }
+      canvas.width = GAME_WIDTH;
+      canvas.height = GAME_HEIGHT;
+      PEG_RADIUS = GAME_WIDTH * 0.006;
+      BALL_RADIUS = GAME_WIDTH * 0.006;
+      BUCKET_WIDTH = GAME_WIDTH * 0.08;
+      BUCKET_HEIGHT = GAME_HEIGHT * 0.06;
+      initializeGame();
+    }
+
+    function initializeGame() {
+      pegs = [];
+      const pegSpacing = GAME_WIDTH / (LEVELS + 1);
+      const verticalSpacing = (GAME_HEIGHT * 0.85) / (LEVELS + 1);
+      for (let level = 0; level < LEVELS; level++) {
+        for (let i = 0; i <= level; i++) {
+          const x = (i + 1) * pegSpacing + (LEVELS - level - 1) * pegSpacing / 2;
+          const y = (level + 1) * verticalSpacing + GAME_HEIGHT * 0.1;
+          pegs.push({ x, y });
+        }
+      }
+      trianglePoints = [
+        { x: GAME_WIDTH / 2, y: GAME_HEIGHT * 0.02 },
+        { x: -GAME_WIDTH * 0.1, y: GAME_HEIGHT * 1.05 },
+        { x: GAME_WIDTH * 1.1, y: GAME_HEIGHT * 1.05 }
+      ];
+    }
+
+    function drawTriangle() {
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(trianglePoints[0].x, trianglePoints[0].y);
+      ctx.lineTo(trianglePoints[1].x, trianglePoints[1].y);
+      ctx.lineTo(trianglePoints[2].x, trianglePoints[2].y);
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    function drawPegs() {
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+      pegs.forEach(peg => {
+        ctx.beginPath();
+        ctx.arc(peg.x, peg.y, PEG_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Add highlight
+        ctx.beginPath();
+        ctx.arc(peg.x - PEG_RADIUS / 3, peg.y - PEG_RADIUS / 3, PEG_RADIUS / 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(66, 135, 245, 1)';
+        ctx.fill();
+      });
+    }
+
+    function drawBuckets() {
+      const bucketSpacing = GAME_WIDTH / (LEVELS + 1);
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
+      for (let i = 0; i < LEVELS; i++) {
+        const x = (i + 1) * bucketSpacing;
+        ctx.fillRect(x - BUCKET_WIDTH / 2, GAME_HEIGHT - BUCKET_HEIGHT, BUCKET_WIDTH, BUCKET_HEIGHT);
+        
+        // Add shadow effect
+        ctx.fillStyle = 'rgba(163, 177, 198, 0.5)';
+        ctx.fillRect(x - BUCKET_WIDTH / 2 + 5, GAME_HEIGHT - BUCKET_HEIGHT + 5, BUCKET_WIDTH, BUCKET_HEIGHT);
+      }
+    }
+
+    function drawBalls() {
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+      balls.forEach(ball => {
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Add highlight
+        ctx.beginPath();
+        ctx.arc(ball.x - BALL_RADIUS / 3, ball.y - BALL_RADIUS / 3, BALL_RADIUS / 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(66, 135, 245, 1)';
+        ctx.fill();
+      });
+    }
+
+    function drawGraphs() {
+      const bucketSpacing = GAME_WIDTH / (LEVELS + 1);
+      const maxHeight = GAME_HEIGHT * 0.2;
+      const maxBalls = Math.max(...buckets);
+      for (let i = 0; i < LEVELS; i++) {
+        const x = (i + 1) * bucketSpacing;
+        const height = maxBalls > 0 ? (buckets[i] / maxBalls) * maxHeight : 0;
+        ctx.fillStyle = 'rgba(109, 93, 252, 0.7)';
+        ctx.fillRect(x - BUCKET_WIDTH / 4, GAME_HEIGHT - BUCKET_HEIGHT - height, BUCKET_WIDTH / 2, height);
+        const percentage = totalBalls > 0 ? (buckets[i] / totalBalls * 100).toFixed(1) + '%' : '0%';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim();
+        ctx.font = `${GAME_WIDTH * 0.015}px Arial`;
+        ctx.fillText(percentage, x - GAME_WIDTH * 0.02, GAME_HEIGHT - BUCKET_HEIGHT - height - 5);
+      }
+    }
+
+    function distance(x1, y1, x2, y2) {
+      return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+    }
+
+    function updateBall(ball) {
+      ball.vy += GAME_HEIGHT * 0.0007; // Gravity
+      ball.y += ball.vy;
+      ball.x += ball.vx;
+      // Check collision with pegs
+      pegs.forEach(peg => {
+        if (distance(ball.x, ball.y, peg.x, peg.y) < BALL_RADIUS + PEG_RADIUS) {
+          const angle = Math.atan2(ball.y - peg.y, ball.x - peg.x);
+          const speed = Math.sqrt(ball.vx ** 2 + ball.vy ** 2);
+          ball.vx = Math.cos(angle) * speed * 0.8;
+          ball.vy = Math.sin(angle) * speed * 0.8;
+          const overlap = BALL_RADIUS + PEG_RADIUS - distance(ball.x, ball.y, peg.x, peg.y);
+          ball.x += Math.cos(angle) * overlap;
+          ball.y += Math.sin(angle) * overlap;
+        }
+      });
+      // Check collision with triangle walls
+      const closestPoint = findClosestPointOnTriangle(ball);
+      const distToTriangle = distance(ball.x, ball.y, closestPoint.x, closestPoint.y);
+      if (distToTriangle < BALL_RADIUS) {
+        const angle = Math.atan2(ball.y - closestPoint.y, ball.x - closestPoint.x);
+        const speed = Math.sqrt(ball.vx ** 2 + ball.vy ** 2);
+        ball.vx = Math.cos(angle) * speed * 0.8;
+        ball.vy = Math.sin(angle) * speed * 0.8;
+        ball.x = closestPoint.x + Math.cos(angle) * BALL_RADIUS;
+        ball.y = closestPoint.y + Math.sin(angle) * BALL_RADIUS;
+      }
+      if (ball.y >= GAME_HEIGHT - BUCKET_HEIGHT - BALL_RADIUS) {
+        const bucketIndex = Math.floor((ball.x / GAME_WIDTH) * LEVELS);
+        buckets[Math.min(Math.max(bucketIndex, 0), LEVELS - 1)]++;
+        totalBalls++;
+        return false;
+      }
+      return true;
+    }
+
+    function findClosestPointOnTriangle(point) {
+      const closestPoints = [
+        closestPointOnLine(trianglePoints[0], trianglePoints[1], point),
+        closestPointOnLine(trianglePoints[1], trianglePoints[2], point),
+        closestPointOnLine(trianglePoints[2], trianglePoints[0], point)
+      ];
+      return closestPoints.reduce((closest, current) =>
+        distance(point.x, point.y, current.x, current.y) < distance(point.x, point.y, closest.x, closest.y) ? current : closest
+      );
+    }
+
+    function closestPointOnLine(a, b, p) {
+      const atob = { x: b.x - a.x, y: b.y - a.y };
+      const atop = { x: p.x - a.x, y: p.y - a.y };
+      const len = atob.x * atob.x + atob.y * atob.y;
+      let dot = atop.x * atob.x + atop.y * atob.y;
+      const t = Math.min(1, Math.max(0, dot / len));
+      return { x: a.x + atob.x * t, y: a.y + atob.y * t };
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      drawTriangle();
+      drawPegs();
+      drawBuckets();
+      drawBalls();
+      drawGraphs();
+      balls = balls.filter(updateBall);
+      requestAnimationFrame(gameLoop);
+    }
+
+   function dropBall() {
+      const startX = GAME_WIDTH / 2 + (Math.random() * GAME_WIDTH * 0.02 - GAME_WIDTH * 0.01);
+      const startY = GAME_HEIGHT * 0.05;
+      balls.push({ x: startX, y: startY, vx: 0, vy: 0 });
+    }
+
+    function reset() {
+      balls = [];
+      buckets = Array(LEVELS).fill(0);
+      totalBalls = 0;
+    }
+
+    dropBallButton.addEventListener('click', dropBall);
+    resetButton.addEventListener('click', reset);
+    dropMultipleButton.addEventListener('click', () => {
+      const count = parseInt(ballCountInput.value, 10);
+      for (let i = 0; i < count; i++) {
+        setTimeout(dropBall, i * 100);
+      }
+    });
+
+    window.addEventListener('resize', resizeGame);
+    resizeGame();
+    gameLoop();
+  </script>
+</body>
+</html>
