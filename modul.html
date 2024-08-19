@@ -1,8 +1,9 @@
 <html lang="da">
 <head>
+    <!-- Skabt af Marc Sonne Dahl - (c) 2024 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modulvælger</title>
+    <title>Modulvælger App - RTS</title>
     <style>
         html, body {
             height: 100%;
@@ -90,203 +91,203 @@
     <script>
         const modules = {
       '1.1': {
-        name: 'Netværks- og datakommunikation',
+        name: '1.1 - Netværks- og datakommunikation',
         text: 'Opsætning af kommunikationsnetværk med aktive og passive netværksenheder under hensyn til cybersikkerhed.',
         prerequisites: []
       },
       '1.2': {
-        name: 'Automatiske anlæg',
+        name: '1.2 - Automatiske anlæg',
         text: 'Opbygning og installation af automatiske anlæg.',
         prerequisites: []
       },
       '1.3': {
-        name: 'Systemkomponenter til bygningsautomatik',
+        name: '1.3 - Systemkomponenter til bygningsautomatik',
         text: 'Opbygning og installation af automatiske anlæg i bygninger fx varme- og ventilationsanlæg.',
         prerequisites: []
       },
       '1.4': {
-        name: 'Intelligente bygningsinstallationer og design af enkle brugerflader',
+        name: '1.4 - Intelligente bygningsinstallationer og design af enkle brugerflader',
         text: 'Programmering og installation af intelligente bygningsinstallationer fx ved anvendelse af kablede og trådløse teknologier, IoT og åbne protokoller fx belysnings-, varme- og ventilationsanlæg.',
         prerequisites: []
       },
       '1.5': {
-        name: 'AIA og TV-overvågning',
+        name: '1.5 - AIA og TV-overvågning',
         text: 'Programmering og opsætning af alarmer (AIA) og TV-overvågning.',
         prerequisites: []
       },
       '1.6': {
-        name: 'Design og styring af lys',
+        name: '1.6 - Design og styring af lys',
         text: 'Design og installation af belysning i bolig, erhverv og industri.',
         prerequisites: []
       },
       '1.7': {
-        name: 'Vedvarende energiløsninger',
+        name: '1.7 - Vedvarende energiløsninger',
         text: 'Design og installation af vedvarende energiløsninger fx solceller, el-producerende enheder og varmepumpeanlæg.',
         prerequisites: []
       },
       '1.8': {
-        name: 'Elinstallationer på skibe og offshore 1',
+        name: '1.8 - Elinstallationer på skibe og offshore 1',
         text: 'Installation af almindelige elektriske installationer på skibe og offshore.',
         prerequisites: []
       },
       '1.9': {
-        name: 'Højspændingsinstallationer 1 – anlægsforståelse og sikkerhed',
+        name: '1.9 - Højspændingsinstallationer 1 – anlægsforståelse og sikkerhed',
         text: 'Sikkerhed og arbejde på almindelige højspændingsinstallationer.',
         prerequisites: []
       },
       '1.10': {
-        name: 'Tavleinstallationer og dimensionering',
+        name: '1.10 - Tavleinstallationer og dimensionering',
         text: 'Dimensionering, opbygning, installation og fejlfinding af lavspændings- og maskintavler.',
         prerequisites: []
       },
       '2.1': {
-        name: 'Programmering og opsætning af kommunikationsnetværk',
+        name: '2.1 - Programmering og opsætning af kommunikationsnetværk',
         text: 'Installation, opsætning og programmering af større kommunikationsnetværk med egnede sikkerhedssystemer fx netværk, firewall og virussikring.',
         prerequisites: ['1.1']
       },
       '2.2': {
-        name: 'Styring og regulering af automatiske anlæg',
+        name: '2.2 - Styring og regulering af automatiske anlæg',
         text: 'Design og installation af PLC-styringer og reguleringer for procesanlæg.',
         prerequisites: ['1.2']
       },
       '2.3': {
-        name: 'Kommunikationssystemer på automatiske anlæg',
+        name: '2.3 - Kommunikationssystemer på automatiske anlæg',
         text: 'Projektering og installation af industrielle bussystemer og netværk på automatiske anlæg.',
         prerequisites: ['1.3']
       },
       '2.4': {
-        name: 'Indeklima med CTS og HVAC',
+        name: '2.4 - Indeklima med CTS og HVAC',
         text: 'Installation af styrings- og reguleringsanlæg for indeklima i bygninger.',
         prerequisites: ['1.3', '1.2', '1.4', '1.6']
       },
       '2.5': {
-        name: 'Industrielle elprocesser',
+        name: '2.5 - Industrielle elprocesser',
         text: 'Sikkerhed, optimering og produktionspro-cesser anvendt ved styring, regulering og programmering af automatiske anlæg.',
         prerequisites: ['1.2']
       },
       '2.6': {
-        name: 'Bygningsautomatik og design af enkle brugerflader',
+        name: '2.6 - Bygningsautomatik og design af enkle brugerflader',
         text: 'Programmering og installation af bygnings-automatik ved anvendelse af trådløse teknologier, IoT og åbne protokoller på fx belysnings-, varme- og ventilationsanlæg.',
         prerequisites: ['1.4', '1.3', '1.5', '1.6']
       },
       '2.7': {
-        name: 'Brandtekniske installationer',
+        name: '2.7 - Brandtekniske installationer',
         text: 'Installation og vedligeholdelse af brand-tekniske installationer fx ABA og ABDL.',
         prerequisites: ['1.5']
       },
       '2.8': {
-        name: 'Elteknik i velfærdsteknologiske løsninger',
+        name: '2.8 - Elteknik i velfærdsteknologiske løsninger',
         text: 'Installation, integration og vejledning i anvendelse af velfærdsteknologiske systemer inden for hospitaler, plejehjem mv. fx hjælp til løft, spisemaskiner, automatiske toiletter, belysning og kommunikative hjælpemidler.',
         prerequisites: []
       },
       '2.9': {
-        name: 'Avanceret fejlfinding, måleteknik, elkvalitet og elektrisk støj',
+        name: '2.9 - Avanceret fejlfinding, måleteknik, elkvalitet og elektrisk støj',
         text: 'Avanceret fejlfinding, diagnose og afhjælpning på elektriske installationer og elektriske brugsgenstande i forbindelse med elektrisk støj og termografering.',
         prerequisites: []
       },
       '2.10': {
-        name: 'Elteknik i kølesystemer og varmepumper',
+        name: '2.10 - Elteknik i kølesystemer og varmepumper',
         text: 'Systemforståelse for køleteknisk anlæg med fyldning op til 2,5 kg og varmepumpesystemer.',
         prerequisites: []
       },
       '2.11': {
-        name: 'Elteknik i elevatorer',
+        name: '2.11 - Elteknik i elevatorer',
         text: 'Installation, udskiftning, justering og fejlretning på elevatoranlæg.',
         prerequisites: ['2.2']
       },
       '2.12': {
-        name: 'Hvidevarer',
+        name: '2.12 - Hvidevarer',
         text: 'Installation, vedligeholdelse, fejlsøgning og justering af industrielle komfurer samt køle-, vaske- og opvaskemaskiner samt tørretumblere.',
         prerequisites: []
       },
       '2.13': {
-        name: 'Elinstallationer på skibe og offshore 2',
+        name: '2.13 - Elinstallationer på skibe og offshore 2',
         text: 'Installation, vedligeholdelse, fejlsøgning på elektriske installationer på skibe og offshore.',
         prerequisites: ['1.8']
       },
       '2.15': {
-        name: 'Elektriske anlæg i vindmøller',
+        name: '2.15 - Elektriske anlæg i vindmøller',
         text: 'Arbejde, måling, fejlsøgning og beregninger på elektriske anlæg i vindmøller.',
         prerequisites: ['1.2']
       },
       '2.16': {
-        name: 'Højspændingsinstallationer 2 – opbygning og drift',
+        name: '2.16 - Højspændingsinstallationer 2 – opbygning og drift',
         text: 'Arbejde, måling, fejlsøgning og beregninger på almindelige højspændingsinstallationer.',
         prerequisites: ['1.9']
       },
       '3.1': {
-        name: 'Integrerede kommunikationsnetværk',
+        name: '3.1 - Integrerede kommunikationsnetværk',
         text: 'Installation og programmering af større integrerede kommunikationsanlæg med fokus på Quality of Service og egnede sikkerhedsprocesser.',
         prerequisites: ['2.1']
       },
       '3.2': {
-        name: 'Integration og SCADA af procesanlæg',
+        name: '3.2 - Integration og SCADA af procesanlæg',
         text: 'Integration af procesanlæg samt opsætning af sporbarhed til et administrativt system.',
         prerequisites: ['2.2', '2.3']
       },
       '3.3': {
-        name: 'Robot-elteknik',
+        name: '3.3 - Robot-elteknik',
         text: 'Projektering og innovativ anvendelse af robotteknologi.',
         prerequisites: ['2.2', '2.3']
       },
       '3.4': {
-        name: 'Integration og energieffektivisering af Building Management Systemer',
+        name: '3.4 - Integration og energieffektivisering af Building Management Systemer',
         text: 'Integration og design af Building Management Systemer (BMS).',
         prerequisites: ['2.5', '2.4']
       },
       '3.5': {
-        name: 'Energieffektivisering af bygningers energi og elanlæg',
+        name: '3.5 - Energieffektivisering af bygningers energi og elanlæg',
         text: 'Opbygning og indretning af økonomi- og energieffektive bygninger ved brug af energiteknologi og miljørigtige løsninger.',
         prerequisites: []
       },
       '3.6': {
-        name: 'Teknisk entreprise- og projektstyring',
+        name: '3.6 - Teknisk entreprise- og projektstyring',
         text: 'Kendskab til værktøjer for teknisk entreprise- og projektstyring.',
         prerequisites: []
       },
       '3.7': {
-        name: 'Integration af sikringsanlæg',
+        name: '3.7 - Integration af sikringsanlæg',
         text: 'Design og integration af sikringsanlæg.',
         prerequisites: ['2.7']
       },
     '4.1': {
-      name: 'Integrerede kommunikationsnetværk',
+      name: '4.1 - Integrerede kommunikationsnetværk',
       text: 'Installation og programmering af større integrerede kommunikationsnetværk med fokus på Quality of Service og egnede sikkerhedssystemer.',
       prerequisites: ['2.1']
       },
 
     '4.2': {
-      name: 'Integration og SCADA af procesanlæg',
+      name: '4.2 - Integration og SCADA af procesanlæg',
       text: 'Integration af procesanlæg samt opsætning af sporbarhed til et administrativt system.',
       prerequisites: ['2.2', '2.3']
     },
 
     '4.3': {
-      name: 'Robot-elteknik',
+      name: '4.3 - Robot-elteknik',
       text: 'Projektering og innovativ anvendelse af robotteknologi.',
       prerequisites: ['2.2', '2.3']
     },
 
     '4.4': {
-      name: 'Integration og energieffektivisering af Building Management System',
+      name: '4.4 - Integration og energieffektivisering af Building Management System',
       text: '',
       prerequisites: ['2.4', '2.5']
     },
 
     '4.5': {
-      name: 'Energieffektivisering af bygningers elinstallationer',
+      name: '4.5 - Energieffektivisering af bygningers elinstallationer',
       text: '',
       prerequisites: []
     },
 
     '4.6': {
-      name: 'Teknisk entreprise- og projektstyring',
+      name: '4.6 - Teknisk entreprise- og projektstyring',
       text: 'Projektstyring fra ordre til aflevering.',
       prerequisites: []
     },
 
     '4.7': {
-      name: 'Integration af sikringsanlæg',
+      name: '4.7 - Integration af sikringsanlæg',
       text: 'Design og integration af sikringsanlæg.',
       prerequisites: ['2.7']
     },
@@ -369,4 +370,5 @@
         });
     </script>
 </body>
+        <!-- Skabt af Marc Sonne Dahl - (c) 2024 -->
 </html>
