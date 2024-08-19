@@ -76,6 +76,13 @@
         #selected-modules {
             margin-top: 20px;
         }
+        .expandable-content {
+            display: none;
+            margin-top: 10px;
+        }
+        .expanded {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -295,10 +302,11 @@
 
        const selectedModules = new Set();
 
-        function isPrerequisitesMet(moduleId) {
-            const module = modules[moduleId];
-            return module.prerequisites.every(prereq => selectedModules.has(prereq));
-        }
+function isPrerequisitesMet(moduleId) {
+    const module = modules[moduleId];
+    return module.prerequisites.length === 0 || module.prerequisites.some(prereq => selectedModules.has(prereq));
+}
+
 
         function toggleModule(moduleId) {
             const moduleCard = document.getElementById(moduleId);
