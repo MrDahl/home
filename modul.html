@@ -1,173 +1,207 @@
 <html lang="da">
+
 <head>
-    <!-- Skabt af Marc Sonne Dahl - (c) 2024 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modulvælger App - RTS</title>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #444;
-            background-color: #f4f4f4;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <!-- Skabt af Marc Sonne Dahl - (c) 2024 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modulvælger App - RTS</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #e0e0e0;
+      background-color: #121212;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            line-height: 1.7;
-            padding: 20px;
-            overflow-y: auto;
-        }
+    body {
+      line-height: 1.7;
+      padding: 10px;
+      overflow-y: auto;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #1e1e1e;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+      padding: 15px;
+    }
 
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: #333;
-        }
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
 
-        .module-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 20px;
-        }
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+    }
 
-        .module-card {
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            background-color: #fff;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-            padding: 15px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
+    .module-card {
+      border: 1px solid #333;
+      border-radius: 12px;
+      background-color: #2a2a2a;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      padding: 15px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+    }
 
-        .module-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
+    .module-card:hover {
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+    }
 
-        .module-card.selected {
-            border-color: #4CAF50;
-            background-color: #E8F5E9;
-        }
+    .module-card.selected {
+      border-color: #4CAF50;
+      background-color: #1b3a1e;
+    }
 
-        .module-card h2 {
-            margin: 0;
-            font-size: 1.4em;
-            color: #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .module-card h2 {
+      margin: 0;
+      font-size: 1.2em;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .module-card p {
-            font-size: 0.95em;
-            margin-bottom: 10px;
-            color: #555;
-        }
+    .module-card p {
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      color: #bdbdbd;
+    }
 
-        .prerequisites {
-            font-size: 0.85em;
-            color: #888;
-        }
+    .prerequisites {
+      font-size: 0.8em;
+      color: #888;
+    }
 
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            font-size: 0.9em;
-        }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-size: 0.9em;
+    }
 
-        button:hover:not(:disabled) {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
+    button:hover:not(:disabled) {
+      background-color: #45a049;
+      transform: scale(1.05);
+    }
 
-        button:disabled {
-            background-color: #ddd;
-            cursor: not-allowed;
-        }
+    button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
 
-        .icon {
-            font-size: 1.3em;
-            color: #4CAF50;
-        }
+    .icon {
+      font-size: 1.3em;
+      color: #4CAF50;
+    }
 
-        #selected-modules {
-            margin-top: 20px;
-        }
+    #selected-modules {
+      margin-top: 20px;
+    }
 
-        #selected-modules h2 {
-            margin: 0;
-            font-size: 1.2em;
-            color: #333;
-        }
+    #selected-modules h2 {
+      margin: 0;
+      font-size: 1.2em;
+      color: #ffffff;
+    }
 
-        #selected-list {
-            list-style: none;
-            padding: 0;
-        }
+    #selected-list {
+      list-style: none;
+      padding: 0;
+    }
 
-        #selected-list li {
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 5px;
-            border: 1px solid #ddd;
-        }
+    #selected-list li {
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+      border: 1px solid #333;
+    }
 
-        .expandable-content {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f1f1f1;
-            border-radius: 6px;
-        }
+    .expandable-content {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #2a2a2a;
+      border-radius: 6px;
+    }
 
-        .expanded {
-            display: block;
-        }
+    .expanded {
+      display: block;
+    }
 
-        .footer {
-            margin-top: 30px;
-            font-weight: thin;
-            color: rgba(0, 0, 0, 0.3);
-            background-color: transparent;
-            text-align: center;
-            padding: 10px 0;
-            border-top: 1px solid #ddd;
-        }
-    </style>
+    .footer {
+      margin-top: 30px;
+      font-weight: thin;
+      color: rgba(255, 255, 255, 0.3);
+      background-color: transparent;
+      text-align: center;
+      padding: 10px 0;
+      border-top: 1px solid #333;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 5px;
+      }
+
+      .container {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .module-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .module-card h2 {
+        font-size: 1.1em;
+      }
+
+      .module-card p {
+        font-size: 0.85em;
+      }
+
+      button {
+        padding: 8px 12px;
+        font-size: 0.85em;
+      }
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Modulvælger - Elektriker uddannelsen</h1>
-        <div id="module-grid" class="module-grid"></div>
-        <div id="selected-modules">
-            <h2>Valgte moduler:</h2>
-            <ul id="selected-list"></ul>
-        </div>
-        <div id="footer" class="footer">
-            <p>Lavet af Marc Sonne Dahl (c) 2024</p>
-        </div>
-    </div>
 
-    <script>
-        const modules = {
+<body>
+  <div class="container">
+    <h1>Modulvælger - Elektriker uddannelsen</h1>
+    <div id="module-grid" class="module-grid"></div>
+    <div id="selected-modules">
+      <h2>Valgte moduler:</h2>
+      <ul id="selected-list"></ul>
+    </div>
+    <div id="footer" class="footer">
+      <p>Lavet af Marc Sonne Dahl (c) 2024</p>
+    </div>
+  </div>
+
+  <script>
+    const modules = {
       '1.1': {
         name: '1.1 - Netværks- og datakommunikation',
         text: 'Opsætning af kommunikationsnetværk med aktive og passive netværksenheder under hensyn til cybersikkerhed.',
@@ -328,126 +362,115 @@
         text: 'Design og integration af sikringsanlæg.',
         prerequisites: ['2.7']
       },
-    '4.1': {
-      name: '4.1 - Integrerede kommunikationsnetværk',
-      text: 'Installation og programmering af større integrerede kommunikationsnetværk med fokus på Quality of Service og egnede sikkerhedssystemer.',
-      prerequisites: ['2.1']
+      '4.1': {
+        name: '4.1 - Integrerede kommunikationsnetværk',
+        text: 'Installation og programmering af større integrerede kommunikationsnetværk med fokus på Quality of Service og egnede sikkerhedssystemer.',
+        prerequisites: ['2.1']
       },
+      '4.2': {
+        name: '4.2 - Integration og SCADA af procesanlæg',
+        text: 'Integration af procesanlæg samt opsætning af sporbarhed til et administrativt system.',
+        prerequisites: ['2.2', '2.3']
+      },
+      '4.3': {
+        name: '4.3 - Robot-elteknik',
+        text: 'Projektering og innovativ anvendelse af robotteknologi.',
+        prerequisites: ['2.2', '2.3']
+      },
+      '4.4': {
+        name: '4.4 - Integration og energieffektivisering af Building Management System',
+        text: '',
+        prerequisites: ['2.4', '2.5']
+      },
+      '4.5': {
+        name: '4.5 - Energieffektivisering af bygningers elinstallationer',
+        text: '',
+        prerequisites: []
+      },
+      '4.6': {
+        name: '4.6 - Teknisk entreprise- og projektstyring',
+        text: 'Projektstyring fra ordre til aflevering.',
+        prerequisites: []
+      },
+      '4.7': {
+        name: '4.7 - Integration af sikringsanlæg',
+        text: 'Design og integration af sikringsanlæg.',
+        prerequisites: ['2.7']
+      },
+    };
+    const selectedModules = new Set();
 
-    '4.2': {
-      name: '4.2 - Integration og SCADA af procesanlæg',
-      text: 'Integration af procesanlæg samt opsætning af sporbarhed til et administrativt system.',
-      prerequisites: ['2.2', '2.3']
-    },
+    function isPrerequisitesMet(moduleId) {
+      const module = modules[moduleId];
+      return module.prerequisites.length === 0 || module.prerequisites.some(prereq => selectedModules.has(prereq));
+    }
 
-    '4.3': {
-      name: '4.3 - Robot-elteknik',
-      text: 'Projektering og innovativ anvendelse af robotteknologi.',
-      prerequisites: ['2.2', '2.3']
-    },
+    function toggleModule(moduleId) {
+      const moduleCard = document.getElementById(moduleId);
+      if (selectedModules.has(moduleId)) {
+        selectedModules.delete(moduleId);
+        moduleCard.classList.remove('selected');
+        moduleCard.querySelector('button').textContent = 'Vælg';
+      } else if (isPrerequisitesMet(moduleId)) {
+        selectedModules.add(moduleId);
+        moduleCard.classList.add('selected');
+        moduleCard.querySelector('button').textContent = 'Fjern';
+      }
+      updateSelectedModulesList();
+      updateModuleStates();
+    }
 
-    '4.4': {
-      name: '4.4 - Integration og energieffektivisering af Building Management System',
-      text: '',
-      prerequisites: ['2.4', '2.5']
-    },
+    function updateSelectedModulesList() {
+      const selectedList = document.getElementById('selected-list');
+      selectedList.innerHTML = '';
+      selectedModules.forEach(moduleId => {
+        const li = document.createElement('li');
+        li.textContent = modules[moduleId].name;
+        selectedList.appendChild(li);
+      });
+    }
 
-    '4.5': {
-      name: '4.5 - Energieffektivisering af bygningers elinstallationer',
-      text: '',
-      prerequisites: []
-    },
-
-    '4.6': {
-      name: '4.6 - Teknisk entreprise- og projektstyring',
-      text: 'Projektstyring fra ordre til aflevering.',
-      prerequisites: []
-    },
-
-    '4.7': {
-      name: '4.7 - Integration af sikringsanlæg',
-      text: 'Design og integration af sikringsanlæg.',
-      prerequisites: ['2.7']
-    },
-        };
-
-       const selectedModules = new Set();
-
-function isPrerequisitesMet(moduleId) {
-    const module = modules[moduleId];
-    return module.prerequisites.length === 0 || module.prerequisites.some(prereq => selectedModules.has(prereq));
-}
-
-
-        function toggleModule(moduleId) {
-            const moduleCard = document.getElementById(moduleId);
-            if (selectedModules.has(moduleId)) {
-                selectedModules.delete(moduleId);
-                moduleCard.classList.remove('selected');
-                moduleCard.querySelector('button').textContent = 'Vælg';
-            } else if (isPrerequisitesMet(moduleId)) {
-                selectedModules.add(moduleId);
-                moduleCard.classList.add('selected');
-                moduleCard.querySelector('button').textContent = 'Fjern';
-            }
-            updateSelectedModulesList();
-            updateModuleStates();
+    function updateModuleStates() {
+      Object.keys(modules).forEach(moduleId => {
+        const moduleCard = document.getElementById(moduleId);
+        const button = moduleCard.querySelector('button');
+        if (!selectedModules.has(moduleId)) {
+          button.disabled = !isPrerequisitesMet(moduleId);
+        } else {
+          button.disabled = false;
         }
+      });
+    }
 
-        function updateSelectedModulesList() {
-            const selectedList = document.getElementById('selected-list');
-            selectedList.innerHTML = '';
-            selectedModules.forEach(moduleId => {
-                const li = document.createElement('li');
-                li.textContent = modules[moduleId].name;
-                selectedList.appendChild(li);
-            });
-        }
-
-        function updateModuleStates() {
-            Object.keys(modules).forEach(moduleId => {
-                const moduleCard = document.getElementById(moduleId);
-                const button = moduleCard.querySelector('button');
-                if (!selectedModules.has(moduleId)) {
-                    button.disabled = !isPrerequisitesMet(moduleId);
-                } else {
-                    button.disabled = false;
-                }
-            });
-        }
-
-        function createModuleCard(moduleId, module) {
-            const card = document.createElement('div');
-            card.className = 'module-card';
-            card.id = moduleId;
-
-            card.innerHTML = `
+    function createModuleCard(moduleId, module) {
+      const card = document.createElement('div');
+      card.className = 'module-card';
+      card.id = moduleId;
+      card.innerHTML = `
                 <h2>${module.name} <span class="icon"></span></h2>
                 <p>${module.text}</p>
                 <p class="prerequisites">Forudsætninger: ${module.prerequisites.length ? module.prerequisites.join(', ') : 'Ingen'}</p>
                 <button>Vælg</button>
             `;
+      const button = card.querySelector('button');
+      button.addEventListener('click', function() {
+        toggleModule(moduleId);
+      });
+      return card;
+    }
 
-            const button = card.querySelector('button');
-            button.addEventListener('click', function() {
-                toggleModule(moduleId);
-            });
-            
-            return card;
-        }
-
-        function initializeModuleGrid() {
-            const moduleGrid = document.getElementById('module-grid');
-            Object.entries(modules).forEach(([moduleId, module]) => {
-                moduleGrid.appendChild(createModuleCard(moduleId, module));
-            });
-            updateModuleStates();
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeModuleGrid();
-        });
-    </script>
+    function initializeModuleGrid() {
+      const moduleGrid = document.getElementById('module-grid');
+      Object.entries(modules).forEach(([moduleId, module]) => {
+        moduleGrid.appendChild(createModuleCard(moduleId, module));
+      });
+      updateModuleStates();
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeModuleGrid();
+    });
+  </script>
 </body>
-        <!-- Skabt af Marc Sonne Dahl - (c) 2024 -->
+<!-- Skabt af Marc Sonne Dahl - (c) 2024 -->
+
 </html>
