@@ -8,87 +8,149 @@
         html, body {
             height: 100%;
             margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #444;
+            background-color: #f4f4f4;
             padding: 0;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            padding: 20px;
             box-sizing: border-box;
-            overflow-y: auto; /* Ændret fra scroll til auto */
         }
+
+        body {
+            line-height: 1.7;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
         }
+
         .module-card {
             border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: 12px;
+            background-color: #fff;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
             padding: 15px;
-            background-color: #f9f9f9;
-            transition: all 0.3s ease;
-            cursor: pointer; /* Tilføjet for at sikre at elementet føles interaktivt */
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
         .module-card.selected {
             border-color: #4CAF50;
             background-color: #E8F5E9;
         }
+
         .module-card h2 {
-            margin-top: 0;
-            font-size: 1.2em;
+            margin: 0;
+            font-size: 1.4em;
+            color: #333;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .module-card p {
-            font-size: 0.9em;
+            font-size: 0.95em;
             margin-bottom: 10px;
+            color: #555;
         }
+
         .prerequisites {
-            font-size: 0.8em;
-            color: #666;
+            font-size: 0.85em;
+            color: #888;
         }
+
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 0.9em;
         }
+
         button:hover:not(:disabled) {
             background-color: #45a049;
+            transform: scale(1.05);
         }
+
         button:disabled {
             background-color: #ddd;
             cursor: not-allowed;
         }
+
         .icon {
-            font-size: 1.2em;
+            font-size: 1.3em;
+            color: #4CAF50;
         }
+
         #selected-modules {
             margin-top: 20px;
-            margin-bottom: 30px;
         }
+
+        #selected-modules h2 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        #selected-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #selected-list li {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+        }
+
         .expandable-content {
             display: none;
             margin-top: 10px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 6px;
         }
+
         .expanded {
             display: block;
         }
+
         .footer {
+            margin-top: 30px;
             font-weight: bold;
-            color: rgba(100, 100, 100, .2);
+            color: rgba(0, 0, 0, 0.5);
             background-color: transparent;
-            text-shadow: rgba(255, 255, 255, .8) 1px 1px 1px;
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
         }
     </style>
 </head>
@@ -100,7 +162,7 @@
             <h2>Valgte moduler:</h2>
             <ul id="selected-list"></ul>
         </div>
-        <div id="footer">
+        <div id="footer" class="footer">
             <p>Lavet af Marc Sonne Dahl (c) 2024</p>
         </div>
     </div>
