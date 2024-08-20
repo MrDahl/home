@@ -111,25 +111,26 @@
 
     #selected-modules {
       margin-top: 20px;
+      background-color: #2a2a2a;
+      padding: 15px;
+      border-radius: 8px;
     }
 
     #selected-modules h2 {
-      margin: 0;
-      font-size: 1.2em;
+      margin-top: 0;
       color: #ffffff;
     }
 
     #selected-list {
-      list-style: none;
+      list-style-type: none;
       padding: 0;
     }
 
     #selected-list li {
-      background: #2a2a2a;
-      padding: 10px;
-      border-radius: 6px;
+      background-color: #3a3a3a;
       margin-bottom: 5px;
-      border: 1px solid #333;
+      padding: 8px;
+      border-radius: 4px;
     }
 
     .expandable-content {
@@ -152,6 +153,56 @@
       text-align: center;
       padding: 10px 0;
       border-top: 1px solid #333;
+    }
+
+    .expandable-content {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #333;
+      border-radius: 6px;
+    }
+
+    .expanded .expandable-content {
+      display: block;
+    }
+
+    .expand-button {
+      background-color: #555;
+      color: white;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .expand-button:hover {
+      background-color: #666;
+    }
+
+    .module-card-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .select-button {
+      flex-grow: 1;
+      margin-left: 10px;
+    }
+
+    .module-card-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
     }
 
     @media (max-width: 768px) {
@@ -398,6 +449,630 @@
         prerequisites: ['2.7']
       },
     };
+    const moduleBulletPoints = {
+      '1.1': [
+        '1) Lærlingen har kendskab til fiberkabler og fiberlederes typer, samt deres opbygning og anvendelse, herunder indendørs og udendørs.',
+        '2) Lærlingen kan vælge, installere og terminere fiberkabler efter korrekt installationspraksis, herunder bøjningsradius og adskillelse fra øvrig kabling.',
+        '3) Lærlingen kan inspicere og rense fiberkonnektorer korrekt.',
+        '4) Lærlingen har kendskab til måling, test, fejlfinding og kvalitetssikring af fiberinstallationer, herunder OTDR, OLTS og VFL.',
+        '5) Lærlingen kan planlægge og udføre føringsveje til netværksinstallationer efter gældende standarder, fx respektafstande og bøjningsradius.',
+        '6) Lærlingen kan udføre måling, test, fejlfinding og kvalitetssikring af twisted pair-installationer med netværkskabeltester i henhold til gældende standarder.',
+        '7) Lærlingen kan dimensionere og opsætte et krydsfelt-rack, herunder opmærkning, potentialudligning og placering af komponenter.',
+        '8) Lærlingen kan redegøre for TCP/IP-protokol, herunder IP-adresser, subnet og DHCP.',
+        '9) Lærlingen kan redegøre for OSI-modellens lag 1-4.',
+        '10) Lærlingen kan redegøre for PoE og IoT-teknologi.',
+        '11) Lærlingen har kendskab til UPS-anlæg og generatorer i forbindelse med netværksinstallationer.',
+        '12) Lærlingen kan udføre netværk med aktive komponenter samt opsætte og idriftsætte netværksenheder, herunder NIC, switches og routere.',
+        '13) Lærlingen kan planlægge, opbygge og installere to netværk med forskellige subnet og lave routing mellem dem, fx et administrativt og et teknisk netværk.',
+        '14) Lærlingen kan redegøre for data- og cybersikkerhed i forbindelse med opbygning og drift af netværk, fx password og port forwarding.',
+        '15) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning og kvalitetssikring.',
+        '16) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til modulets indhold.'
+      ],
+      '1.2': [
+        '1) Lærlingen har kendskab til sikkerhedssystemer på automatiske anlæg på maskiner.',
+        '2) Lærlingen har kendskab til IoT og cybersikkerhed i forbindelse med automatiske anlæg på maskiner.',
+        '3) Lærlingen kan vejlede om og anvende de bedst egnede energieffektive komponenter til automatiske anlæg på maskiner.',
+        '4) Lærlingen kan redegøre for anvendelse af digitale tvillinger samt virtual reality i forbindelse med drift og vedligehold af industriinstallationer.',
+        '5) Lærlingen kan redegøre for farvekoder på aktuatorer, indikationslys og ledere.',
+        '6) Lærlingen kan redegøre for automatiseringsprincipper, analoge og digitale kredsløb, herunder sekventiel PLC-teknik.',
+        '7) Lærlingen kan montere automatiske anlæg på maskiner indeholdende elektromekanisk, elektronisk og programmerbart udstyr samt almindeligt forekommende digitale styre- og føleorganer.',
+        '8) Lærlingen kan programmere, opbygge og indkøre mindre automatiske anlæg indeholdende elektromekanisk, elektronisk og programmerbart udstyr (PLC).',
+        '9) Lærlingen kan foretage forskriftsmæssig afprøvning efter instruktion.',
+        '10) Lærlingen kan selvstændigt udføre måling, fejlfinding, kvalitetssikring, service og vedligeholdelse på automatiske anlæg på maskiner.',
+        '11) Lærlingen kan vejlede brugeren i daglig anvendelse af anlægget og dets fleksibilitet ved simpel programmering.',
+        '12) Lærlingen kan redegøre for og udvælge korrekte styre- og føleorganer samt udføre indkøring og justering af disse.',
+        '13) Lærlingen har grundlæggende kendskab til pneumatik og hydraulik.',
+        '14) Lærlingen kan redegøre for pneumatiske komponenter og disses styringer samt vedligeholdelse.',
+        '15) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning.',
+        '16) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til modulets indhold.'
+      ],
+      '1.3': [
+        '1) Lærlingen kan redegøre for de standardsystemkomponenter, der forefindes på belysning, varme, ventilation og solafskærmning.',
+        '2) Lærlingen kan redegøre for IoT-teknologi anvendt i bygninger.',
+        '3) Lærlingen kan vejlede om og anvende de bedst egnede energieffektive komponenter til automatiske anlæg i bygninger.',
+        '4) Lærlingen kan installere og montere automatiske anlæg i bygninger, indeholdende styrings- og reguleringskomponenter for belysning, varme, ventilation og solafskærmning.',
+        '5) Lærlingen har kendskab til dørtelefoni og låseautomatik.',
+        '6) Lærlingen kan foretage forskriftsmæssig afprøvning.',
+        '7) Lærlingen kan udføre fejlfinding, service og vedligeholdelse på automatiske anlæg i bygninger.',
+        '8) Lærlingen kan vejlede brugeren i daglig anvendelse af anlægget og dets fleksibilitet ved simpel programmering.',
+        '9) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til modulets indhold.',
+        '10) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning.',
+        '11) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til modulets indhold.'
+      ],
+      '1.4': [
+        '1) Lærlingen kan redegøre for teknologierne ved en intelligent bygningsinstallation, herunder centralt og decentralt styrede installationer samt PoE, IoT, cybersikkerhed og trådløse teknologier.',
+        '2) Lærlingen kan selvstændigt dimensionere, installere, montere, programmere og konfigurere intelligente bygningsinstallationer og opsætte grafiske webbaserede brugerflader, fx via software installeret på PC.',
+        '3) Lærlingen kan udvælge og placere sensorer og følere.',
+        '4) Lærlingen kan udvælge og anvende komponenter til intelligent bygningsinstallation, så der kan skabes bedst egnede energieffektive løsninger.',
+        '5) Lærlingen kan udføre service og vedligeholdelse på intelligente bygningsinstallationer i bygninger.',
+        '6) Lærlingen kan anvende og integrere minimum to åbne protokoller i bygninger, fx ZigBee, Z-Wave eller EnOcean.',
+        '7) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til modulets indhold.',
+        '8) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning.',
+        '9) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til modulets indhold.',
+        '10) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for modulets indhold.'
+      ],
+      '1.5': [
+        '1) Lærlingen kan redegøre for sikringsbranchens struktur, opbygning samt kompetence- og ansvarsområder.',
+        '2) Lærlingen kan selvstændigt vejlede, projektere, installere, energieffektivisere, fejlfinde og udføre service på mekaniske sikringsløsninger, trådløse og kablede AIA-anlæg samt instruere slutbrugeren i brugen af anlægget.',
+        '3) Lærlingen kan vælge og programmere en AIA-central med tilhørende alarmtransmission til kontrolcentral i henhold til reglerne for et forsikringskrævet AIA-anlæg.',
+        '4) Lærlingen kan selvstændigt vejlede, projektere, installere, fejlfinde og udføre service på TV-overvågningsanlæg samt instruere slutbrugeren i brugen af anlægget.',
+        '5) Lærlingen kan udvælge anlægsdele i korrekt udstyrsklasse, fx nøglerør, og projektere kablingen, herunder PoE.',
+        '6) Lærlingen har kendskab til dør- og låseautomatik samt dørtelefoni med og uden video.',
+        '7) Lærlingen kan installere, konfigurere, idriftsætte, servicere og fejlrette på udstyr, der indgår i et TCP/IP-netværk og kan sikre høj netværkssikkerhed.',
+        '8) Lærlingen kan vejlede kunden om trusler og data- og netværkssikkerhed på et TCP/IP-baseret alarm-, sikrings- og overvågningsanlæg.',
+        '9) Lærlingen har kendskab til GDPR og IT-sikkerhed i forbindelse med TV-overvågning, dørtelefoni og alarmsystemer.',
+        '10) Lærlingen kan selvstændigt programmere og foretage målinger, afprøvning og fejlretning på de nævnte typer sikringsanlæg samt konfigurere og programmere almindeligt forekommende centraludstyr.',
+        '11) Lærlingen skal gennemføre og bestå den skriftlige test, der berettiger til AIA-bevis.',
+        '12) Lærlingen kan udfærdige forskriftsmæssig dokumentation til alle typer anlæg.',
+        '13) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til modulets indhold.',
+        '14) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning.',
+        '15) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til modulets indhold.',
+        '16) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for modulets indhold.'
+      ],
+      '1.6': [
+        '1) Lærlingen kan redegøre for forskellige belysningskategorier fx inden- og udendørs, industriel, kontor og erhverv samt lystekniske begreber og krav til belysning.',
+        '2) Lærlingen har kendskab til problemstillinger med EMC/EMI, harmoniske strømme og lækstrømme i PE-lederen i forbindelse med LED-armaturer og valg af RCD og gruppeafbrydere m.m.',
+        '3) Lærlingen kan ved anvendelse af IT vælge og beregne belysningsanlæg samt designe installationer, der opfylder kravene til komfort, miljø og energi.',
+        '4) Lærlingen har kendskab til designmuligheder af belysningsarmaturer herunder 3D-design og print af prototyper.',
+        '5) Lærlingen kan udføre belysningsanlæg i forskellige belysningskategorier, som opfylder gældende standarder som fx DS/EN 12464 serien samt kundens og bygningsreglementets krav herunder krav om funktionsafprøvning.',
+        '6) Lærlingen har kendskab til forskellige styrings- og reguleringsprincipper for energirigtige belysningsanlæg fx DALI, trådløse løsninger og hybride systemer.',
+        '7) Lærlingen kan vejlede, udvælge og anvende de bedst egnede systemkomponenter til styring og regulering af energioptimerede belysningsanlæg ved såvel renovering og nybygning.',
+        '8) Lærlingen kan vælge, placere og indstille sensorer og følere ud fra opgaven og gældende love, regler og standarder.',
+        '9) Lærlingen kan selvstændigt udføre måling, fejlfinding, indregulering og kvalitetssikring i forhold til modulets indhold.',
+        '10) Lærlingen kan vælge, dimensionere og installere belysningsanlæg udført med installationsstikforbindelser.',
+        '11) Lærlingen kan redegøre for PoE, IoT og døgnrytmebelysning (HCL) og dets anvendelse inden for belysningsanlæg.',
+        '12) Lærlingen kan montere, installere, idriftsætte og programmere mindre belysningsanlæg indeholdende kablede, trådløse eller hybride lysstyringer samt regulere og omprogrammere eksisterende lysstyringsanlæg.',
+        '13) Lærlingen har kendskab til love, regler og standarder om flugtvejs- og panikbelysning og udfører installation og vedligeholdelse af sikkerhedsbelysningsanlæg under hensyntagen til bygningers anvendelseskategori.',
+        '14) Lærlingen kan vejlede, udvælge og dimensionere belysningsanlæg, der skaber den rigtige lysstemning i fx erhverv og bolig fx DALI og DALI 2 med RGB.',
+        '15) Lærlingen kan selvstændigt udføre verifikation, måling, fejlfinding og kvalitetssikring i forhold til modulets indhold.',
+        '16) Lærlingen kan redegøre for LED-armaturer, LED-lyskilder og -drivere samt har kendskab til ældre former for belysning som fx lysrør, halogen og fasekompenserede belysningsanlæg.',
+        '17) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til modulets indhold.',
+        '18) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning.',
+        '19) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for modulets indhold.'
+      ],
+      '1.7': [
+        '1) Lærlingen kan selvstændigt vejlede og vælge energieffektive vedvarende energiløsninger ud fra en energiøkonomisk betragtning og ud fra kundebehov.',
+        '2) Lærlingen kan beskrive energimæssige og økonomiske konsekvenser ved valg af vedvarende energiløsninger kontra konventionelle løsninger.',
+        '3) Lærlingen kan medvirke til at vurdere risici i forbindelse med elsikkerhed på og nær ved spændingsførende anlæg samt forsvarligt udføre service, fejlfinding og vedligeholdelse af vedvarende energianlæg.',
+        '4) Lærlingen kan udføre elektrisk installation, idriftsætte og fejlfinde på vedvarende energiløsninger herunder solcelleanlæg og varmepumper.',
+        '5) Lærlingen kan redegøre for IoT og cybersikkerhed i forbindelse med vedvarende energiløsninger.',
+        '6) Lærlingen kan selvstændigt integrere de forskellige vedvarende energiløsninger.',
+        '7) Lærlingen kan selvstændigt dimensionere og installere korrekt beskyttelse og koblingsudstyr ved vedvarende energiløsninger.',
+        '8) Lærlingen kan dimensionere hybridanlæg og batterilagering i forhold til effektbehov.',
+        '9) Lærlingen har kendskab til nuværende og kommende el-producerende teknologier.',
+        '10) Lærlingen kan udføre forskriftsmæssig service og vedligehold af vedvarende energianlæg.',
+        '11) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til modulets indhold.',
+        '12) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning.',
+        '13) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til modulets indhold.',
+        '14) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for modulets indhold.'
+      ],
+      '1.8': [
+        '1) Lærlingen kan redegøre for elektriske energisystemer, som anvendes offshore og på skibe med akkumulatorer, ladeaggregater, omformere, motorer (AC/DC) og generatorer (AC/DC).',
+        '2) Lærlingen kan installere og vedligeholde de almindelige installationer offshore og på skibe, herunder automatiske anlæg, lanternesystemer, tavleanlæg og landtilslutning.',
+        '3) Lærlingen kan udføre installationer til sikringssystemer, herunder brandslukningssystemer indeholdende slukningsmidler, detektering og alarmering.',
+        '4) Lærlingen har kendskab til sikkerhedsprocedurer i forbindelse med arbejde offshore og på skibe.',
+        '5) Lærlingen kan udføre installationer i områder med eksplosions- og brandfare.',
+        '6) Lærlingen kan redegøre for arbejde med gnistproducerende værktøj fx vinkelslibere og svejseudstyr brandteknisk korrekt.',
+        '7) Lærlingen kan udføre korrekte vandtætte og brandsikre gennemføringer.',
+        '8) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til modulets indhold.',
+        '9) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning.',
+        '10) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til modulets indhold.',
+        '11) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for modulets indhold.'
+      ],
+      '1.9': [
+        '1) Lærlingen kan redegøre for transformerstationers opbygning og komponenter.',
+        '2) Lærlingen kan redegøre for elektriske farer, forholdsregler og sikkerhed for drift af elektriske mellem-/højspændingsanlæg i henhold til Bekendtgørelse om sikkerhed for drift af elektriske anlæg.',
+        '3) Lærlingen kan redegøre for respektafstande og overholdelse af disse ved mellem-/højspændingsanlæg.',
+        '4) Lærlingen kan redegøre for tilknyttede sikkerhedskrav ved færdsel og arbejde på transformerstationer, herunder principper for Lockout/Tagout.',
+        '5) Lærlingen kan redegøre for årsager til lysbuefarer og elektriske ulykker ved mellem-/højspændingsanlæg.',
+        '6) Lærlingen kan redegøre for sikkerhedsfunktioner i koblingsudstyr ved mellem-/højspændingsanlæg, fx interlocking, blokering og beskyttelsesrelæer.',
+        '7) Lærlingen kan redegøre for sekundære farer, nødforhold, højspændingsregler og operationelle procedurer i et højspændingsnet.',
+        '8) Lærlingen kan redegøre for kontrol af spændingsløs tilstand på et mellem-/højspændingsanlæg.',
+        '9) Lærlingen kan redegøre for regler i forbindelse med sikring imod genindkobling og jording af mellem-/højspændingsanlæg.',
+        '10) Lærlingen kan redegøre for forskellige mellem-/højspændingskablers opbygning og typer.',
+        '11) Lærlingen har kendskab til forskellige typer kabelmuffer.',
+        '12) Lærlingen kan selvstændigt udføre strøm- og spændingsmålinger i forbindelse med forsyningsnettet.',
+        '13) Lærlingen kan montere kabler i tavler på transformerstationer.',
+        '14) Lærlingen har kendskab til simpel afprøvning af beskyttelsesrelæer.',
+        '15) Lærlingen kan udføre arbejde i henhold til gældende bekendtgørelser og arbejdsinstrukser fra driftsleder.',
+        '16) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning.',
+        '17) Lærlingen har kendskab til arbejdsmiljø- og elsikkerhedsmæssige forhold, der er relevante for modulets indhold.'
+      ],
+      '1.10': [
+        '1) Lærlingen kan redegøre for definitioner på flere typer eltavler, herunder lavspændings- og maskintavlers opbygning, samt kendskab til gældende love, normer og standarder samt mærkning af tavler.',
+        '2) Lærlingen kan redegøre for kortslutningsniveauer i forbindelse med valg og installation af komponenter og kabler i forhold til installation af tavler, fx med hensyn til dynamiske og termiske påvirkninger eller andre forhold.',
+        '3) Lærlingen kan udvælge og indstille tavlebeskyttelse i henhold til DS/HD 60364-standardserien, som jordforbindelse, transientbeskyttelse (SPD), gnistdetektor (AFDD), fejlstrømsafbryder (RCD), sikringer og maksimalafbrydere.',
+        '4) Lærlingen kan udvælge kortslutnings- og overbelastningsudstyr i henhold til DS/HD 60364-standardserien til tavler, kabler og udstyr i afgående kredse.',
+        '5) Lærlingen kan redegøre for selektivitet mellem tavlekomponenter, herunder backup-beskyttelse.',
+        '6) Lærlingen har kendskab til elektromagnetisk kompatibilitet (EMC) i forbindelse med tavler og tavlekomponenter.',
+        '7) Lærlingen har kendskab til fremstilling og dokumentation af tavler i henhold til DS/EN 61439-standardserien og DS/EN 61082 samt vejledninger fra Dansk El-Tavle Forening.',
+        '8) Lærlingen har kendskab til termiske forhold og udfordringer i forbindelse med komponenter samt lednings- og kabelføring i tavler.',
+        '9) Lærlingen kan redegøre for og gennemføre fejlfinding ved hjælp af fx termografering af forbindelser, komponenter og samlinger.',
+        '10) Lærlingen kan dimensionere, montere og installere lavspændings- og maskintavler, herunder kabel- og ledningsføringer inde i tavlen.',
+        '11) Lærlingen kan ved tavlearbejde foretage risikovurdering og sikring af egen og andres sikkerhed.',
+        '12) Lærlingen kan udvælge og anvende korrekt måleudstyr, værktøj og relevante materialer til at opbygge og servicere eltavler.',
+        '13) Lærlingen kan kvalitetssikre og dokumentere eget arbejde, herunder udfylde tavlespecifikationsskemaer (fx BPS) og kredsskemaer korrekt.',
+        '14) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til modulets indhold samt anvende IT til relevant informationssøgning.',
+        '15) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til modulets indhold.',
+        '16) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for modulets indhold.',
+        '17) Lærlingen har kendskab til bæredygtighed og grøn omstilling i forbindelse med opbygning af tavler, herunder standarder, Life Cycle Assessment, Environmental Product Declaration, CO2-aftryk og affaldssortering.'
+      ],
+      '2.1': [
+        '1) Lærlingen kan redegøre for OSI-modellens 7 lag.',
+        '2) Lærlingen kan dimensionere og opsætte et krydsfelt-rack til fiberinstallationer, herunder udføre opmærkning, potentialudligning og placering af komponenter.',
+        '3) Lærlingen kan dimensionere fiberinstallationer i forhold til protokoller, dæmpning, længde og andre relevante parametre.',
+        '4) Lærlingen kan udføre splidsning på fiberinstallationer med fusionssplidser.',
+        '5) Lærlingen kan redegøre for opbygningen af netværk med fiber, herunder PON-netværk.',
+        '6) Lærlingen kan udføre måling, test, fejlfinding og kvalitetssikring af fiberinstallationer, herunder OTDR, OLTS og VFL.',
+        '7) Lærlingen kan vælge og installere netværksudstyr til brug i større netværk, fx switche, routere, firewalls og netværksdrev.',
+        '8) Lærlingen kan redegøre for samt opsætte og konfigurere en VPN-forbindelse.',
+        '9) Lærlingen kan redegøre for forskellige operativsystemer og fordele ved deres anvendelse.',
+        '10) Lærlingen kan opsætte, konfigurere og oprette brugere på et netværk i forhold til det anvendte operativsystem.',
+        '11) Lærlingen kan redegøre for cybersikkerhedstrusler mod datanetværk og brugere samt har kendskab til egnede sikkerhedsprocedurer.',
+        '12) Lærlingen kan installere og vedligeholde egnede sikkerhedssystemer til beskyttelse af data, herunder backup, firewall, virussikring og cloud-løsninger.',
+        '13) Lærlingen kan redegøre for EMI-udfordringer, der kan påvirke netværksinstallationer.',
+        '14) Lærlingen kan på større netværksinstallationer med fx twisted pair, fiber, COAX og PoE selvstændigt udføre måling, fejlfinding, dokumentation og kvalitetssikring.',
+        '15) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning og kvalitetssikring.',
+        '16) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '17) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.'
+      ],
+      '2.2': [
+        '1) Lærlingen kan selvstændigt programmere, indkøre og montere styringer og reguleringer, herunder elektromekanisk, elektronisk og programmerbart udstyr (PLC).',
+        '2) Lærlingen kan opbygge et pneumatisk anlæg samt foretage fejlfinding, reparation og vedligeholdelse.',
+        '3) Lærlingen kan redegøre for komponenter til hydraulikstyringer og hydraulikpumper.',
+        '4) Lærlingen kan foretage fejlfinding, service og vedligehold på styringer og reguleringer af automatiske anlæg.',
+        '5) Lærlingen kan redegøre for og udvælge korrekte styre- og føleorganer, transmittere og convertere samt udføre indkøring og justering af disse.',
+        '6) Lærlingen kan anvende visionssystemer med optisk udstyr til kvalitetssikring af processer.',
+        '7) Lærlingen kan foretage montering og programmering af operatørpaneler og grafiske brugerflader.',
+        '8) Lærlingen kan opbygge, optimere og indkøre en reguleringssløjfe ved anvendelse af en PID-regulator.',
+        '9) Lærlingen kan redegøre for og opbygge sikkerhedssystemer på automatiske anlæg, herunder nødstop og Safety PLC.',
+        '10) Lærlingen har kendskab til og kan anvende step- og servomotorer samt programmerbare motorer.',
+        '11) Lærlingen kan redegøre for IoT-teknologi anvendt på automatiske maskiner.',
+        '12) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '13) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '14) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '15) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.'
+      ],
+      '2.3': [
+        '1) Lærlingen kan redegøre for og anvende sikkerhedssystemer på industrielle bussystemer og netværk, herunder nødstop og Safety PLC.',
+        '2) Lærlingen kan selvstændigt installere og programmere industrielle bussystemer og netværk.',
+        '3) Lærlingen kan foretage service og vedligehold på kommunikationssystemer til automatiske anlæg og vejlede brugeren om systemets virkemåde og vedligehold.',
+        '4) Lærlingen kan foretage energioptimering af automatiske anlæg på maskiner.',
+        '5) Lærlingen kan redegøre for relevant dokumentation i forbindelse med idriftsættelse af et automatisk anlægs kommunikationssystem, herunder CE-mærkning og overensstemmelseserklæring.',
+        '6) Lærlingen har kendskab til og kan afprøve, integrere, optimere og indregulere reguleringssløjfer ved hjælp af forskellige optimeringsmetoder via kommunikationssystemer.',
+        '7) Lærlingen kan vælge, installere og programmere motorstyringer via kommunikationssystemer.',
+        '8) Lærlingen kan redegøre for IIoT (Industrial Internet of Things) og cybersikkerhed på automatiske maskiner.',
+        '9) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '10) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '11) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '12) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '13) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '2.4': [
+        '1) Lærlingen kan udvælge, installere, måle, afprøve, fejlfinde, programmere og konfigurere anlæg til varme, ventilation og køling (CTS og HVAC).',
+        '2) Lærlingen kan vælge, vurdere og redegøre for styrings- og reguleringsprincipper for anlæg til varme, ventilation og køling samt de energimæssige konsekvenser af dette valg.',
+        '3) Lærlingen kan redegøre for IoT, cybersikkerhed og muligheder for dataopsamling til brug for energioptimering af anlæggets drift.',
+        '4) Lærlingen kan redegøre for miljø- og energikrav til køle-, varme- og ventilationsinstallationer.',
+        '5) Lærlingen kan idriftsætte, indregulere samt servicere og vedligeholde anlæg til varme, ventilation og køling ud fra energioptimale hensyn.',
+        '6) Lærlingen har kendskab til muligheder for at programmere og konfigurere en grafisk brugerflade.',
+        '7) Lærlingen kan programmere alarmfunktioner i forhold til uhensigtsmæssig drift.',
+        '8) Lærlingen kan vejlede brugeren i daglig anvendelse af anlægget og dets funktioner.',
+        '9) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '10) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '11) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '12) Lærlingen kan selvstændigt udføre måling, fejlfinding, dokumentation og kvalitetssikring i forhold til ovenstående læringsmål.',
+        '13) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '2.5': [
+        '1) Lærlingen har kendskab til sikkerheden i en industriel produktionsproces.',
+        '2) Lærlingen kan foretage korrekt valg af elkomponenter og udstyr i forhold til de hygiejniske og kemiske processer samt tilhørende korrekt værkstøjsvalg og håndtering af disse.',
+        '3) Lærlingen kan foretage korrekt vurdering af elinstallationsmetoder på automatiske anlæg i forhold til en given produktionsform/-proces og branche.',
+        '4) Lærlingen har kendskab til risiko og sikkerhedsprocesser anvendt ved servicering og programmering af automatisk rengøring i procesanlæg.',
+        '5) Lærlingen har en kemisk forståelse for anlæggets processer og kan anvende flow- og procesdiagrammer ved servicering af automatiske anlæg.',
+        '6) Lærlingen kan energioptimere et procesanlæg ud fra sit kendskab til energiforbrug, tryktab, pumpeflow, varmetab og mekanisk arbejde.',
+        '7) Lærlingen kan anvende producentanvisninger for elektrisk materiel til drift og vedligehold for et procesanlæg.',
+        '8) Lærlingen har kendskab til opsamling, håndtering og analyse af procesdata anvendt ved udfærdigelse af drift og vedligeholdelsesplaner.',
+        '9) Lærlingen kan udføre registreringer af vedligeholdelsesomkostninger og udføre beregninger for levetid for optimal udnyttelse af anlægget i forhold til fejltyper og nedbrud.',
+        '10) Lærlingen har grundlæggende kendskab til produktionsoptimering i forhold til at kunne forenkle og effektivisere programmering og styring af den automatiserede proces.',
+        '11) Lærlingen kan selvstændigt anvende IT-projektværktøjer til at optimere kvaliteten af det leverede arbejde.',
+        '12) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '13) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '14) Lærlingen kan anvende innovative processer i forhold til valgmodulet.'
+      ],
+      '2.6': [
+        '1) Lærlingen kan redegøre for PoE, IoT, trådløse teknologier og åbne protokoller anvendt ved bygningsautomatik herunder også forskellen på central- og decentral bygningsautomatik.',
+        '2) Lærlingen kan selvstændigt installere, måle, afprøve, fejlfinde, programmere og konfigurere på bygningsautomatik samt teknologisk passende grafiske brugerflader fx software på PC.',
+        '3) Lærlingen har kendskab til reguleringsteknik og kan indregulere og energioptimere bygningsautomatik.',
+        '4) Lærlingen kan selvstændigt opsætte fjernopkobling og foretage cybersikker fjernovervågning og fjernbetjening samt fejlfinding og omkonfigurering af eksisterende bygningsautomatik.',
+        '5) Lærlingen skal gennemføre de mål, som er rettet mod KNX-basisprøven dog uden at gennemføre selve prøven.',
+        '6) Lærlingen har kendskab til dataopsamling og kan anvende de relevante data i henhold til eventuelt gældende lovgivning.',
+        '7) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '8) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '9) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '10) Lærlingen kan selvstændigt udføre måling, fejlfinding, dokumentation og kvalitetssikring i forhold til ovenstående læringsmål.',
+        '11) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '2.7': [
+        '1) Lærlingen kan selvstændigt udføre tætninger af alle former for installationsgennemføringer i brandadskillelser efter gældende love og regler.',
+        '2) Lærlingen kan selvstændigt installere, idriftsætte, fejlfinde, reparere, servicere og vedligeholde brandtekniske installationer jf. bygningsreglementet herunder røgalarm-, vars-lings-, ABDL-anlæg samt flugtvejs- og panikbelysningsanlæg både som selvstændige anlæg såvel som integrerede anlæg i en funktionsbaseret sammenhæng.',
+        '3) Lærlingen kan selvstændigt installere, idriftsætte, fejlfinde og reparere, servicere og vedligeholde ABA (Automatisk Brandalarm Anlæg) i relation til myndighedskravene. Har kendskab til at ABA kan styre funktioner i andre typer anlægsinstallationer.',
+        '4) Lærlingen kan for brandtekniske installationer udarbejde den krævede dokumentation og foretage idriftsættelse.',
+        '5) Lærlingen har indgående kendskab til gældende love og reglers krav til brandtekniske installationers funktionalitet, dokumentations- og eftersynsomfang herunder funktionsafprøvning og kan sikre, at bygningers brandtekniske installationer er projekteret og installeret, så de fungerer efter hensigten.',
+        '6) Lærlingen har kendskab til røgudluftnings-, brandventilations-, rumsluknings- og sprinkleranlæg.',
+        '7) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '8) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '9) Lærlingen kan selvstændigt udføre måling, fejlfinding, dokumentation og kvalitetssikring i forhold til ovenstående læringsmål.',
+        '10) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '2.8': [
+        '1) Lærlingen kan redegøre for elteknik i velfærdsteknologiske løsninger.',
+        '2) Lærlingen kan redegøre for velfærdsteknologiske produkters anvendelsesområder og begrænsninger.',
+        '3) Lærlingen kan med en innovativ tilgang vejlede kunder og brugere om fordele og ulemper ved forskellige typer af velfærdstekniske løsninger.',
+        '4) Lærlingen kan optimere og integrere det eltekniske i velfærdsteknologiske løsninger til størst mulig glæde for bruger og medarbejder.',
+        '5) Lærlingen kan selvstændigt foretage tilslutning, dataopsamling, service og reparation af det eltekniske i forskellige typer af velfærdsteknologiske løsninger og produkter.',
+        '6) Lærlingen kan selvstændigt udarbejde og vedligeholde dokumentation, brugervejledning og vedligeholdelsesplaner i forhold til fagområdet.',
+        '7) Lærlingen kan redegøre for PoE, IoT, cybersikkerhed og dataopsamling.',
+        '8) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '9) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning.',
+        '10) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.'
+      ],
+      '2.9': [
+        '1) Lærlingen har grundlæggende kendskab til betydningen af og problematikken ved fre-kvens, transienter, statisk elektricitet, lækstrømme m.m. med henblik på reduktion af elektrisk støj.',
+        '2) Lærlingen kan redegøre for de harmoniske og overharmoniske strømme og medvirke til løsningsforslag for at minimere disse.',
+        '3) Lærlingen kan optimere bygningers elinstallationer og elektriske brugsgenstande ved brug af måleteknik med henblik på reduktion af elektrisk støj.',
+        '4) Lærlingen har grundlæggende kendskab til infrarød termografi og infrarød målingsteknologi.',
+        '5) Lærlingen kan udarbejde rapport og vejlede kunden til en optimeret løsning ved hjælp af måleteknisk analyseudstyr i forhold til elektrisk støj, spændingskvalitet og termografering ved elinstallationer og elektriske brugsgenstande.',
+        '6) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning.',
+        '7) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '8) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '9) Lærlingen kan inden påbegyndelse af opgaven inddrage dokumentation og brugerinformation i risikovurdering og planlægning af fejlfindingsopgaven.',
+        '10) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '2.10': [
+        '1) Lærlingen har grundlæggende kendskab til SI-enheder som tryk, temperatur, effekt og energi og kan anvende disse i forbindelse med kølemidlets termodynamiske omdannelser samt optimering af anlæg.',
+        '2) Lærlingen kan redegøre for systemkomponenter i et køleanlæg.',
+        '3) Lærlingen kan selvstændigt idriftsætte et køleanlæg, herunder tæthedsprøvning, styrkeforøgelse, evakuering og påfyldning af kølemiddel samt udfylde tilhørende idriftsættelsesattest.',
+        '4) Lærlingen kan indregulere et køleanlæg for at sikre optimal drift, herunder indregulering af thermostatiske ekspansionsventiler, elektroniske regulatorer og pressostater.',
+        '5) Lærlingen kan udføre målinger på køleanlægget og overføre data til en idriftsættelsesattest for at bestemme køleanlæggets COP-værdi.',
+        '6) Lærlingen kan udføre lovpligtige eftersyn for køleanlæg med en kølemiddelfyldning mellem 1 kg og 2,5 kg i henhold til gældende regler og leverandørens anvisninger.',
+        '7) Lærlingen kan udføre lækagekontrol og kender mulige lækagepunkter i køleanlægget.',
+        '8) Lærlingen har grundlæggende kendskab til EU’s og international klimapolitik, herunder De Forenede Nationers rammekonvention om klimaændringer.',
+        '9) Lærlingen kan redegøre for kølemidlers miljøbelastning og har grundlæggende kendskab til globalt opvarmningspotentiale (GWP) og kan redegøre for anvendelsen af fluorholdige drivhusgasser og andre stoffer som kølemidler samt indvirkningen af emissioner af fluorholdige drivhusgasser på klimaet og relevante bestemmelser i gældende forordning.',
+        '10) Lærlingen kan udføre fejlfinding på et køleanlæg samt udføre korrigerende handlinger for at udbedre fejlen.',
+        '11) Lærlingen kan anvende korrekt udstyr som returflaske og tømmestation i forbindelse med nedlukning og aftapning af kølemiddel fra et kølesystem.',
+        '12) Lærlingen kan udføre hårdlodning på køleanlæg på dimensioner op til 13 mm, herunder anvende korrekt tilsatsmateriale, flux og sikkerhedsudstyr.',
+        '13) Lærlingen kan vejlede om og anvende de bedst egnede energieffektive komponenter til køleanlæg.',
+        '14) Lærlingen skal gennemføre og bestå prøven, der berettiger til kølebevis – Kategori II F – gas certifikat (op til 2,5 kg).',
+        '15) Lærlingen kan redegøre for varmepumpers grundlæggende fysik og driftsprincipper, herunder varmepumpecyklussens karakteristika og komponenters funktion.',
+        '16) Lærlingen kan redegøre for de forskellige varmepumpe typer, såsom luft/luft, luft/vand samt væske/vand.',
+        '17) Lærlingen kan redegøre for dimensioneringsgrundlaget for jordslanger, herunder kendskab til de geotermiske ressourcer for horisontalt udlagte slanger.',
+        '18) Lærlingen kan redegøre for bygningers varmesystemer (radiatorer og gulvvarme), herunder drift- og temperaturforhold samt bygningers klimaskærm.',
+        '19) Lærlingen kan beregne bygningens energibehov til både opvarmning og varmt brugsvand.',
+        '20) Lærlingen kan redegøre for miljø-, sikkerheds- og myndighedskrav, herunder lydkrav og regler for attester.',
+        '21) Lærlingen kan dimensionere en korrekt elektrisk installation for varmepumpen.',
+        '22) Lærlingen kan redegøre for korrekt indregulering af styrings- og reguleringssystemer.',
+        '23) Lærlingen kan vælge og dimensionere komponenter til et typisk anlæg.',
+        '24) Lærlingen har kendskab til de komponenter, der indgår i et varmekredsløb, herunder radiatorer og radiatorventiler samt varmtvandsbeholder.',
+        '25) Lærlingen kan anvende gældende relevant lovgivning, herunder byggelovgivning, autorisationslovgivning, støjlovgivning og jordvarmebekendtgørelsen.',
+        '26) Lærlingen kan vejlede om oplagte energibesparende foranstaltninger i forbindelse med etablering af varmepumper.',
+        '27) Lærlingen kan vejlede slutbrugeren om varmepumpeinstallationen.',
+        '28) Lærlingen kan vurdere konsekvenserne af forskellige løsninger med hensyn til miljø, komfort og økonomisk rentabilitet.',
+        '29) Lærlingen kan vurdere nøjagtigheden og de praktiske konsekvenser af forskellige løsninger.',
+        '30) Lærlingen kan tilegne sig ny viden inden for området og selvstændigt indgå i fagligt og tværfagligt samarbejde.',
+        '31) Lærlingen kan selvstændigt udføre måling, fejlfinding, energieffektivisering og kvalitetssikring i forhold til valgmodulets indhold.',
+        '32) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning.',
+        '33) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '34) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.'
+      ],
+      '2.11': [
+        '1) Lærlingen kan udskifte, justere og fejlrette på eltekniske komponenter på bestående elevatoranlæg, herunder sikkerhedsudstyr.',
+        '2) Lærlingen har kendskab til opbygning, sikkerheds- og miljømæssige krav, der stilles ved udførelsen af arbejde på elevatorer, rulletrapper og -fortove.',
+        '3) Lærlingen kan justere og fejlrette på motorer og motorstyringer.',
+        '4) Lærlingen har kendskab til elevatorens mekaniske opbygning ud fra gældende love og kan foretage systematisk fejlsøgning og fejlretning på de komponenter, som anvendes inden for branchen.',
+        '5) Lærlingen har kendskab til opbygning og vedligehold af tovbårne og hydrauliske anlæg efter dokumentation.',
+        '6) Lærlingen kan opmåle en skakt og anvende målingerne til udskiftning af komponenter.',
+        '7) Lærlingen kan fejlrette og justere dragerparti ud fra en konstruktionstegning og drivmaskineri ud fra en arrangementstegning samt udskifte og justere dørlåse og hastighedsbegrænsere.',
+        '8) Lærlingen kan udføre elektrisk fejlsøgning og databehandling på elevatorstyringer samt udskifte fejlmeldte komponenter.',
+        '9) Lærlingen kan integrere, optimere og fejlrette på motorer og motorstyringer, herunder anvende måleudstyr og dokumentation.',
+        '10) Lærlingen kan selvstændigt foretage eftersyn og vedligehold af elevatorer, rulletrapper og -fortove, herunder optimere bestående anlæg.',
+        '11) Lærlingen kan kontrollere elevatorers, rulletrappers og -fortoves elektriske og mekaniske opbygning.',
+        '12) Lærlingen kan systematisk fejlsøge og fejlrette på elektriske, elektroniske, mekaniske og hydrauliske komponenter, som anvendes inden for elevatorbranchen.',
+        '13) Lærlingen får forudsætninger for at idriftsætte elevatorer og rulletrapper og -fortove efter gældende normer samt sikkerheds- og miljømæssige krav.',
+        '14) Lærlingen kan vejlede ejer- og ansvarlig bruger om anvendelse af elevatorer, rulletrapper og -fortove.',
+        '15) Lærlingen kan foretage et komplet eftersyn og demonstrere over for inspektionsorganerne, at elevatoren mv. overholder gældende regler.',
+        '16) Lærlingen kan anvende teknisk dokumentation til elevatoranlæg mv., fx love, regler og standarder samt el-diagrammer, konstruktionstegninger og fabrikantanvisninger til kontrol af den elektriske og mekaniske opbygning.',
+        '17) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '18) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '19) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '2.12': [
+        '1) Lærlingen har grundlæggende elteknisk kendskab til hvidevarers opbygning og virkemåde og er efterfølgende i stand til selvstændigt at vejlede kunder om fordele og ulemper ved brugsmaskiner indeholdende såvel mekaniske som elektroniske styreanordninger.',
+        '2) Lærlingen kan selvstændigt foretage installation, tilslutning, energieffektivisering, databearbejdning og vedligehold af forskellige typer af hvidevarer.',
+        '3) Lærlingen kan vejlede kunder om miljøbelastning og energieffektivisering ved valg og anvendelse af hvidevarer.',
+        '4) Lærlingen har indgående kendskab til de forskellige maskintypers komponenter samt diagrammer og maskintegninger.',
+        '5) Lærlingen kan foretage indkøb af elektroniske komponenter og vurdere de økonomiske aspekter vedrørende reparation og udskiftning.',
+        '6) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '7) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '8) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '9) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '10) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '2.13': [
+        '1) Lærlingen kan energieffektivisere almindelige installationer på skibe og offshore.',
+        '2) Lærlingen kan redegøre for internationale og nationale miljøregler for søfart.',
+        '3) Lærlingen kan selvstændigt installere og integrere elektriske systemer på skibe og offshore.',
+        '4) Lærlingen har kendskab til dimensionering med systemjording på skibe og offshore.',
+        '5) Lærlingen kan udføre vedligehold og dataopsamling på elektriske installationer ud fra vedligeholdelsesplaner på skibe og offshore.',
+        '6) Lærlingen kan løse maritime eltekniske problemstillinger i samarbejde med andre faggrupper.',
+        '7) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '8) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '9) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '10) Lærlingen kan selvstændigt udføre måling, fejlfinding, dokumentation og kvalitetssikring i forhold til valgmodulet.',
+        '11) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '2.15': [
+        '1) Lærlingen kan redegøre for frekvensomformer og converteres opbygning og virkemåde.',
+        '2) Lærlingen kan selvstændigt udføre målinger på EMC induktive og kapacitive strømme.',
+        '3) Lærlingen kan redegøre for principper og procedure omkring Lockout/Tagout (LOTO) inkl. Key Interlock.',
+        '4) Lærlingen har kendskab til effektfordelingerne under og efter kobling samt kortslutningsniveauer og jordingsanlæg i vindmøller.',
+        '5) Lærlingen kan selvstændigt udføre fejlfinding via diagrammer på komplekse styringer på lav- og højspændingsinstallationer samt hydrauliske anlæg.',
+        '6) Lærlingen kan redegøre for frekvens, transienter, statisk elektricitet, lækstrømme med betydning for reduktion af elektrisk støj i vindmøller.',
+        '7) Lærlingen kan fejlfinde, udskifte og montere transientbeskyttelse.',
+        '8) Lærlingen kan udføre arbejdet jf. gældende bekendtgørelser og arbejdsinstruks.',
+        '9) Lærlingen kan redegøre for konstruktion og funktion af reguleringsenheder, invertere, følere, målere og relæer.',
+        '10) Lærlingen kan selvstændigt udføre fejlfinding på reguleringsenheder og invertere funktionssikkerhedsmæssigt korrekt.',
+        '11) Lærlingen kan redegøre for funktion og problematikker omkring roterende kontakter og mikrometertest.',
+        '12) Lærlingen kan selvstændigt udføre afprøvning og fejlfinding på UPS- og nødstrømsanlæg i vindmøller.',
+        '13) Lærlingen kan selvstændigt udføre målinger og kvalitetssikring i forhold til valgmodulets indhold.',
+        '14) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning.',
+        '15) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '16) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '17) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '2.16': [
+        '1) Lærlingen kan redegøre for nøglekasser og multihasp-systemer.',
+        '2) Lærlingen kan anvende sin grundlæggende forståelse for tekniske sammenhænge, fagudtryk og måleenheder til løsning af el- og elektrotekniske beregninger ved mellem-/højspændingsanlæg.',
+        '3) Lærlingen kan finde og rette fejl på mellem-/højspændingslinjerne i et 10-400kV højspændingsfelt fx i forbindelse med kabelfejl i jorden.',
+        '4) Lærlingen kan udføre kabelmuffer på mellemspændingsniveau og redegøre for forskellige typer muffer på mellem-/højspændingsniveau.',
+        '5) Lærlingen har kendskab til eftersyn af adskillere, viklingskoblere, afbrydere, måletransformere og transformere.',
+        '6) Lærlingen har kendskab til eftersyn af batterier, ladeenrettere og vekselrettere.',
+        '7) Lærlingen kan nedtage og udskifte komponenter i et mellem-/højspændingsfelt.',
+        '8) Lærlingen har kendskab til forskellige typer beskyttelsesrelæer fx linjebeskyttelse, differentialbeskyttelse og samleskinnebeskyttelse.',
+        '9) Lærlingen kan koble, spændingsteste og udføre jording i mellem-/højspændingsfelter.',
+        '10) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning.',
+        '11) Lærlingen har kendskab til arbejdsmiljø- og sikkerhedsmæssige forhold, der er relevante for valgmodulet.'
+      ],
+      '3.1': [
+        '1) Lærlingen kan selvstændigt designe, installere og programmere en integreret kommunikationsnetværksløsning herunder med trådløse enheder.',
+        '2) Lærlingen kan selvstændigt integrere data mellem forskellige typer af kommunikationsnetværk og tage hensyn til Quality of Service.',
+        '3) Lærlingen kan foretage målinger i forbindelse med afprøvning og udarbejde dokumentationsmateriale og anvende målingerne til at optimere systemerne til kundens fordel.',
+        '4) Lærlingen kan vejlede kunden om funktionalitet og brugerflade.',
+        '5) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '6) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '7) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '8) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.'
+      ],
+      '3.2': [
+        '1) Lærlingen kan selvstændigt anvende og kombinere grafiske brugerflader og avancerede funktioner på et HMI-system.',
+        '2) Lærlingen har kendskab til OPC, SCADA og tilhørende webserver.',
+        '3) Lærlingen har via sin anlægs- og procesforståelse kendskab til at optimere sporbarhed fx via ERP og MES.',
+        '4) Lærlingen kan redegøre for IoT-teknologi anvendt på automatiske maskiner.',
+        '5) Lærlingen kan med baggrund i sit kendskab til kommunikationssystemer selvstændigt vælge, anvende, kombinere og optimere netværk til integration af procesanlægget med det administrative system.',
+        '6) Lærlingen kan med sin procesforståelse selvstændigt håndtere data fra kommunikationssystemer mellem det industrielle anlæg og det administrative system og anvende disse data til energi- og procesoptimering.',
+        '7) Lærlingen kan med forståelse for den samlede proces selvstændigt anvende dataopsamling og bruge disse data til optimering af såvel administrative og produktionstekniske processer.',
+        '8) Lærlingen kan selvstændigt vælge og anvende egnet programmeringssprog i forbindelse med opsætning af databaser mellem det industrielle anlæg og det administrative system.',
+        '9) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '10) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '11) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '12) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.'
+      ],
+      '3.3': [
+        '1) Lærlingen kan oprette robotceller i et virtuelt miljø via 3D-software. Derudover kan lærlingen programmere, downloade og afprøve en robot med et virtuelt program, hvor offlineprincippet anvendes.',
+        '2) Lærlingen kan opsætte og integrere kommunikation mellem procesanlægget og robotten.',
+        '3) Lærlingen kan integrere, programmere og installere robotter i et procesanlæg.',
+        '4) Lærlingen kan vælge og redegøre for systemkomponenter og softwareenheder til robotters virkemåder.',
+        '5) Lærlingen kan foretage en risikovurdering og anvende reglerne for sikkerhed på robotter og robotceller herunder afstand fra robot til sikkerhedshegn, lysgitters reaktionstid samt reglerne for nødstop og nødstopsafbrydning.',
+        '6) Lærlingen kan optimere et produktionsanlæg i relation til kvalitet, produktionstid samt produktionsudgiften ved hjælp af fleksible robotter.',
+        '7) Lærlingen kan udarbejde integrerede robotstyringer til energioptimering af produktionsprocesser.',
+        '8) Lærlingen kan anvende vision-system til kvalitetssikring af robottens og produktionsanlæggets proces.',
+        '9) Lærlingen har kendskab til robotteknologiens anvendelsesmuligheder og robotteknologiens fremtidige muligheder.',
+        '10) Lærlingen kan redegøre for IoT-teknologi anvendt på automatiske maskiner.',
+        '11) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '12) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '13) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '14) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.'
+      ],
+      '3.4': [
+        '1) Lærlingen kan selvstændigt designe, installere, afprøve, programmere og konfigurere på netværk til integration af IBI-systemer, CTS-anlæg og BMS.',
+        '2) Lærlingen kan programmere kommunikationsgrænsefladen imellem et IBI/CTS-system og et BMS.',
+        '3) Lærlingen kan med sit kendskab til programmeringsprotokoller selvstændigt vælge og anvende egnet programmeringssprog i forbindelse med opsætning af databaser, grafiske brugerflader samt webserver, til præsentation af data fra IBI- og CTS-anlæg.',
+        '4) Lærlingen kan selvstændigt håndtere og analysere data fra BMS-systemet, der integrerer IBI- og CTS-systemer.',
+        '5) Lærlingen kan selvstændigt oprette og anvende dataopsamling og databehandling til brug for dokumentation af energiforbrug samt til iværksættelse af energiforbedringstiltag.',
+        '6) Lærlingen kan ved hjælp af BMS servicere og optimere på IBI- og CTS-anlæg samt udarbejde forslag til optimering og forebyggende vedligehold.',
+        '7) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '8) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '9) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '10) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.'
+      ],
+      '3.5': [
+        '1) Lærlingen kan anvende, kombinere og vurdere problemstillinger om energi- og miljøpolitik samt -teknologi lokalt, nationalt og globalt.',
+        '2) Lærlingen kan redegøre for og formidle udviklingstendenser inden for energiløsninger ved hjælp af tabeller, diagrammer og enkle modeller.',
+        '3) Lærlingen kan projektere, installere, montere, programmere og energioptimere på eksisterende anlæg og installationer herunder vejlede slutbrugeren om drift og vedligehold.',
+        '4) Lærlingen kan identificere og opstille besparelsespotentialer på eksisterende energianlæg og installationer i boliger og andre bygninger.',
+        '5) Lærlingen kan anvende energitekniske beregninger og værktøjer i forbindelse med energioptimering herunder udarbejde en bygnings energiramme.',
+        '6) Lærlingen kan vurdere alternative energikilder som mulighed for at ændre eller supplere den eksisterende energiforsyning.',
+        '7) Lærlingen kan redegøre for, hvorledes CTS og BMS indgår i bygningers samlede overvågning og styring/regulering.',
+        '8) Lærlingen kan redegøre for de nyeste teknologier, metoder og produkter inden for energiteknologi.',
+        '9) Lærlingen kan installere og programmere på energitekniske installationer og anlæg ud fra dokumentation og brugerønsker.',
+        '10) Lærlingen kan foretage elteknisk tilslutning og indregulering af varmepumper, solceller og husstandsvindmøller.',
+        '11) Lærlingen har kendskab til lagring af energi.',
+        '12) Lærlingen kan vejlede kunden om valg af anlægstype i forhold til økonomi, tilbagebetalingstid, levetid og miljøpåvirkning.',
+        '13) Lærlingen har kendskab til projektering og udførelse af klima- og energianlæg.',
+        '14) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '15) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '16) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '17) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.'
+      ],
+      '3.6': [
+        '1) Lærlingen kan gennemføre kvalitetssikrende procedurer, vurdere tidsplaner, udarbejde bemandings- og materialeleveringsplaner samt deltage i opstarts- og byggemøder.',
+        '2) Lærlingen kan anvende relevante planlægningsværktøjer fx Outlook, PERT- eller Gantt-diagram.',
+        '3) Lærlingen har kendskab til de udfordringer, der er forbundet med at lede kollegaer, samt kendskab til hvorledes et koordineret samarbejde med andre faggrupper kan foregå.',
+        '4) Lærlingen kan med relevante projektledelsesværktøjer herunder Det Digitale Byggeri selvstændigt kombinere sin elfaglige viden med viden om, at entrepriser bliver afleveret til rette tid, rette pris og i den rigtige kvalitet.',
+        '5) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '6) Lærlingen kan anvende innovationskompetencer udfoldet som samarbejdskompetencer.'
+      ],
+      '3.7': [
+        '1) Lærlingen har kendskab til AIA og kan selvstændigt vejlede, udvælge, installere og udføre service på TVO og ADK.',
+        '2) Lærlingen kan udvælge anlægsdele i korrekt udstyrsklasse og projektere kablingen.',
+        '3) Lærlingen kan selvstændigt programmere og foretage målinger, afprøvning og fejlretning på de nævnte typer sikringsanlæg samt konfigurere, databehandle og programmere almindeligt forekommende centraludstyr.',
+        '4) Lærlingen kan udfærdige forskriftsmæssig dokumentation for alle typer anlæg samt instruere slutbrugerne i anvendelse af anlæggene.',
+        '5) Lærlingen kan selvstændigt integrere sikringsanlæg som fx AIA med ADK, ADK med TVO og andre integrationsmuligheder i forbindelse med brandtekniske installationer og/eller bygningsinstallationer samt elektriske apparater og IoT.',
+        '6) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning.',
+        '7) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '8) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '9) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.'
+      ],
+      '4.1': [
+        '1) Lærlingen kan selvstændigt designe, installere og programmere en integreret kommunikationsnetværksløsning herunder med trådløse enheder.',
+        '2) Lærlingen kan selvstændigt integrere data mellem forskellige typer af kommunikationsnetværk og tage hensyn til Quality of Service.',
+        '3) Lærlingen kan foretage målinger i forbindelse med afprøvning og udarbejde dokumentationsmateriale og anvende målingerne til at optimere systemerne til kundens fordel.',
+        '4) Lærlingen kan vejlede kunden om funktionalitet og brugerflade.',
+        '5) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '6) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '7) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '8) Lærlingen kan vejlede om kommunikationsnetværk og Quality of Service.',
+        '9) Lærlingen kan vejlede om funktionalitet og brugerflade samt om optimering af systemer til kundens fordel.',
+        '10) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.'
+      ],
+      '4.2': [
+        '1) Lærlingen kan selvstændigt anvende og kombinere grafiske brugerflader og avancerede funktioner på et HMI-system.',
+        '2) Lærlingen har kendskab til OPC, SCADA og tilhørende webserver.',
+        '3) Lærlingen har via sin anlægs- og procesforståelse kendskab til at optimere sporbarhed fx via ERP og MES.',
+        '4) Lærlingen kan redegøre for IoT-teknologi anvendt på automatiske maskiner.',
+        '5) Lærlingen kan med baggrund i sit kendskab til kommunikationssystemer selvstændigt vælge, anvende, kombinere og optimere netværk til integration af procesanlægget med det administrative system.',
+        '6) Lærlingen kan med sin procesforståelse selvstændigt håndtere data fra kommunikationssystemer mellem det industrielle anlæg og det administrative system og anvende disse data til energi- og procesoptimering.',
+        '7) Lærlingen kan med forståelse for den samlede proces selvstændigt anvende dataopsamling og bruge disse data til optimering af såvel administrative som produktionstekniske processer.',
+        '8) Lærlingen kan selvstændigt vælge og anvende egnet programmeringssprog i forbindelse med opsætning af databaser mellem det industrielle anlæg og det administrative system.',
+        '9) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '10) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '11) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '12) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '13) Lærlingen kan vejlede om og designe integrationen mellem det industrielle anlæg og det administrative system til sporbarheds- og dataopsamling og -udveksling.',
+        '14) Lærlingen kan vejlede om energi- og procesoptimering.',
+        '15) Lærlingen kan vejlede om og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.'
+      ],
+      '4.3': [
+        '1) Lærlingen kan oprette robotceller i et virtuelt miljø via 3D-software. Derudover kan lærlingen programmere, downloade og afprøve en robot med et virtuelt program, hvor offlineprincippet anvendes.',
+        '2) Lærlingen kan opsætte og integrere kommunikation mellem procesanlægget og robotten.',
+        '3) Lærlingen kan integrere, programmere og installere robotter i et procesanlæg.',
+        '4) Lærlingen kan vælge og redegøre for systemkomponenter og softwareenheder til robotters virkemåder.',
+        '5) Lærlingen kan foretage en risikovurdering og anvende reglerne for sikkerhed på robotter og robotceller herunder afstand fra robot til sikkerhedshegn, lysgitres reaktionstid samt reglerne for nødstop og nødstopsafbrydning.',
+        '6) Lærlingen kan optimere et produktionsanlæg i relation til kvalitet, produktionstid samt produktionsudgiften ved hjælp af fleksible robotter.',
+        '7) Lærlingen kan udarbejde integrerede robotstyringer til energioptimering af produktionsprocesser.',
+        '8) Lærlingen kan anvende vision-system til kvalitetssikring af robottens og produktionsanlæggets proces.',
+        '9) Lærlingen har kendskab til robotteknologiens anvendelsesmuligheder og robotteknologiens fremtidige muligheder.',
+        '10) Lærlingen kan redegøre for IoT-teknologi anvendt på automatiske maskiner.',
+        '11) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '12) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning.',
+        '13) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '14) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '15) Lærlingen kan vejlede om og designe, programmere og integrere robotter i procesanlæg.',
+        '16) Lærlingen kan designe kommunikation mellem procesanlægget og robotten.',
+        '17) Lærlingen kan vejlede om systemkomponenter og softwareenheder til robotter.',
+        '18) Lærlingen kan vejlede om integrerede robotstyringer til energioptimering af produktionsprocesser.',
+        '19) Lærlingen kan vejlede om relevante love, regler og standarder i forhold til valgmodulet.'
+      ],
+      '4.4': [
+        '1) Lærlingen kan selvstændigt designe, installere, afprøve, programmere og konfigurere på netværk til integration af IBI-systemer, CTS-anlæg og BMS.',
+        '2) Lærlingen kan programmere kommunikationsgrænsefladen imellem et IBI/CTS-system og BMS.',
+        '3) Lærlingen kan med sit kendskab til programmeringsprotokoller selvstændigt vælge og anvende egnet programmeringssprog i forbindelse med opsætning af databaser, grafiske brugerflader samt webserver til præsentation af data fra IBI- og CTS-anlæg.',
+        '4) Lærlingen kan selvstændigt håndtere og analysere data fra BMS-systemet, der integrerer IBI- og CTS-systemer.',
+        '5) Lærlingen kan selvstændigt oprette og anvende dataopsamling og databehandling til brug for dokumentation af energiforbrug samt til iværksættelse af energiforbedringstiltag.',
+        '6) Lærlingen kan, ved hjælp af BMS, servicere og optimere på IBI- og CTS-anlæg og udarbejde forslag til optimering og forebyggende vedligehold.',
+        '7) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '8) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '9) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '10) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '11) Lærlingen kan vejlede om kommunikationsgrænsefladen imellem et IBI/CTS-system og BMS (Building Management System).',
+        '12) Lærlingen kan med sit kendskab til programmeringsprotokoller vejlede om egnet programmeringssprog i forbindelse med opsætning af databaser, grafiske brugerflader samt webserver til præsentation af data fra IBI- og CTS-anlæg.',
+        '13) Lærlingen kan selvstændigt oprette og anvende dataopsamling og databehandling til brug for vejledning om energiforbrug samt til iværksættelse af energiforbedringstiltag.',
+        '14) Lærlingen kan ved hjælp af BMS vejlede om og udarbejde forslag til optimering og forebyggende vedligehold.',
+        '15) Lærlingen kan vejlede om relevante love, regler og standarder i forhold til valgmodulet.'
+      ],
+      '4.5': [
+        '1) Lærlingen kan anvende, kombinere og vurdere problemstillinger om energi- og miljøpolitik og -teknologi lokalt, nationalt og globalt.',
+        '2) Lærlingen kan redegøre for og formidle udviklingstendenser inden for energiløsninger ved hjælp af tabeller, diagrammer og enkle modeller.',
+        '3) Lærlingen kan projektere, installere, montere, programmere og energioptimere på eksisterende anlæg og installationer, herunder kunne vejlede slutbrugeren om drift og vedligehold.',
+        '4) Lærlingen kan identificere og opstille besparelsespotentialer på eksisterende energi-anlæg og installationer i boliger og andre bygninger.',
+        '5) Lærlingen kan anvende energitekniske beregninger og værktøjer i forbindelse med energioptimering, herunder kunne udarbejde en bygnings energiramme.',
+        '6) Lærlingen kan vurdere alternative energikilder som mulighed for at ændre eller supplere den eksisterende energiforsyning.',
+        '7) Lærlingen kan redegøre for hvorledes CTS og BMS indgår i bygningers samlede overvågning og styring/regulering.',
+        '8) Lærlingen kan redegøre for de nyeste teknologier, metoder og produkter inden for energiteknologi.',
+        '9) Lærlingen har kendskab til lagring af energi.',
+        '10) Lærlingen kan installere og programmere på energitekniske installationer og anlæg ud fra dokumentation og brugerønsker.',
+        '11) Lærlingen kan foretage elteknisk tilslutning og indregulering af varmepumper, solceller og husstandsvindmøller.',
+        '12) Lærlingen kan vejlede kunden om valg af anlægstype i forhold til økonomi, tilbagebetalingstid, levetid og miljøpåvirkning.',
+        '13) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '14) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet, samt anvende IT til relevant informationssøgning.',
+        '15) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '16) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '17) Lærlingen kan udfærdige energitekniske beregninger og værktøjer i forbindelse med energioptimering, herunder kunne udarbejde en bygnings energiramme.',
+        '18) Lærlingen kan vejlede om alternative energikilder som mulighed for at ændre eller supplere den eksisterende energiforsyning.',
+        '19) Lærlingen kan vejlede om hvorledes CTS og BMS indgår i bygningers samlede energiforbrug og overvågning af dette.',
+        '20) Lærlingen kan vejlede om de nyeste teknologier og produkter inden for energiteknologi.',
+        '21) Lærlingen kan vejlede om opbygning og funktion af klima- og energianlæg.',
+        '22) Lærlingen kan vejlede kunden om valg af anlægstype i forhold til økonomi, tilbagebetalingstid, levetid og miljøpåvirkning.',
+        '23) Lærlingen kan redegøre for projektering og udførelse af klima- og energianlæg.'
+      ],
+      '4.6': [
+        '1) Lærlingen kan ud fra en effektivitetsbetragtning vurdere, hvordan en opgave optimalt skal bemandes ud fra egen entreprise og andre entreprisers opgaver og fremdrift.',
+        '2) Lærlingen kan gennemføre kvalitetssikrende procedurer, vurdere tidsplaner, udarbejde bemandings- og materialeleveringsplaner samt deltage i opstarts-, byggemøder og afleveringsforretninger.',
+        '3) Lærlingen kan med relevante projektledelsesværktøjer herunder Det Digitale Byggeri selvstændigt kombinere sin el-faglige viden med viden om, at entrepriser bliver afleveret til rette tid, rette pris og i den rigtige kvalitet.',
+        '4) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '5) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning.',
+        '6) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '7) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '8) Lærlingen har kendskab til de ledelsesmæssige udfordringer, der er forbundet med at lede kollegaer, samt kendskab til hvorledes et koordineret samarbejde med andre faggrupper kan foregå ud fra kommunikationsfærdigheder og konflikthåndtering.',
+        '9) Lærlingen kan selvstændigt anvende projektstyringsværktøjer i forbindelse med at optimere tid, økonomi og kvalitet i projekter.',
+        '10) Lærlingen kan selvstændigt håndtere principper og regelsæt, der gælder i forskellige entrepriseretlige aftaleforhold.',
+        '11) Lærlingen kan selvstændigt håndtere de retslige forhold og processer, der skal anvendes i forbindelse med ændringer i arbejdet, uklarheder i udbudsmaterialet, tidsfristforlængelser, forsinkelser, aflevering, betaling, sikkerhedsstillelse m.m. og agere korrekt og rettidigt for at sikre kvalitet og økonomi i entreprisen.'
+      ],
+      '4.7': [
+        '1) Lærlingen har kendskab til AIA og kan selvstændigt vejlede, udvælge, installere og udføre service på TVO og ADK.',
+        '2) Lærlingen kan udvælge anlægsdele i korrekt udstyrsklasse og projektere kablingen.',
+        '3) Lærlingen kan selvstændigt programmere og foretage målinger, afprøvning og fejlretning på de nævnte typer sikringsanlæg samt konfigurere, databehandle og programmere almindeligt forekommende centraludstyr.',
+        '4) Lærlingen kan udfærdige forskriftsmæssig dokumentation for alle typer anlæg samt instruere slutbrugerne i anvendelse af anlæggene.',
+        '5) Lærlingen kan selvstændigt integrere sikringsanlæg som fx AIA med ADK, ADK med TVO og andre integrationsmuligheder i forbindelse med brandtekniske installationer og/eller bygningsinstallationer samt elektriske apparater og IoT.',
+        '6) Lærlingen kan redegøre for og anvende relevante love, regler og standarder i forhold til valgmodulet samt anvende IT til relevant informationssøgning.',
+        '7) Lærlingen kan selvstændigt udføre måling, fejlfinding og kvalitetssikring i forhold til valgmodulets indhold.',
+        '8) Lærlingen kan anvende relevant fagterminologi på engelsk med samarbejdspartnere og brugere.',
+        '9) Lærlingen kan anvende innovative processer for at skabe den bedst mulige løsning i forhold til valgmodulet.',
+        '10) Lærlingen kan vejlede om integrationsgrænsefladen imellem brand- og sikringsanlæg og BMS (Building Management System).',
+        '11) Lærlingen kan med sit kendskab til programmeringsprotokoller vejlede om egnet programmeringssprog i forbindelse med opsætning af databaser, grafiske brugerflader samt webserver, til præsentation af data fra brand- og sikringsinstallationer.',
+        '12) Lærlingen kan, ved hjælp af sit kendskab til brand- og sikringstekniske installationer, vejlede om og udarbejde forslag til optimering og forebyggende vedligehold.',
+        '13) Lærlingen kan vejlede om relevante love, regler og standarder i forhold til valgmodulet.'
+      ],
+    };
     const selectedModules = new Set();
 
     function isPrerequisitesMet(moduleId) {
@@ -410,11 +1085,11 @@
       if (selectedModules.has(moduleId)) {
         selectedModules.delete(moduleId);
         moduleCard.classList.remove('selected');
-        moduleCard.querySelector('button').textContent = 'Vælg';
+        moduleCard.querySelector('.select-button').textContent = 'Vælg';
       } else if (isPrerequisitesMet(moduleId)) {
         selectedModules.add(moduleId);
         moduleCard.classList.add('selected');
-        moduleCard.querySelector('button').textContent = 'Fjern';
+        moduleCard.querySelector('.select-button').textContent = 'Fjern';
       }
       updateSelectedModulesList();
       updateModuleStates();
@@ -428,32 +1103,56 @@
         li.textContent = modules[moduleId].name;
         selectedList.appendChild(li);
       });
+      // Show or hide the selected modules section based on whether any modules are selected
+      const selectedModulesSection = document.getElementById('selected-modules');
+      selectedModulesSection.style.display = selectedModules.size > 0 ? 'block' : 'none';
     }
 
     function updateModuleStates() {
       Object.keys(modules).forEach(moduleId => {
         const moduleCard = document.getElementById(moduleId);
-        const button = moduleCard.querySelector('button');
+        const selectButton = moduleCard.querySelector('.select-button');
         if (!selectedModules.has(moduleId)) {
-          button.disabled = !isPrerequisitesMet(moduleId);
+          selectButton.disabled = !isPrerequisitesMet(moduleId);
         } else {
-          button.disabled = false;
+          selectButton.disabled = false;
         }
       });
+    }
+
+    function toggleExpandCard(moduleId) {
+      const card = document.getElementById(moduleId);
+      card.classList.toggle('expanded');
+      const expandButton = card.querySelector('.expand-button');
+      expandButton.textContent = card.classList.contains('expanded') ? '−' : '+';
     }
 
     function createModuleCard(moduleId, module) {
       const card = document.createElement('div');
       card.className = 'module-card';
       card.id = moduleId;
+      const bulletPoints = moduleBulletPoints[moduleId] || ['Ingen yderligere detaljer tilgængelige'];
+      const bulletPointsHTML = bulletPoints.map(point => `<li>${point}</li>`).join('');
       card.innerHTML = `
-                <h2>${module.name} <span class="icon"></span></h2>
-                <p>${module.text}</p>
-                <p class="prerequisites">Forudsætninger: ${module.prerequisites.length ? module.prerequisites.join(', ') : 'Ingen'}</p>
-                <button>Vælg</button>
-            `;
-      const button = card.querySelector('button');
-      button.addEventListener('click', function() {
+        <h2>${module.name} <span class="icon"></span></h2>
+        <p>${module.text}</p>
+        <p class="prerequisites">Forudsætninger: ${module.prerequisites.length ? module.prerequisites.join(', ') : 'Ingen'}</p>
+        <div class="module-card-buttons">
+          <button class="expand-button" aria-label="Vis detaljer">+</button>
+          <button class="select-button">Vælg</button>
+        </div>
+        <div class="expandable-content">
+          <ul>${bulletPointsHTML}</ul>
+        </div>
+      `;
+      const expandButton = card.querySelector('.expand-button');
+      expandButton.addEventListener('click', function(event) {
+        event.stopPropagation();
+        toggleExpandCard(moduleId);
+      });
+      const selectButton = card.querySelector('.select-button');
+      selectButton.addEventListener('click', function(event) {
+        event.stopPropagation();
         toggleModule(moduleId);
       });
       return card;
@@ -465,12 +1164,12 @@
         moduleGrid.appendChild(createModuleCard(moduleId, module));
       });
       updateModuleStates();
+      updateSelectedModulesList(); // Initialize the selected modules list
     }
     document.addEventListener('DOMContentLoaded', function() {
       initializeModuleGrid();
     });
   </script>
 </body>
-<!-- Skabt af Marc Sonne Dahl - (c) 2024 -->
 
 </html>
