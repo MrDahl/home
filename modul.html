@@ -4,8 +4,12 @@
   <!-- Skabt af Marc Sonne Dahl - (c) 2024 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modulvælger App - RTS</title>
+
+  <title>Modulvælger App Elektriker uddannelsen</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bungee+Tint&family=Jersey+10&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee+Tint&family=Jersey+10&display=swap');
+
     html,
     body {
       height: 100%;
@@ -34,8 +38,22 @@
 
     h1 {
       font-size: 1.8em;
-      margin-bottom: 20px;
+      margin-bottom: 0px;
       color: #ffffff;
+      text-align: center;
+      font-family: "Bungee Tint", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    h3 {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      color: #ffffff;
+      text-align: center;
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-style: normal;
     }
 
     .module-grid {
@@ -218,6 +236,10 @@
         font-size: 1.5em;
       }
 
+      h3 {
+        font-size: 1em;
+      }
+
       .module-grid {
         grid-template-columns: 1fr;
       }
@@ -240,10 +262,11 @@
 
 <body>
   <div class="container">
-    <h1>Modulvælger - Elektriker uddannelsen</h1>
+    <h1>Modul vælger</h1>
+    <h3>Elektriker uddannelsen</h3>
     <div id="module-grid" class="module-grid"></div>
     <div id="selected-modules">
-      <h2>Valgte moduler:</h2>
+      <h3>Valgte moduler:</h3>
       <ul id="selected-list"></ul>
     </div>
     <div id="footer" class="footer">
@@ -1171,5 +1194,5 @@
     });
   </script>
 </body>
-
+  <!-- Skabt af Marc Sonne Dahl - (c) 2024 -->
 </html>
