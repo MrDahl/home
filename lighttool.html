@@ -1,218 +1,223 @@
 <html lang="da">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Belysningsrapport Værktøj</title>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f7f8;
-        }
-        .card {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 30px;
-            margin-bottom: 30px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        h1 {
-            color: #2c3e50;
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #34495e;
-        }
-        textarea, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 16px;
-            background-color: #f9f9f9;
-            resize: none;
-            overflow: hidden;
-        }
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .column {
-            flex: 1;
-            min-width: 320px;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        @media print {
-            body {
-                background-color: white;
-            }
-            .card {
-                box-shadow: none;
-                margin: 0;
-                padding: 0;
-            }
-            .row {
-                flex-direction: column;
-                gap: 0;
-            }
-            textarea {
-                font-size: 14px;
-                border: none;
-                background-color: transparent;
-            }
-            button {
-                display: none;
-            }
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.0.0/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beregningsforudsætninger Rapport Værktøj</title>
+    <!-- Lavet af Marc Sonne Dahl -->
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      width: 90%;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f7f8;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-bottom: 30px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 1em;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h4 {
+      font-weight: bold;
+      color: rgba(100, 100, 100, .2);
+      background-color: transparent;
+      text-shadow: rgba(255, 255, 255, .8) 1px 1px 1px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #34495e;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      box-sizing: border-box;
+      font-size: 16px;
+      background-color: #f9f9f9;
+      resize: none;
+      overflow: hidden;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      width: 100%;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+
 <body>
-    <div class="card">
-        <h1>Belysningsrapport Værktøj</h1>
-        <form id="lightingForm">
-            <div class="row">
-                <div class="column">
-                    <div class="form-group">
-                        <label for="projectInfo1">Informationer</label>
-                        <textarea id="projectInfo1" name="projectInfo1" placeholder="Datoer, navne, nødvendige informationer, eventuelle specifikke krav"></textarea>
-                    </div>
+  <div class="card">
+    <h1>Rapport over beregningsforudsætning</h1>
+    <form id="lightingForm">
+      <div class="form-group">
+        <label for="projectInfo1">Informationer</label>
+        <textarea id="projectInfo1" name="projectInfo1" placeholder="Datoer, navne, nødvendige informationer, eventuelle specifikke krav"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="roomSpecsValue">Rumspecifikationer</label>
+        <textarea id="roomSpecsValue" name="roomSpecsValue" placeholder="F.eks. dimensioner, lofttype, omgivelsestemperatur"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="roomUseValue">Rummets brug</label>
+        <textarea id="roomUseValue" name="roomUseValue" placeholder="F.eks. kontor, gangforløb"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="reflectancesValue">Reflektanser</label>
+        <textarea id="reflectancesValue" name="reflectancesValue" placeholder="F.eks. loft, vægge, gulv, glasflader"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="workAreasValue">Arbejdsfelter</label>
+        <textarea id="workAreasValue" name="workAreasValue" placeholder="F.eks. størrelse og højde over gulv"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="specialUsersValue">Særlige brugere</label>
+        <textarea id="specialUsersValue" name="specialUsersValue" placeholder="F.eks. brugere uden normalt syn"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="colorTempValue">Farvetemperatur</label>
+        <textarea id="colorTempValue" name="colorTempValue" placeholder="Angiv farvetemperatur i Kelvin"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="colorRenderingValue">Farvegengivelse</label>
+        <textarea id="colorRenderingValue" name="colorRenderingValue" placeholder="Angiv krav til farvegengivelse"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="lightingFormValue">Belysningsform</label>
+        <textarea id="lightingFormValue" name="lightingFormValue" placeholder="F.eks. rettet/diffust, direkte/indirekte"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="mountingFormValue">Montageform</label>
+        <textarea id="mountingFormValue" name="mountingFormValue" placeholder="F.eks. indbygget, påbygget, nedhængt"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="automationValue">Automatik og styring</label>
+        <textarea id="automationValue" name="automationValue" placeholder="F.eks. sensorstyring, dæmpning"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="maintenancePlanValue">Vedligeholdelsesplan</label>
+        <textarea id="maintenancePlanValue" name="maintenancePlanValue" placeholder="F.eks. udskiftningsplan, rengørings-intervaller"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="emergencyLightingValue">Nødbelysning</label>
+        <textarea id="emergencyLightingValue" name="emergencyLightingValue" placeholder="Angiv krav til nødbelysning"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="certificationRequirementsValue">Certificeringskrav</label>
+        <textarea id="certificationRequirementsValue" name="certificationRequirementsValue" placeholder="F.eks. BREEAM, LEED, DGNB"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="sportsLightingValue">Sportsbelysning</label>
+        <textarea id="sportsLightingValue" name="sportsLightingValue" placeholder="F.eks. Lighting Class I / II / III"></textarea>
+      </div>
+      <button type="button" id="generatePdfButton">Download PDF</button>
+    </form>
+    <h4>by Marc Sonne Dahl</h4>
+  </div>
 
-                    <div class="form-group">
-                        <label for="roomSpecsValue">Rumspecifikationer</label>
-                        <textarea id="roomSpecsValue" name="roomSpecsValue" placeholder="F.eks. dimensioner, lofttype, omgivelsestemperatur"></textarea>
-                    </div>
+  <script>
+    document.getElementById('generatePdfButton').addEventListener('click', function() {
+      generatePDF();
+    });
 
-                    <div class="form-group">
-                        <label for="roomUseValue">Rummets brug</label>
-                        <textarea id="roomUseValue" name="roomUseValue" placeholder="F.eks. kontor, gangforløb"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="reflectancesValue">Reflektanser</label>
-                        <textarea id="reflectancesValue" name="reflectancesValue" placeholder="F.eks. loft, vægge, gulv, glasflader"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="workAreasValue">Arbejdsfelter</label>
-                        <textarea id="workAreasValue" name="workAreasValue" placeholder="F.eks. størrelse og højde over gulv"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="specialUsersValue">Særlige brugere</label>
-                        <textarea id="specialUsersValue" name="specialUsersValue" placeholder="F.eks. brugere uden normalt syn"></textarea>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="form-group">
-                        <label for="colorTempValue">Farvetemperatur</label>
-                        <textarea id="colorTempValue" name="colorTempValue" placeholder="Angiv farvetemperatur i Kelvin"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="colorRenderingValue">Farvegengivelse</label>
-                        <textarea id="colorRenderingValue" name="colorRenderingValue" placeholder="Angiv krav til farvegengivelse"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="lightingFormValue">Belysningsform</label>
-                        <textarea id="lightingFormValue" name="lightingFormValue" placeholder="F.eks. rettet/diffust, direkte/indirekte"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="mountingFormValue">Montageform</label>
-                        <textarea id="mountingFormValue" name="mountingFormValue" placeholder="F.eks. indbygget, påbygget, nedhængt"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="automationValue">Automatik og styring</label>
-                        <textarea id="automationValue" name="automationValue" placeholder="F.eks. sensorstyring, dæmpning"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="maintenancePlanValue">Vedligeholdelsesplan</label>
-                        <textarea id="maintenancePlanValue" name="maintenancePlanValue" placeholder="F.eks. udskiftningsplan, rengørings-intervaller"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="emergencyLightingValue">Nødbelysning</label>
-                        <textarea id="emergencyLightingValue" name="emergencyLightingValue" placeholder="Angiv krav til nødbelysning"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="certificationRequirementsValue">Certificeringskrav</label>
-                        <textarea id="certificationRequirementsValue" name="certificationRequirementsValue" placeholder="F.eks. BREEAM, LEED, DGNB"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sportsLightingValue">Sportsbelysning</label>
-                        <textarea id="sportsLightingValue" name="sportsLightingValue" placeholder="F.eks. Lighting Class I / II / III"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <button type="button" id="generatePdfButton">Download PDF</button>
-        </form>
-    </div>
-
-    <script>
-        const textareas = document.querySelectorAll('textarea');
-
-        textareas.forEach(textarea => {
-            textarea.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = this.scrollHeight + 'px';
-            });
-        });
-
-        document.getElementById('generatePdfButton').addEventListener('click', generatePDF);
-
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const element = document.querySelector('.card');
-            
-            html2canvas(element, { scale: 2 }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'pt',
-                    format: [canvas.width, canvas.height]
-                });
-
-                pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-                pdf.save('Belysningsrapport.pdf');
-            });
-        }
-    </script>
+    function generatePDF() {
+      const {
+        jsPDF
+      } = window.jspdf;
+      const doc = new jsPDF();
+      // Tilføj overskrift
+      doc.setFontSize(18);
+      doc.text("Belysningsrapport", 20, 20);
+      // Tilføj input data som tekst i PDF
+      const projectInfo1 = document.getElementById('projectInfo1').value;
+      const roomSpecsValue = document.getElementById('roomSpecsValue').value;
+      const roomUseValue = document.getElementById('roomUseValue').value;
+      const reflectancesValue = document.getElementById('reflectancesValue').value;
+      const workAreasValue = document.getElementById('workAreasValue').value;
+      const specialUsersValue = document.getElementById('specialUsersValue').value;
+      const colorTempValue = document.getElementById('colorTempValue').value;
+      const colorRenderingValue = document.getElementById('colorRenderingValue').value;
+      const lightingFormValue = document.getElementById('lightingFormValue').value;
+      const mountingFormValue = document.getElementById('mountingFormValue').value;
+      const automationValue = document.getElementById('automationValue').value;
+      const maintenancePlanValue = document.getElementById('maintenancePlanValue').value;
+      const emergencyLightingValue = document.getElementById('emergencyLightingValue').value;
+      const certificationRequirementsValue = document.getElementById('certificationRequirementsValue').value;
+      const sportsLightingValue = document.getElementById('sportsLightingValue').value;
+      // Juster position og formatering som nødvendigt
+      doc.setFontSize(12);
+      doc.text("Informationer:", 20, 40);
+      doc.text(projectInfo1, 20, 50);
+      doc.text("Rumspecifikationer:", 20, 80);
+      doc.text(roomSpecsValue, 20, 90);
+      doc.text("Rummets brug:", 20, 110);
+      doc.text(roomUseValue, 20, 120);
+      doc.text("Reflektanser:", 20, 140);
+      doc.text(reflectancesValue, 20, 150);
+      doc.text("Arbejdsfelter:", 20, 170);
+      doc.text(workAreasValue, 20, 180);
+      doc.text("Særlige brugere:", 20, 200);
+      doc.text(specialUsersValue, 20, 210);
+      doc.text("Farvetemperatur:", 20, 230);
+      doc.text(colorTempValue, 20, 240);
+      doc.text("Farvegengivelse:", 20, 260);
+      doc.text(colorRenderingValue, 20, 270);
+      doc.text("Belysningsform:", 20, 290);
+      doc.text(lightingFormValue, 20, 300);
+      doc.text("Montageform:", 20, 320);
+      doc.text(mountingFormValue, 20, 330);
+      doc.text("Automatik og styring:", 20, 350);
+      doc.text(automationValue, 20, 360);
+      doc.text("Vedligeholdelsesplan:", 20, 380);
+      doc.text(maintenancePlanValue, 20, 390);
+      doc.text("Nødbelysning:", 20, 410);
+      doc.text(emergencyLightingValue, 20, 420);
+      doc.text("Certificeringskrav:", 20, 440);
+      doc.text(certificationRequirementsValue, 20, 450);
+      doc.text("Sportsbelysning:", 20, 470);
+      doc.text(sportsLightingValue, 20, 480);
+      // Tilføj flere sektioner som nødvendigt
+      doc.save('Belysningsrapport.pdf');
+    }
+  </script>
 </body>
+    <!-- Lavet af Marc Sonne Dahl -->
 </html>
