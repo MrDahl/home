@@ -1,10 +1,10 @@
 <html lang="da">
 
 <head>
+<!-- Lavet af Marc Sonne Dahl -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beregningsforudsætninger Rapport Værktøj</title>
-    <!-- Lavet af Marc Sonne Dahl -->
   <style>
     body {
       font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -148,7 +148,7 @@
         <label for="sportsLightingValue">Sportsbelysning</label>
         <textarea id="sportsLightingValue" name="sportsLightingValue" placeholder="F.eks. Lighting Class I / II / III"></textarea>
       </div>
-      <button type="button" id="generatePdfButton">Download PDF</button>
+     <button type="button" id="generatePdfButton">Download PDF</button>
     </form>
     <h4>by Marc Sonne Dahl</h4>
   </div>
@@ -159,65 +159,68 @@
     });
 
     function generatePDF() {
-      const {
-        jsPDF
-      } = window.jspdf;
-      const doc = new jsPDF();
-      // Tilføj overskrift
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        format: 'a4',
+        unit: 'mm'
+      });
+
+      // Margins og initiale positioner
+      const marginX = 20;
+      let positionY = 20;
+      const lineHeight = 10;
+      const maxLineWidth = 170;
+
       doc.setFontSize(18);
-      doc.text("Belysningsrapport", 20, 20);
-      // Tilføj input data som tekst i PDF
-      const projectInfo1 = document.getElementById('projectInfo1').value;
-      const roomSpecsValue = document.getElementById('roomSpecsValue').value;
-      const roomUseValue = document.getElementById('roomUseValue').value;
-      const reflectancesValue = document.getElementById('reflectancesValue').value;
-      const workAreasValue = document.getElementById('workAreasValue').value;
-      const specialUsersValue = document.getElementById('specialUsersValue').value;
-      const colorTempValue = document.getElementById('colorTempValue').value;
-      const colorRenderingValue = document.getElementById('colorRenderingValue').value;
-      const lightingFormValue = document.getElementById('lightingFormValue').value;
-      const mountingFormValue = document.getElementById('mountingFormValue').value;
-      const automationValue = document.getElementById('automationValue').value;
-      const maintenancePlanValue = document.getElementById('maintenancePlanValue').value;
-      const emergencyLightingValue = document.getElementById('emergencyLightingValue').value;
-      const certificationRequirementsValue = document.getElementById('certificationRequirementsValue').value;
-      const sportsLightingValue = document.getElementById('sportsLightingValue').value;
-      // Juster position og formatering som nødvendigt
+      doc.text("Belysningsrapport", marginX, positionY);
+
+      // Tilføj afsnit
       doc.setFontSize(12);
-      doc.text("Informationer:", 20, 40);
-      doc.text(projectInfo1, 20, 50);
-      doc.text("Rumspecifikationer:", 20, 80);
-      doc.text(roomSpecsValue, 20, 90);
-      doc.text("Rummets brug:", 20, 110);
-      doc.text(roomUseValue, 20, 120);
-      doc.text("Reflektanser:", 20, 140);
-      doc.text(reflectancesValue, 20, 150);
-      doc.text("Arbejdsfelter:", 20, 170);
-      doc.text(workAreasValue, 20, 180);
-      doc.text("Særlige brugere:", 20, 200);
-      doc.text(specialUsersValue, 20, 210);
-      doc.text("Farvetemperatur:", 20, 230);
-      doc.text(colorTempValue, 20, 240);
-      doc.text("Farvegengivelse:", 20, 260);
-      doc.text(colorRenderingValue, 20, 270);
-      doc.text("Belysningsform:", 20, 290);
-      doc.text(lightingFormValue, 20, 300);
-      doc.text("Montageform:", 20, 320);
-      doc.text(mountingFormValue, 20, 330);
-      doc.text("Automatik og styring:", 20, 350);
-      doc.text(automationValue, 20, 360);
-      doc.text("Vedligeholdelsesplan:", 20, 380);
-      doc.text(maintenancePlanValue, 20, 390);
-      doc.text("Nødbelysning:", 20, 410);
-      doc.text(emergencyLightingValue, 20, 420);
-      doc.text("Certificeringskrav:", 20, 440);
-      doc.text(certificationRequirementsValue, 20, 450);
-      doc.text("Sportsbelysning:", 20, 470);
-      doc.text(sportsLightingValue, 20, 480);
-      // Tilføj flere sektioner som nødvendigt
+      const addSection = (title, content) => {
+        positionY += lineHeight;
+        doc.setFontSize(14);
+        doc.text(title, marginX, positionY);
+        positionY += lineHeight;
+        doc.setFontSize(12);
+
+        const lines = doc.splitTextToSize(content, maxLineWidth);
+        lines.forEach(line => {
+          if (positionY > 280) {  // Hvis teksten er for tæt på bunden, tilføj ny side
+            doc.addPage();
+            positionY = 20;
+          }
+          doc.text(line, marginX, positionY);
+          positionY += lineHeight;
+        });
+      };
+
+      // Data fra formularen
+      const formData = {
+        "Informationer": document.getElementById('projectInfo1').value,
+        "Rumspecifikationer": document.getElementById('roomSpecsValue').value,
+        "Rummets brug": document.getElementById('roomUseValue').value,
+        "Reflektanser": document.getElementById('reflectancesValue').value,
+        "Arbejdsfelter": document.getElementById('workAreasValue').value,
+        "Særlige brugere": document.getElementById('specialUsersValue').value,
+        "Farvetemperatur": document.getElementById('colorTempValue').value,
+        "Farvegengivelse": document.getElementById('colorRenderingValue').value,
+        "Belysningsform": document.getElementById('lightingFormValue').value,
+        "Montageform": document.getElementById('mountingFormValue').value,
+        "Automatik og styring": document.getElementById('automationValue').value,
+        "Vedligeholdelsesplan": document.getElementById('maintenancePlanValue').value,
+        "Nødbelysning": document.getElementById('emergencyLightingValue').value,
+        "Certificeringskrav": document.getElementById('certificationRequirementsValue').value,
+        "Sportsbelysning": document.getElementById('sportsLightingValue').value,
+      };
+
+      // Generer PDF med alle sektioner
+      for (const [title, content] of Object.entries(formData)) {
+        addSection(title, content);
+      }
+
       doc.save('Belysningsrapport.pdf');
     }
   </script>
 </body>
-    <!-- Lavet af Marc Sonne Dahl -->
+<!-- Lavet af Marc Sonne Dahl -->
 </html>
