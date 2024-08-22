@@ -1,7 +1,6 @@
 <html lang="da">
 
 <head>
-<!-- Lavet af Marc Sonne Dahl -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beregningsforudsætninger Rapport Værktøj</title>
@@ -171,21 +170,21 @@
       const lineHeight = 10;
       const maxLineWidth = 170;
 
-      doc.setFontSize(18);
+      doc.setFontSize(16);
       doc.text("Belysningsrapport", marginX, positionY);
 
       // Tilføj afsnit
-      doc.setFontSize(12);
+      doc.setFontSize(11);
       const addSection = (title, content) => {
         positionY += lineHeight;
-        doc.setFontSize(14);
+        doc.setFontSize(12);
         doc.text(title, marginX, positionY);
         positionY += lineHeight;
-        doc.setFontSize(12);
+        doc.setFontSize(11);
 
         const lines = doc.splitTextToSize(content, maxLineWidth);
         lines.forEach(line => {
-          if (positionY > 280) {  // Hvis teksten er for tæt på bunden, tilføj ny side
+          if (positionY > 240) {  // Hvis teksten er for tæt på bunden, tilføj ny side
             doc.addPage();
             positionY = 20;
           }
@@ -222,5 +221,5 @@
     }
   </script>
 </body>
-<!-- Lavet af Marc Sonne Dahl -->
+
 </html>
