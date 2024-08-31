@@ -1,169 +1,321 @@
 <html lang="da">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marc Sonne Dahl - Projects</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marc Sonne Dahl - Projects</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-        :root {
-            --primary-color: #0078D7;
-            --accent-color: #FFB900;
-            --background-color: #F3F4F6;
-            --text-color: #333333;
-            --tile-background: #FFFFFF;
-            --tile-shadow: rgba(0, 0, 0, 0.1);
-            --tile-border-radius: 10px;
-            --transition-time: 0.3s;
-        }
+    :root {
+      --primary-color: #0078D7;
+      --accent-color: #FFB900;
+      --background-color: #F3F4F6;
+      --text-color: #333333;
+      --tile-background: #FFFFFF;
+      --tile-shadow: rgba(0, 0, 0, 0.1);
+      --tile-border-radius: 10px;
+      --transition-time: 0.3s;
+    }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
 
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            color: var(--primary-color);
-        }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--primary-color);
+    }
 
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
 
-        .project-tile {
-            background-color: var(--tile-background);
-            border-radius: var(--tile-border-radius);
-            box-shadow: 0 4px 6px var(--tile-shadow);
-            transition: transform var(--transition-time), box-shadow var(--transition-time);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 1rem;
-        }
+    .project-tile {
+      background-color: var(--tile-background);
+      border-radius: var(--tile-border-radius);
+      box-shadow: 0 4px 6px var(--tile-shadow);
+      transition: transform var(--transition-time), box-shadow var(--transition-time);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 1rem;
+    }
 
-        .project-tile:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px var(--tile-shadow);
-        }
+    .project-tile:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 16px var(--tile-shadow);
+    }
 
-        .project-tile i {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
+    .project-tile i {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
 
-        .project-tile h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
+    .project-tile h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
 
-        .project-tile p {
-            margin: 0.5rem 0 0;
-            font-size: 1rem;
-            opacity: 0.8;
-        }
+    .project-tile p {
+      margin: 0.5rem 0 0;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
 
-        .footer {
-            text-align: center;
-            padding: 1rem;
-            font-size: 0.9rem;
-            color: var(--text-color);
-            opacity: 0.7;
-            margin-top: 2rem;
-        }
+    .project-tile a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-color);
+      opacity: 0.7;
+      margin-top: 2rem;
+    }
 
-            .container {
-                padding: 1rem;
-            }
-        }
-    </style>
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Marc's Projects</h1>
-        <div class="projects-grid" id="projectsGrid">
-        </div>
+  <div class="container">
+    <h1>Marc's Projects</h1>
+    <div class="projects-grid" id="projectsGrid">
     </div>
-    <footer class="footer">
-        <p>Copyright © 2024 Marc Sonne Dahl. All rights reserved.</p>
-    </footer>
+  </div>
+  <footer class="footer">
+    <p>Copyright © 2024 Marc Sonne Dahl. All rights reserved.</p>
+  </footer>
 
-    <script>
-        const projects = [
-            { name: "Faktura generator", url: "https://mrdahl.github.io/home/faktura.html", description: "Fakturerings værktøj", icon: "fa-solid fa-file-invoice-dollar" },
-            { name: "Choice Forge", url: "https://mrdahl.github.io/home/choice.html", description: "Beslutnings Værktøj", icon: "fa-solid fa-ranking-star" },
-            { name: "S.P.E.C.I.A.L Duels", url: "https://mrdahl.github.io/home/duels.html", description: "Fallout baseret tekst RPG", icon: "fa-solid fa-circle-radiation" },
-            { name: "KNX in binary", url: "https://mrdahl.github.io/home/knx.html", description: "KNX Visualisering", icon: "<i class="fa-solid fa-building-shield"></i>" },
-            { name: "Arkanoid", url: "https://mrdahl.github.io/home/arkanoid.html", description: "Arkanoid i Neumorphic design", icon: "fa-solid fa-gamepad" },
-            { name: "VTV", url: "https://mrdahl.github.io/home/vtv.html", description: "Velfærdsteknologisk matrix generator", icon: "fa-solid fa-th" },
-            { name: "Beregnings forudsætninger", url: "https://mrdahl.github.io/home/lighttool.html", description: "Beregningsforudsætninger Rapport Værktøj", icon: "fa-solid fa-lightbulb" },
-            { name: "Modul App", url: "https://mrdahl.github.io/home/modul.html", description: "Modulvælger til EL-uddannelsen", icon: "fa-solid fa-graduation-cap" },
-            { name: "MF Calculator", url: "https://mrdahl.github.io/home/mf.html", description: "Vedligeholdelse faktor til indendør LED", icon: "fa-solid fa-calculator" },
-            { name: "Slot Machine", url: "https://mrdahl.github.io/home/slots.html", description: "En-armed bandit type spil", icon: "fa-solid fa-circle-dollar-to-slot" },
-            { name: "Music Control", url: "https://mrdahl.github.io/home/music.html", description: "Musikkontrol med 7 forskellige temaer", icon: "fa-solid fa-music" },
-            { name: "DnD Dice", url: "https://mrdahl.github.io/home/dnd.html", description: "D2 til D100 terninger til alle slags brætspil", icon: "fa-solid fa-dungeon" },
-            { name: "TSP Solver", url: "https://mrdahl.github.io/home/tsp.html", description: "Traveling Salesman problem løser", icon: "fa-solid fa-route" },
-            { name: "Mesh Generator", url: "https://mrdahl.github.io/home/mesh.html", description: "Værktøj til Netværk forståelse", icon: "fa-solid fa-network-wired" },
-            { name: "Snail Game", url: "https://mrdahl.github.io/home/snails.html", description: "Sneglespil til børn", icon: "fa-solid fa-hat-wizard" },
-            { name: "Snake", url: "https://mrdahl.github.io/home/snake.html", description: "Klassisk Snake spil i ny design", icon: "fa-solid fa-worm" },
-            { name: "AIvengers", url: "https://mrdahl.github.io/home/avengers.html", description: "CSS billed galleri", icon: "fa-solid fa-spider" },
-            { name: "Voodoo Rush", url: "https://mrdahl.github.io/home/voodoo.html", description: "Trænings Værktøj med progress bar", icon: "fa-solid fa-dumbbell" },
-            { name: "Rock Paper Scissors", url: "https://mrdahl.github.io/home/rockpaper.html", description: "Sten, Saks, Papir, Øgle, Spock spil", icon: "fa-solid fa-hand-spock" },
-            { name: "Emoji Match", url: "https://mrdahl.github.io/home/emojimatch.html", description: "Huske spil med emojier", icon: "fa-solid fa-smile" },
-            { name: "Wolf vs. Sheeps", url: "https://mrdahl.github.io/home/wolfsheep.html", description: "Kæmp som ulv eller får", icon: "fa-solid fa-chess" },
-            { name: "Tag Filtering", url: "https://mrdahl.github.io/home/tagfilter.html", description: "Filtrer i tags", icon: "fa-solid fa-tags" },
-            { name: "Yatzy!", url: "https://mrdahl.github.io/home/yatzy.html", description: "Local Multiplayer Yatzy!", icon: "fa-solid fa-dice" },
-            { name: "Pascals Probability Triangle", url: "https://mrdahl.github.io/home/pascal.html", description: "Plinko Style Pyramide", icon: "fa-solid fa-shapes" },            
-            { name: "Time Traveller's Dilemmas", url: "https://mrdahl.github.io/home/timeless.html", description: "Time Travel RPG Game", icon: "fa-solid fa-clock" },
-        ];
+  <script>
+    const projects = [{
+        name: "Faktura generator",
+        url: "https://mrdahl.github.io/home/faktura.html",
+        description: "Fakturerings værktøj",
+        icon: "fa-solid fa-file-invoice-dollar",
+        color: "#4CAF50"
+      },
+      {
+        name: "Choice Forge",
+        url: "https://mrdahl.github.io/home/choice.html",
+        description: "Beslutnings Værktøj",
+        icon: "fa-solid fa-ranking-star",
+        color: "#2196F3"
+      },
+      {
+        name: "Mesh Generator",
+        url: "https://mrdahl.github.io/home/mesh.html",
+        description: "Værktøj til Netværk forståelse",
+        icon: "fa-solid fa-network-wired",
+        color: "#9C27B0"
+      },
+      {
+        name: "KNX in binary",
+        url: "https://mrdahl.github.io/home/knx.html",
+        description: "KNX Visualisering",
+        icon: "fa-solid fa-building-shield",
+        color: "#FF9800"
+      },
+      {
+        name: "Tag Filtering",
+        url: "https://mrdahl.github.io/home/tagfilter.html",
+        description: "Filtrer i tags",
+        icon: "fa-solid fa-tags",
+        color: "#E91E63"
+      },
+      {
+        name: "VTV",
+        url: "https://mrdahl.github.io/home/vtv.html",
+        description: "Velfærdsteknologisk matrix generator",
+        icon: "fa-solid fa-th",
+        color: "#3F51B5"
+      },
+      {
+        name: "Beregnings forudsætninger",
+        url: "https://mrdahl.github.io/home/lighttool.html",
+        description: "Beregningsforudsætninger Rapport Værktøj",
+        icon: "fa-solid fa-lightbulb",
+        color: "#FFC107"
+      },
+      {
+        name: "Modul App",
+        url: "https://mrdahl.github.io/home/modul.html",
+        description: "Modulvælger til EL-uddannelsen",
+        icon: "fa-solid fa-graduation-cap",
+        color: "#795548"
+      },
+      {
+        name: "MF Calculator",
+        url: "https://mrdahl.github.io/home/mf.html",
+        description: "Vedligeholdelse faktor til indendør LED",
+        icon: "fa-solid fa-calculator",
+        color: "#607D8B"
+      },
+      {
+        name: "Music Control",
+        url: "https://mrdahl.github.io/home/music.html",
+        description: "Musikkontrol med 7 forskellige temaer",
+        icon: "fa-solid fa-music",
+        color: "#F44336"
+      },
+      {
+        name: "DnD Dice",
+        url: "https://mrdahl.github.io/home/dnd.html",
+        description: "D2 til D100 terninger til alle slags brætspil",
+        icon: "fa-solid fa-dungeon",
+        color: "#673AB7"
+      },
+      {
+        name: "TSP Solver",
+        url: "https://mrdahl.github.io/home/tsp.html",
+        description: "Traveling Salesman problem løser",
+        icon: "fa-solid fa-route",
+        color: "#009688"
+      },
+      {
+        name: "Snail Game",
+        url: "https://mrdahl.github.io/home/snails.html",
+        description: "Sneglespil til børn",
+        icon: "fa-solid fa-hat-wizard",
+        color: "#8BC34A"
+      },
+      {
+        name: "Snake",
+        url: "https://mrdahl.github.io/home/snake.html",
+        description: "Klassisk Snake spil i ny design",
+        icon: "fa-solid fa-worm",
+        color: "#00BCD4"
+      },
+      {
+        name: "AIvengers",
+        url: "https://mrdahl.github.io/home/avengers.html",
+        description: "CSS billed galleri",
+        icon: "fa-solid fa-spider",
+        color: "#FF5722"
+      },
+      {
+        name: "Voodoo Rush",
+        url: "https://mrdahl.github.io/home/voodoo.html",
+        description: "Trænings Værktøj med progress bar",
+        icon: "fa-solid fa-dumbbell",
+        color: "#CDDC39"
+      },
+      {
+        name: "Rock Paper Scissors",
+        url: "https://mrdahl.github.io/home/rockpaper.html",
+        description: "Sten, Saks, Papir, Øgle, Spock spil",
+        icon: "fa-solid fa-hand-spock",
+        color: "#03A9F4"
+      },
+      {
+        name: "Wolf vs. Sheeps",
+        url: "https://mrdahl.github.io/home/wolfsheep.html",
+        description: "Kæmp som ulv eller får",
+        icon: "fa-solid fa-chess",
+        color: "#9E9E9E"
+      },
+      {
+        name: "Yatzy!",
+        url: "https://mrdahl.github.io/home/yatzy.html",
+        description: "Local Multiplayer Yatzy!",
+        icon: "fa-solid fa-dice",
+        color: "#FF4081"
+      },
+      {
+        name: "Pascals Probability Triangle",
+        url: "https://mrdahl.github.io/home/pascal.html",
+        description: "Plinko Style Pyramide",
+        icon: "fa-solid fa-shapes",
+        color: "#7C4DFF"
+      },
+      {
+        name: "Time Traveller's Dilemmas",
+        url: "https://mrdahl.github.io/home/timeless.html",
+        description: "Time Travel RPG Game",
+        icon: "fa-solid fa-clock",
+        color: "#FFD54F"
+      },
+      {
+        name: "S.P.E.C.I.A.L Duels",
+        url: "https://mrdahl.github.io/home/duels.html",
+        description: "Fallout baseret tekst RPG",
+        icon: "fa-solid fa-circle-radiation",
+        color: "#76FF03"
+      },
+      {
+        name: "Arkanoid",
+        url: "https://mrdahl.github.io/home/arkanoid.html",
+        description: "Arkanoid i Neumorphic design",
+        icon: "fa-solid fa-gamepad",
+        color: "#FF6E40"
+      },
+      {
+        name: "Slot Machine",
+        url: "https://mrdahl.github.io/home/slots.html",
+        description: "En-armed bandit type spil",
+        icon: "fa-solid fa-circle-dollar-to-slot",
+        color: "#1DE9B6"
+      },
+      {
+        name: "Emoji Match",
+        url: "https://mrdahl.github.io/home/emojimatch.html",
+        description: "Huske spil med emojier",
+        icon: "fa-solid fa-smile",
+        color: "#FFAB00"
+      },
+    ];
+    const projectsGrid = document.getElementById('projectsGrid');
 
-        const projectsGrid = document.getElementById('projectsGrid');
-
-        function createTiles() {
-            projectsGrid.innerHTML = '';
-
-            projects.forEach(project => {
-                const tile = document.createElement('div');
-                tile.className = 'project-tile';
-
-                tile.innerHTML = `
-                    <a href="${project.url}">
-                        <i class="${project.icon}"></i>
+    function createTiles() {
+      projectsGrid.innerHTML = '';
+      projects.forEach(project => {
+        const tile = document.createElement('div');
+        tile.className = 'project-tile';
+        tile.innerHTML = `
+                    <a href="${project.url}" style="color: ${project.color};">
+                        <i class="${project.icon}" style="color: ${project.color};"></i>
                         <h3>${project.name}</h3>
                         <p>${project.description}</p>
                     </a>
                 `;
-                projectsGrid.appendChild(tile);
-            });
-        }
-
-        createTiles();
-    </script>
+        projectsGrid.appendChild(tile);
+      });
+    }
+    createTiles();
+  </script>
 </body>
+
 </html>
