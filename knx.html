@@ -1,4 +1,5 @@
 <html lang="en">
+<!-- Copyright 2024 © Marc Sonne Dahl -->
 
 <head>
   <meta charset="UTF-8">
@@ -7,321 +8,269 @@
   <style>
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: #e0f7fa;
-      color: #212121;
-      margin: 0;
+      background: linear-gradient(45deg, #1a2634, #0f1620);
+      color: #e0e0e0;
       padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      user-select: none;
-    }
-
-    h1 {
-      color: #00796b;
-      font-size: 2.5em;
-      margin-bottom: -20px;
-      font-weight: 300;
-    }
-
-    h2 {
-      color: #00796b;
-      font-size: 2em;
-      margin-bottom: 30px;
-      font-weight: 300;
+      line-height: 1.6;
+      min-height: 100vh;
     }
 
     .container {
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(26, 38, 52, 0.3);
+      backdrop-filter: blur(10px);
       padding: 30px;
-      max-width: 700px;
-      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .input-section {
-      margin-bottom: 25px;
+    h1 {
+      color: #4fd1c5;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px rgba(79, 209, 197, 0.5);
     }
 
-    .input-section label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #555555;
+    .block {
+      margin: 20px 0;
+      background: rgba(35, 52, 70, 0.4);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
     }
 
-    .input-section select,
-    .input-section input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #bdbdbd;
-      border-radius: 7px;
-      box-sizing: border-box;
-      font-size: 0.8em;
+    .block:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.2);
     }
 
-    .input-section select {
-      background-color: #fafafa;
+    .telegram {
+      font-family: 'Courier New', monospace;
+      margin-top: 20px;
+      background: rgba(44, 66, 87, 0.4);
+      padding: 20px;
+      border-radius: 10px;
+      overflow-x: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .input-section .address-inputs input {
-      width: 60px;
-      margin-right: 15px;
+    .binary-block {
       display: inline-block;
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid rgba(79, 209, 197, 0.5);
+      background: rgba(35, 52, 70, 0.6);
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      word-wrap: break-word;
+      word-break: break-all;
+      max-width: 100%;
+      box-shadow: 0 0 10px rgba(79, 209, 197, 0.2);
+    }
+
+    .binary-block:hover {
+      background: rgba(44, 66, 87, 0.8);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(79, 209, 197, 0.3);
+    }
+
+    label {
+      display: inline-block;
+      width: 200px;
+      color: #4fd1c5;
+      text-shadow: 0 0 5px rgba(79, 209, 197, 0.5);
+    }
+
+    .section-title {
+      margin-top: 30px;
+      font-weight: bold;
+      color: #4fd1c5;
+      text-shadow: 0 0 10px rgba(79, 209, 197, 0.5);
+    }
+
+    input[type="number"],
+    select {
+      background: rgba(44, 66, 87, 0.4);
+      border: 1px solid rgba(79, 209, 197, 0.5);
+      color: #e0e0e0;
+      padding: 5px 10px;
+      border-radius: 5px;
+      margin: 5px 0;
+      transition: all 0.3s ease;
+    }
+
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(79, 209, 197, 0.5);
     }
 
     button {
-      background-color: #00796b;
-      color: white;
-      padding: 12px 25px;
+      background: linear-gradient(45deg, #4fd1c5, #3db1a8);
+      color: #0f1620;
       border: none;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 1.1em;
-      transition: background-color 0.3s, transform 0.2s;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(79, 209, 197, 0.3);
     }
 
     button:hover {
-      background-color: #004d40;
+      background: linear-gradient(45deg, #3db1a8, #4fd1c5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79, 209, 197, 0.4);
     }
 
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .output {
-      margin-top: 40px;
-      background-color: #fafafa;
-      border: 1px solid #bdbdbd;
-      border-radius: 12px;
+    #timingInfo {
+      margin-top: 20px;
+      background: rgba(35, 52, 70, 0.4);
       padding: 20px;
-    }
-
-    .output span {
-      font-weight: 600;
-      display: block;
-      margin-bottom: 12px;
-      color: #00796b;
-    }
-
-    .binary-output {
-      margin-top: 15px;
-    }
-
-    .binary-output p {
-      background-color: #c8e6c9;
-      padding: 15px;
-      border-radius: 6px;
-      font-family: monospace;
-      word-break: break-all;
-      overflow-wrap: break-word;
-    }
-
-    .chunk {
-      margin-top: 15px;
-      font-family: monospace;
-      white-space: pre-wrap;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
 
 <body>
-  <h1>KNX TP</h1>
-  <h2>Telegram Visualizer</h2>
-
   <div class="container">
-    <div class="input-section">
-      <label for="frameType">Frame Type:</label>
-      <select id="frameType">
-        <option value="0">Standard Frame (1)</option>
-        <option value="1">Extended Frame (0)</option>
-      </select>
+    <h1>KNX TP<br>Telegram Visualizer</h1>
+
+    <div class="block">
+      <label>Source Address:</label><br>
+      Area (0-15): <input type="number" id="sourceArea" min="0" max="15" value="0"><br>
+      Line (0-15): <input type="number" id="sourceLine" min="0" max="15" value="0"><br>
+      Device (0-255): <input type="number" id="sourceDevice" min="0" max="255" value="0">
     </div>
 
-    <div class="input-section">
-      <label for="repeatFlag">Repeat Flag:</label>
-      <select id="repeatFlag">
-        <option value="0">Original Telegram (1)</option>
-        <option value="1">Repeated Telegram (0)</option>
-      </select>
+    <div class="block">
+      <label>Destination Address:</label><br>
+      Main Group (0-31): <input type="number" id="destMainGroup" min="0" max="31" value="0"><br>
+      Middle Group (0-7): <input type="number" id="destMiddleGroup" min="0" max="7" value="0"><br>
+      Group Address (0-255): <input type="number" id="destGroupAddress" min="0" max="255" value="0">
     </div>
 
-    <div class="input-section">
+    <div class="block">
+      <label for="routingCounter">Routing Counter (0-7):</label>
+      <input type="number" id="routingCounter" min="0" max="7" value="0">
+    </div>
+
+    <div class="block">
       <label for="priority">Priority:</label>
       <select id="priority">
         <option value="00">System (00)</option>
-        <option value="10">Alarm (10)</option>
         <option value="01">High (01)</option>
+        <option value="10">Alarm (10)</option>
         <option value="11">Low (11)</option>
       </select>
     </div>
 
-    <div class="input-section">
-      <label for="ackFlag">Acknowledgement Flag:</label>
-      <select id="ackFlag">
-        <option value="0">No LL_ACK Requested (0)</option>
-        <option value="1">LL_ACK Requested (1)</option>
-      </select>
-    </div>
-
-    <div class="input-section">
-      <label for="errorFlag">Error Flag:</label>
-      <select id="errorFlag">
-        <option value="0">No Errors (0)</option>
-        <option value="1">Error Detected (1)</option>
-      </select>
-    </div>
-
-    <div class="input-section">
-      <label for="addressType">Address Type:</label>
-      <select id="addressType">
-        <option value="0">Individual Address (0)</option>
-        <option value="1">Group Address (1)</option>
-      </select>
-    </div>
-
-    <div class="input-section">
-      <label for="hopCount">Hop Count:</label>
-      <select id="hopCount">
-        <option value="000">0</option>
-        <option value="001">1</option>
-        <option value="010">2</option>
-        <option value="011">3</option>
-        <option value="100">4</option>
-        <option value="101">5</option>
-        <option value="110">6</option>
-        <option value="111">7</option>
-      </select>
-    </div>
-
-    <div class="input-section">
-      <label>Source Address (X.X.X):</label>
-      <div class="address-inputs">
-        <input type="number" id="sourceArea" value="1" min="0" max="15">
-        <input type="number" id="sourceLine" value="1" min="0" max="15">
-        <input type="number" id="sourceDevice" value="250" min="0" max="255">
-      </div>
-    </div>
-
-    <div class="input-section">
-      <label>Destination Address (X/X/X or X.X.X):</label>
-      <div class="address-inputs">
-        <input type="number" id="destMain" value="1" min="0" max="31">
-        <input type="number" id="destMiddle" value="1" min="0" max="7">
-        <input type="number" id="destSub" value="1" min="0" max="255">
-      </div>
-    </div>
-
-    <div class="input-section">
-      <label for="npdu">NPDU:</label>
-      <select id="npdu">
-        <option value="000000000000">GroupValueRead</option>
-        <option value="000100000000">GroupValueResponse</option>
-        <option value="001000000000">GroupValueWrite</option>
-        <option value="001100000000000000000000">PhysAddrWrite</option>
-        <option value="0100000000000000000000">PhysAddrRead</option>
-        <option value="0101000000000000000000">PhysAddrResponse</option>
-        <option value="1000000000000000000000000000">MemoryRead</option>
-        <option value="1001000000000000000000000000000000">MemoryResponse</option>
-        <option value="111111000000">Escape</option>
-      </select>
-    </div>
-
-    <div class="input-section">
-      <label for="dptType">Useful Data Type:</label>
+    <div class="block">
+      <label for="dptValue">DPT Size:</label><br>
+      <input type="number" id="dptValue" value="1" min="1">
       <select id="dptType">
-        <option value="1bit">1 Bit</option>
-        <option value="4bit">4 Bit</option>
-        <option value="1byte">1 Byte</option>
-        <option value="2bytes">2 Bytes</option>
-        <option value="3bytes">3 Bytes</option>
-        <option value="4bytes">4 Bytes</option>
-        <option value="6bytes">6 Bytes</option>
-        <option value="8bytes">8 Bytes</option>
-        <option value="14bytes">14 Bytes</option>
-        <option value="16bytes">16 Bytes</option>
+        <option value="1">Bit</option>
+        <option value="8">Byte</option>
       </select>
     </div>
 
-    <button onclick="visualizeTelegram()">Visualize Telegram</button>
+    <button onclick="generateTelegram()">Generate Telegram</button>
 
-    <div class="output">
-      <div class="binary-output">
-        <span>Telegram (Binary):</span>
-        <p id="binaryOutput"></p>
-      </div>
-    </div>
+    <h2 class="section-title">Telegram Transmission Process</h2>
+    <div><strong>T1 Pause:</strong> The time before a new telegram starts transmitting on the bus after it's idle.</div>
+    <div class="telegram" id="telegramOutput"></div>
+    <div><strong>T2 Pause:</strong> The time after the telegram is sent, during which devices verify reception.</div>
+    <div><strong>Acknowledgment:</strong> Devices acknowledge receipt of the telegram.</div>
+    <h2 class="section-title">Timing Information</h2>
+    <div id="timingInfo"></div>
   </div>
 
   <script>
-    function convertAddress(isGroup, main, middle, sub) {
-      let mainBinary = parseInt(main, 10).toString(2).padStart(isGroup ? 5 : 4, '0');
-      let middleBinary = parseInt(middle, 10).toString(2).padStart(isGroup ? 3 : 4, '0');
-      let subBinary = parseInt(sub, 10).toString(2).padStart(8, '0');
-      return mainBinary + middleBinary + subBinary;
+    function padBinary(binary, length) {
+      return binary.padStart(length, '0');
     }
 
-    function convertDPTValue(type) {
-      switch (type) {
-        case '1bit':
-          return '0'; // Placeholder value for 1-bit data
-        case '4bit':
-          return '0000'; // Placeholder value for 4-bit data
-        case '1byte':
-          return '00000000'; // Placeholder value for 1-byte data
-        case '2bytes':
-          return '0000000000000000'; // Placeholder value for 2-byte data
-        case '3bytes':
-          return '000000000000000000000000'; // Placeholder value for 3-byte data
-        case '4bytes':
-          return '00000000000000000000000000000000'; // Placeholder value for 4-byte data
-        case '6bytes':
-          return '000000000000000000000000000000000000'; // Placeholder value for 6-byte data
-        case '8bytes':
-          return '000000000000000000000000000000000000000000000000'; // Placeholder value for 8-byte data
-        case '14bytes':
-          return '00000000000000000000000000000000000000000000000000000000000000'; // Placeholder value for 14-byte data
-        case '16bytes':
-          return '0000000000000000000000000000000000000000000000000000000000000000'; // Placeholder value for 16-byte data
-        default:
-          return ''; // Handle unexpected types
+    function formatBinary(binary, groupSizes) {
+      let result = '';
+      let index = 0;
+      for (let size of groupSizes) {
+        if (result) result += ' ';
+        result += binary.substr(index, size);
+        index += size;
       }
+      return result;
     }
 
-    function hexToBinary(hex) {
-      return parseInt(hex, 16).toString(2).padStart(hex.length * 4, '0');
-    }
-
-    function visualizeTelegram() {
-      const frameType = document.getElementById("frameType").value;
-      const repeatFlag = document.getElementById("repeatFlag").value;
+    function generateTelegram() {
+      const sourceArea = padBinary((+document.getElementById("sourceArea").value).toString(2), 4);
+      const sourceLine = padBinary((+document.getElementById("sourceLine").value).toString(2), 4);
+      const sourceDevice = padBinary((+document.getElementById("sourceDevice").value).toString(2), 8);
+      const destinationMainGroup = padBinary((+document.getElementById("destMainGroup").value).toString(2), 5);
+      const destinationMiddleGroup = padBinary((+document.getElementById("destMiddleGroup").value).toString(2), 3);
+      const destinationGroupAddress = padBinary((+document.getElementById("destGroupAddress").value).toString(2), 8);
+      const routingCounter = padBinary((+document.getElementById("routingCounter").value).toString(2), 3);
       const priority = document.getElementById("priority").value;
-      const ackFlag = document.getElementById("ackFlag").value;
-      const errorFlag = document.getElementById("errorFlag").value;
-      const controlField1 = `1${frameType}${repeatFlag}0${priority}${ackFlag}${errorFlag}`;
-      const addressType = document.getElementById("addressType").value;
-      const hopCount = document.getElementById("hopCount").value;
-      const controlField2 = `${addressType}${hopCount}0000`;
-      const sourceArea = document.getElementById("sourceArea").value.trim();
-      const sourceLine = document.getElementById("sourceLine").value.trim();
-      const sourceDevice = document.getElementById("sourceDevice").value.trim();
-      const destMain = document.getElementById("destMain").value.trim();
-      const destMiddle = document.getElementById("destMiddle").value.trim();
-      const destSub = document.getElementById("destSub").value.trim();
-      const sourceAddressBinary = convertAddress(false, sourceArea, sourceLine, sourceDevice);
-      const destAddressBinary = convertAddress(addressType === '1', destMain, destMiddle, destSub);
-      const npduHex = document.getElementById("npdu").value.trim();
-      const npduBinary = hexToBinary(npduHex);
+      const dptValue = +document.getElementById("dptValue").value;
       const dptType = document.getElementById("dptType").value;
-      const dptBinary = convertDPTValue(dptType);
-      // Combine all parts
-      const telegramBinary = controlField1 + controlField2 + sourceAddressBinary + destAddressBinary + npduBinary + dptBinary;
-      // Format the binary output
-      const formattedBinary = `${controlField1} ${controlField2} ${sourceAddressBinary} ${destAddressBinary} ${npduBinary} ${dptBinary}`;
-      document.getElementById("binaryOutput").textContent = formattedBinary;
+      // Calculate DPT size in bits
+      const dptSize = dptType === "1" ? dptValue : dptValue * 8;
+      // Default fields
+      const controlField = "10101010"; // Example 8 bits
+      const npci = "00001010"; // Example 8 bits
+      const apci = "001100"; // Example 6 bits
+      const checksum = "11110000"; // Example 8 bits
+      // Generate Data Field
+      let dataField = "";
+      if (dptSize === 1) {
+        dataField = "1"; // Single bit data
+      } else {
+        dataField = "0".repeat(dptSize); // DPT size in bits
+      }
+      // Construct the binary telegram with formatted binary
+      const sourceAddress = formatBinary(sourceArea + sourceLine + sourceDevice, [4, 4, 8]);
+      const destinationAddress = formatBinary(destinationMainGroup + destinationMiddleGroup + destinationGroupAddress, [5, 3, 8]);
+      const telegram = `
+                <div class="binary-block"><strong>Control Field:</strong><br> ${controlField}</div>
+                <div class="binary-block"><strong>Source Address:</strong><br> ${sourceAddress}</div>
+                <div class="binary-block"><strong>Destination Address:</strong><br> ${destinationAddress}</div>
+                <div class="binary-block"><strong>Routing Counter:</strong><br> ${routingCounter}</div>
+                <div class="binary-block"><strong>Priority:</strong><br> ${priority}</div>
+                <div class="binary-block"><strong>NPCI:</strong><br> ${npci}</div>
+                <div class="binary-block"><strong>APCI + Data:</strong><br> ${apci}${dataField}</div>
+                <div class="binary-block"><strong>Frame Checksum:</strong><br> ${checksum}</div>
+            `;
+      document.getElementById("telegramOutput").innerHTML = telegram;
+      // Calculate total number of bits
+      const totalBits = controlField.length + sourceAddress.replace(/\s/g, '').length + destinationAddress.replace(/\s/g, '').length +
+        routingCounter.length + priority.length + npci.length +
+        (apci.length + dataField.length) + checksum.length;
+      // Calculate transmission time in microseconds
+      const transmissionTime = totalBits * 104; // 1 bit = 104 µs at 9600 bps
+      // Calculate the T2 pause based on the transmission time
+      let t2Pause = 0;
+      if (dptSize === 1) {
+        t2Pause = 20000 - transmissionTime; // 1-bit DPT takes 20 ms
+      } else if (dptSize === 128) {
+        t2Pause = 40000 - transmissionTime; // 16-byte DPT takes 40 ms
+      } else {
+        t2Pause = (20000 + ((dptSize - 1) * 156.25)) - transmissionTime; // Extrapolate for other DPT sizes
+      }
+      // Convert times to milliseconds for display
+      const transmissionTimeMs = (transmissionTime / 1000).toFixed(2);
+      const t2PauseMs = (t2Pause / 1000).toFixed(2);
+      document.getElementById("timingInfo").innerHTML = `
+                <div><strong>Total Bits:</strong> ${totalBits} bits</div>
+                <div><strong>Transmission Time:</strong> ${transmissionTimeMs} ms</div>
+                <div><strong>Adjusted T2 Pause:</strong> ${t2PauseMs} ms</div>
+            `;
     }
   </script>
 </body>
+<!-- Copyright 2024 © Marc Sonne Dahl -->
 
 </html>
