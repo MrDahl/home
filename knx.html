@@ -139,7 +139,7 @@
 
 <body>
   <div class="container">
-    <h1>KNX TP<br>Telegram Visualizer</h1>
+    <h1>Simple KNX<br>Telegram Visualizer</h1>
 
     <div class="block">
       <label>Source Address:</label><br>
@@ -195,81 +195,119 @@
       return binary.padStart(length, '0');
     }
 
-    function formatBinary(binary, groupSizes) {
-      let result = '';
-      let index = 0;
-      for (let size of groupSizes) {
+    function calculateParity(byte) {
+      // Calculate even parity (1 if the number of 1's is odd, otherwise 0)
+      return (byte.split('1').length - 1) % 2 === 0 ? '0' : '1';
+    }
+
+
+function formatBinary(binary, groupSizes) {
+    let result = '';
+    let index = 0;
+    for (let size of groupSizes) {
         if (result) result += ' ';
         result += binary.substr(index, size);
         index += size;
-      }
-      return result;
+    }
+    return result;
+}
+
+function generateDummyData(dptSize) {
+    // Create a dummy data value corresponding to the DPT size.
+    if (dptSize === 1) {
+        return '1'; // Simple binary value for 1-bit DPT
+    } else {
+        return '1'.repeat(dptSize).substr(0, dptSize); // Repeat '1' for other sizes
+    }
+}
+
+function generateTelegram() {
+    const sourceArea = padBinary((+document.getElementById("sourceArea").value).toString(2), 4);
+    const sourceLine = padBinary((+document.getElementById("sourceLine").value).toString(2), 4);
+    const sourceDevice = padBinary((+document.getElementById("sourceDevice").value).toString(2), 8);
+    const destinationMainGroup = padBinary((+document.getElementById("destMainGroup").value).toString(2), 5);
+    const destinationMiddleGroup = padBinary((+document.getElementById("destMiddleGroup").value).toString(2), 3);
+    const destinationGroupAddress = padBinary((+document.getElementById("destGroupAddress").value).toString(2), 8);
+    const routingCounter = padBinary((+document.getElementById("routingCounter").value).toString(2), 3);
+    const priority = document.getElementById("priority").value;
+    const dptValue = +document.getElementById("dptValue").value;
+    const dptType = document.getElementById("dptType").value;
+
+    // Calculate DPT size in bits
+    const dptSize = dptType === "1" ? dptValue : dptValue * 8;
+
+    // Generate dummy data based on DPT size
+    const dataField = generateDummyData(dptSize);
+
+    // Default fields
+    const controlField = "10101010"; // Example 8 bits
+    const npci = "00001010"; // Example 8 bits
+    const apci = "001100"; // Example 6 bits
+    const checksum = "11110000"; // Example 8 bits
+
+    // Calculate parity for each byte
+    const paritySourceAddress = calculateParity(sourceArea + sourceLine + sourceDevice);
+    const parityDestinationAddress = calculateParity(destinationMainGroup + destinationMiddleGroup + destinationGroupAddress);
+    const parityControlField = calculateParity(controlField);
+    const parityNPCI = calculateParity(npci);
+    const parityAPCI = calculateParity(apci);
+    const parityChecksum = calculateParity(checksum);
+
+    // Construct the binary telegram with formatted binary
+    const sourceAddress = formatBinary(sourceArea + sourceLine + sourceDevice, [4, 4, 8]);
+    const destinationAddress = formatBinary(destinationMainGroup + destinationMiddleGroup + destinationGroupAddress, [5, 3, 8]);
+    const telegram = `
+        <div class="binary-block"><strong>Start Bit:</strong><br> 1</div>
+        <div class="binary-block"><strong>Control Field:</strong><br> ${controlField} ${parityControlField}</div>
+        <div class="binary-block"><strong>Source Address:</strong><br> ${sourceAddress} ${paritySourceAddress}</div>
+        <div class="binary-block"><strong>Destination Address:</strong><br> ${destinationAddress} ${parityDestinationAddress}</div>
+        <div class="binary-block"><strong>Routing Counter:</strong><br> ${routingCounter}</div>
+        <div class="binary-block"><strong>Priority:</strong><br> ${priority}</div>
+        <div class="binary-block"><strong>NPCI:</strong><br> ${npci} ${parityNPCI}</div>
+        <div class="binary-block"><strong>APCI + Data:</strong><br> ${apci} ${dataField} ${parityAPCI}</div>
+        <div class="binary-block"><strong>Frame Checksum:</strong><br> ${checksum} ${parityChecksum}</div>
+        <div class="binary-block"><strong>Stop Bit:</strong><br> 1</div>
+    `;
+
+    document.getElementById("telegramOutput").innerHTML = telegram;
+
+    // Calculate total number of bits including start, stop, and parity bits
+    const totalBits = controlField.length + sourceAddress.replace(/\s/g, '').length + destinationAddress.replace(/\s/g, '').length +
+      routingCounter.length + priority.length + npci.length + apci.length + dataField.length +
+      checksum.length + 2 * (1 + 1); // Adding start and stop bits
+
+    // Calculate transmission time in microseconds
+    const transmissionTime = totalBits * 104; // 1 bit = 104 µs at 9600 bps
+
+    // Calculate the T2 pause based on the transmission time
+    let t2Pause = 0;
+    if (dptSize === 1) {
+        t2Pause = 20000 - transmissionTime; // 1-bit DPT takes 20 ms
+    } else if (dptSize === 128) {
+        t2Pause = 40000 - transmissionTime; // 16-byte DPT takes 40 ms
+    } else {
+        t2Pause = (20000 + ((dptSize - 1) * 156.25)) - transmissionTime; // Extrapolate for other DPT sizes
     }
 
-    function generateTelegram() {
-      const sourceArea = padBinary((+document.getElementById("sourceArea").value).toString(2), 4);
-      const sourceLine = padBinary((+document.getElementById("sourceLine").value).toString(2), 4);
-      const sourceDevice = padBinary((+document.getElementById("sourceDevice").value).toString(2), 8);
-      const destinationMainGroup = padBinary((+document.getElementById("destMainGroup").value).toString(2), 5);
-      const destinationMiddleGroup = padBinary((+document.getElementById("destMiddleGroup").value).toString(2), 3);
-      const destinationGroupAddress = padBinary((+document.getElementById("destGroupAddress").value).toString(2), 8);
-      const routingCounter = padBinary((+document.getElementById("routingCounter").value).toString(2), 3);
-      const priority = document.getElementById("priority").value;
-      const dptValue = +document.getElementById("dptValue").value;
-      const dptType = document.getElementById("dptType").value;
-      // Calculate DPT size in bits
-      const dptSize = dptType === "1" ? dptValue : dptValue * 8;
-      // Default fields
-      const controlField = "10101010"; // Example 8 bits
-      const npci = "00001010"; // Example 8 bits
-      const apci = "001100"; // Example 6 bits
-      const checksum = "11110000"; // Example 8 bits
-      // Generate Data Field
-      let dataField = "";
-      if (dptSize === 1) {
-        dataField = "1"; // Single bit data
-      } else {
-        dataField = "0".repeat(dptSize); // DPT size in bits
-      }
-      // Construct the binary telegram with formatted binary
-      const sourceAddress = formatBinary(sourceArea + sourceLine + sourceDevice, [4, 4, 8]);
-      const destinationAddress = formatBinary(destinationMainGroup + destinationMiddleGroup + destinationGroupAddress, [5, 3, 8]);
-      const telegram = `
-                <div class="binary-block"><strong>Control Field:</strong><br> ${controlField}</div>
-                <div class="binary-block"><strong>Source Address:</strong><br> ${sourceAddress}</div>
-                <div class="binary-block"><strong>Destination Address:</strong><br> ${destinationAddress}</div>
-                <div class="binary-block"><strong>Routing Counter:</strong><br> ${routingCounter}</div>
-                <div class="binary-block"><strong>Priority:</strong><br> ${priority}</div>
-                <div class="binary-block"><strong>NPCI:</strong><br> ${npci}</div>
-                <div class="binary-block"><strong>APCI + Data:</strong><br> ${apci}${dataField}</div>
-                <div class="binary-block"><strong>Frame Checksum:</strong><br> ${checksum}</div>
-            `;
-      document.getElementById("telegramOutput").innerHTML = telegram;
-      // Calculate total number of bits
-      const totalBits = controlField.length + sourceAddress.replace(/\s/g, '').length + destinationAddress.replace(/\s/g, '').length +
-        routingCounter.length + priority.length + npci.length +
-        (apci.length + dataField.length) + checksum.length;
-      // Calculate transmission time in microseconds
-      const transmissionTime = totalBits * 104; // 1 bit = 104 µs at 9600 bps
-      // Calculate the T2 pause based on the transmission time
-      let t2Pause = 0;
-      if (dptSize === 1) {
-        t2Pause = 20000 - transmissionTime; // 1-bit DPT takes 20 ms
-      } else if (dptSize === 128) {
-        t2Pause = 40000 - transmissionTime; // 16-byte DPT takes 40 ms
-      } else {
-        t2Pause = (20000 + ((dptSize - 1) * 156.25)) - transmissionTime; // Extrapolate for other DPT sizes
-      }
-      // Convert times to milliseconds for display
-      const transmissionTimeMs = (transmissionTime / 1000).toFixed(2);
-      const t2PauseMs = (t2Pause / 1000).toFixed(2);
-      document.getElementById("timingInfo").innerHTML = `
-                <div><strong>Total Bits:</strong> ${totalBits} bits</div>
-                <div><strong>Transmission Time:</strong> ${transmissionTimeMs} ms</div>
-                <div><strong>Adjusted T2 Pause:</strong> ${t2PauseMs} ms</div>
-            `;
-    }
-  </script>
+    // Calculate total telegram duration
+    const totalDurationMs = (transmissionTime + t2Pause) / 1000;
+
+    // Convert times to milliseconds for display
+    const transmissionTimeMs = (transmissionTime / 1000).toFixed(2);
+    const t2PauseMs = (t2Pause / 1000).toFixed(2);
+
+    document.getElementById("timingInfo").innerHTML = `
+        <div><strong>Total Bits:</strong> ${totalBits} bits</div>
+        <div><strong>Transmission Time:</strong> ${transmissionTimeMs} ms</div>
+        <div><strong>Adjusted T2 Pause:</strong> ${t2PauseMs} ms</div>
+        <div><strong>Total Telegram Duration:</strong> ${totalDurationMs.toFixed(2)} ms</div>
+        <div><strong>ACK:</strong> Acknowledge Signal</div>
+        <div><strong>NACK:</strong> Negative Acknowledge Signal</div>
+        <div><strong>BUSY:</strong> Busy Signal</div>
+    `;
+}
+</script>
+
 </body>
 <!-- Copyright 2024 © Marc Sonne Dahl -->
 
