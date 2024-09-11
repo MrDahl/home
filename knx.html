@@ -36,8 +36,30 @@
     h1 {
       color: var(--primary-color);
       text-align: center;
-      margin-bottom: 2rem;
-      font-size: 2.5rem;
+      margin-bottom: auto;
+      font-size: 1.4rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    .highlight {
+      background-color: #e7f1ff;
     }
 
     .block {
@@ -62,6 +84,7 @@
       overflow-x: auto;
       margin-top: 1.5rem;
       margin-bottom: 1.5rem;
+      word-wrap: break-all;
     }
 
     .binary-block {
@@ -73,6 +96,8 @@
       border-radius: 6px;
       transition: all 0.3s ease;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      word-wrap: break-word;
+      max-width: 90%;
     }
 
     .binary-block:hover {
@@ -231,6 +256,33 @@
       color: var(--text-color);
     }
 
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .form-group select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: #ffffff;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+
     footer {
       position: relative;
       display: flex;
@@ -258,13 +310,51 @@
         width: 100%;
       }
     }
+
+    @media (max-width: 480px) {
+      .telegram-bit {
+        width: 20px;
+        height: 20px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Simple KNX<br>Telegram Visualizer</h1>
 
+  <div class="container">
+    <h1>KNX TP Telegram Visualizer</h1>
+    <div class="block">
+      <div class="form-group">
+        <label for="repeatFlag">Repeat Flag:</label>
+        <select id="repeatFlag">
+          <option value="0">Not repeated</option>
+          <option value="1">Repeated</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="form-group">
+        <label for="targetType">Target Address Type:</label>
+        <select id="targetType">
+          <option value="1">Group Address/Multicast</option>
+          <option value="0">Individual Address/Unicast</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="form-group">
+        <label for="command">Command:</label>
+        <select id="command">
+          <option value="0000">Value Read</option>
+          <option value="0001">Value Response</option>
+          <option value="0010">Value Write</option>
+          <option value="1010">Memory Write</option>
+        </select>
+      </div>
+    </div>
     <div class="block">
       <label>Source Address:</label><br>
       Area (0-15): <input type="number" id="sourceArea" min="0" max="15" value="0"><br>
@@ -334,11 +424,89 @@
     <h2 class="section-title">Timing Information</h2>
     <div id="timingInfo"></div>
   </div>
+
+  <div class="container">
+    <h1>Telegram Structure Explanation</h1>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Header (6 bytes)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Byte 0</td>
+          <td class="highlight">Control Field</td>
+        </tr>
+        <tr>
+          <td>Byte 1</td>
+          <td class="highlight">Source Address High byte (Area + Line)</td>
+        </tr>
+        <tr>
+          <td>Byte 2</td>
+          <td class="highlight">Source Address Low byte (Unit)</td>
+        </tr>
+        <tr>
+          <td>Byte 3</td>
+          <td class="highlight">Destination Address High byte (Main address + middle address)</td>
+        </tr>
+        <tr>
+          <td>Byte 4</td>
+          <td class="highlight">Destination Address Low byte (Group address)</td>
+        </tr>
+        <tr>
+          <td>Byte 5</td>
+          <td class="highlight">Routing field (0 to 7)</td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Payload (2 to 16 bytes) (DataPointType)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Byte 6</td>
+          <td class="highlight">Command field High</td>
+        </tr>
+        <tr>
+          <td>Byte 7</td>
+          <td class="highlight">Command field Low + 1st payload data (6 bits)</td>
+        </tr>
+        <tr>
+          <td>Byte 8 up to 21</td>
+          <td class="highlight">Payload bytes (optional)</td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Checksum (1 byte)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Byte 22</td>
+          <td class="highlight">Checksum</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <footer>
     <p>KNX Visualiser</p>
     <p>Marc Sonne Dahl</p>
   </footer>
   <script>
+    document.getElementById('menuToggle').addEventListener('click', function() {
+      var menu = document.getElementById('menuContainer');
+      var toggle = document.getElementById('menuToggle');
+      menu.classList.toggle('open');
+      toggle.classList.toggle('open');
+    });
+
     function padBinary(binary, length) {
       return binary.padStart(length, '0');
     }
@@ -377,6 +545,9 @@
       const destinationGroupAddress = padBinary((+document.getElementById("destGroupAddress").value).toString(2), 8);
       const routingCounter = padBinary((+document.getElementById("routingCounter").value).toString(2), 3);
       const priority = document.getElementById("priority").value;
+      const repeatFlag = document.getElementById("repeatFlag").value;
+      const targetType = document.getElementById("targetType").value;
+      const command = document.getElementById("command").value;
       // Retrieve DPT Type and extract the size based on selection
       const dptType = document.getElementById("dptType").value;
       let dptSize;
@@ -429,9 +600,23 @@
       }
       const dataField = generateDummyData(dptSize);
       // Default fields
-      const controlField = "10101010"; // Example 8 bits
+      const controlField = `1010${repeatFlag}${targetType}10`;
       const npci = "00001010"; // Example 8 bits
-      const apci = "001100"; // Example 6 bits
+      let apci;
+      switch (command) {
+        case "0000":
+          apci = "000000";
+          break;
+        case "0001":
+          apci = "000001";
+          break;
+        case "0010":
+          apci = "000010";
+          break;
+        case "1010":
+          apci = "001010";
+          break;
+      }
       const checksum = "11110000"; // Example 8 bits
       // Calculate parity for each byte
       const paritySourceAddress = calculateParity(sourceArea + sourceLine + sourceDevice);
@@ -450,11 +635,14 @@
         <div class="binary-block"><strong>Destination Address:</strong><br> ${destinationAddress} ${parityDestinationAddress}</div>
         <div class="binary-block"><strong>Routing Counter:</strong><br> ${routingCounter}</div>
         <div class="binary-block"><strong>Priority:</strong><br> ${priority}</div>
+        <div class="binary-block"><strong>Repeat Flag:</strong><br> ${repeatFlag}</div>
+        <div class="binary-block"><strong>Target Type:</strong><br> ${targetType}</div>
         <div class="binary-block"><strong>NPCI:</strong><br> ${npci} ${parityNPCI}</div>
         <div class="binary-block"><strong>APCI + Data:</strong><br> ${apci} ${dataField} ${parityAPCI}</div>
+        <div class="binary-block"><strong>Command:</strong><br> ${command}</div>
         <div class="binary-block"><strong>Frame Checksum:</strong><br> ${checksum} ${parityChecksum}</div>
         <div class="binary-block"><strong>Stop Bit:</strong><br> 1</div>
-    `;
+      `;
       document.getElementById("telegramOutput").innerHTML = telegram;
       // Calculate total number of bits including start, stop, and parity bits
       const totalBits = controlField.length + sourceAddress.replace(/\s/g, '').length + destinationAddress.replace(/\s/g, '').length +
@@ -477,13 +665,11 @@
       const transmissionTimeMs = (transmissionTime / 1000).toFixed(2);
       const t2PauseMs = (t2Pause / 1000).toFixed(2);
       document.getElementById("timingInfo").innerHTML = `
-        <div><strong>Total Bits:</strong> ${totalBits} bits</div>
-        <div><strong>Transmission Time:</strong> ${transmissionTimeMs} ms</div>
-        <div><strong>Adjusted T2 Pause:</strong> ${t2PauseMs} ms</div>
-        <div><strong>Total Telegram Duration:</strong> ${totalDurationMs.toFixed(2)} ms</div>
-        <div><strong>ACK:</strong> Acknowledge Signal</div>
-        <div><strong>NACK:</strong> Negative Acknowledge Signal</div>
-        <div><strong>BUSY:</strong> Busy Signal</div>
+      <div><strong>Total Bits:</strong> ${totalBits} bits</div>
+      <div><strong>Transmission Time:</strong> ${transmissionTimeMs} ms</div>
+      <div><strong>T2 Pause:</strong> ${t2PauseMs} ms</div>
+      <div><strong>Total Telegram Duration:</strong> ${totalDurationMs.toFixed(2)} ms</div>
+      <div><strong>ACK:</strong> Acknowledge Signal Received</div>
     `;
     }
   </script>
