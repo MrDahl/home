@@ -1,48 +1,158 @@
-<html lang="da">
+<html lang="en">
+
 <head>
+  <!-- Created by Marc Sonne Dahl -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DnD Dice Roller</title>
-  <link href="https://mrdahl.github.io/home/tailwind.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { user-select: none; }
-    .text-shadow { text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); }
-    .perspective { perspective: 1000px; }
-    .hover-glow:hover { box-shadow: 0 0 10px 2px rgba(0, 100, 255, 0.7); }
-    .logo-text { 
-      font-family: 'MedievalSharp', cursive; 
+    body {
+      user-select: none;
+      font-family: 'Roboto', sans-serif;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23111827"/><path d="M0 0L50 50L100 0M0 100L50 50L100 100" fill="none" stroke="%231f2937" stroke-width="2"/></svg>');
+      background-size: 50px 50px;
+    }
+
+    .text-shadow {
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .perspective {
+      perspective: 1000px;
+    }
+
+    .hover-glow:hover {
+      box-shadow: 0 0 15px 5px rgba(59, 130, 246, 0.5);
+    }
+
+    .logo-text {
+      font-family: 'MedievalSharp', cursive;
       text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5), -1px -1px 3px rgba(255, 255, 255, 0.2);
+    }
+
+    @keyframes roll {
+      0% {
+        transform: rotateX(0deg) rotateY(0deg);
+      }
+
+      100% {
+        transform: rotateX(720deg) rotateY(720deg);
+      }
+    }
+
+    .roll-animation {
+      animation: roll 0.5s ease-out;
+    }
+
+    .dice-container {
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231f2937"/><circle cx="25" cy="25" r="2" fill="%234b5563"/><circle cx="75" cy="25" r="2" fill="%234b5563"/><circle cx="25" cy="75" r="2" fill="%234b5563"/><circle cx="75" cy="75" r="2" fill="%234b5563"/><circle cx="50" cy="50" r="2" fill="%234b5563"/></svg>');
+      background-size: 25px 25px;
+    }
+
+    .scroll-bg {
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23111827"/><path d="M0 0C25 10 75 10 100 0L100 100C75 90 25 90 0 100Z" fill="%231f2937"/></svg>');
+      background-size: 100% 100%;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #374151;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #6b7280;
+      border-radius: 20px;
     }
   </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8">
-  <div class="max-w-4xl mx-auto bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl shadow-2xl p-8 border border-gray-700">
-    <h1 class="text-4xl font-bold text-center text-blue-300 mb-8 logo-text">DnD Dice Roller</h1>
-    <div id="dice-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
-    <button id="roll-all-dice" class="mt-8 w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 rounded-xl text-xl font-semibold shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(255,255,255,0.05)] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] active:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-200 ease-in-out">Roll All Dice</button>
+
+<body class="min-h-screen bg-gray-900 p-8 text-blue-100">
+  <div class="max-w-4xl mx-auto bg-gray-800 rounded-3xl shadow-2xl p-8 border-4 border-gray-700 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 opacity-10"></div>
+    <div class="relative">
+      <h1 class="text-5xl font-bold text-center text-blue-300 mb-8 logo-text">Enchanted Dice Roller</h1>
+      <div id="dice-container" class="dice-container grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 p-6 rounded-2xl mb-8"></div>
+      <button id="roll-all-dice" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 rounded-xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 active:translate-y-0">
+        Roll All Dice
+      </button>
+      <div id="history" class="mt-8 scroll-bg rounded-2xl p-6 relative">
+        <div class="absolute inset-0 bg-gray-900 opacity-50 rounded-2xl"></div>
+        <div class="relative">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-blue-300 logo-text">Arcane Chronicles</h2>
+            <button id="clear-history" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-200 shadow-md hover:shadow-lg">
+              Clear History
+            </button>
+          </div>
+          <div class="max-h-40 overflow-y-auto pr-4 custom-scrollbar">
+            <ul id="history-list" class="space-y-2"></ul>
+          </div>
+        </div>
+      </div>
+      <div id="total" class="mt-6 text-2xl font-semibold text-blue-300 text-center">
+        Total: <span id="total-value" class="text-yellow-400">0</span>
+      </div>
+    </div>
   </div>
 
   <script>
-    const diceTypes = [
-      { value: 2, label: 'D2' },
-      { value: 3, label: 'D3' },
-      { value: 4, label: 'D4' },
-      { value: 6, label: 'D6' },
-      { value: 8, label: 'D8' },
-      { value: 10, label: 'D10' },
-      { value: 12, label: 'D12' },
-      { value: 20, label: 'D20' },
-      { value: 100, label: 'D100' },
+    const diceTypes = [{
+        value: 2,
+        label: 'D2'
+      },
+      {
+        value: 3,
+        label: 'D3'
+      },
+      {
+        value: 4,
+        label: 'D4'
+      },
+      {
+        value: 6,
+        label: 'D6'
+      },
+      {
+        value: 8,
+        label: 'D8'
+      },
+      {
+        value: 10,
+        label: 'D10'
+      },
+      {
+        value: 12,
+        label: 'D12'
+      },
+      {
+        value: 20,
+        label: 'D20'
+      },
+      {
+        value: 100,
+        label: 'D100'
+      },
     ];
-
-    let dice = diceTypes.map(type => ({ ...type, result: null }));
-
+    let dice = diceTypes.map(type => ({
+      ...type,
+      result: null
+    }));
+    let history = [];
     const diceContainer = document.getElementById('dice-container');
+    const historyList = document.getElementById('history-list');
+    const totalValue = document.getElementById('total-value');
+    const clearHistoryButton = document.getElementById('clear-history');
 
     function rollDice(index) {
       dice[index].result = Math.floor(Math.random() * dice[index].value) + 1;
+      addToHistory(`Rolled ${dice[index].label}: ${dice[index].result}`);
       renderDice();
+      updateTotal();
     }
 
     function rollAllDice() {
@@ -50,22 +160,52 @@
         ...die,
         result: Math.floor(Math.random() * die.value) + 1
       }));
+      addToHistory(`Rolled all dice: ${dice.map(d => `${d.label}:${d.result}`).join(', ')}`);
       renderDice();
+      updateTotal();
     }
 
     function changeDiceType(index, newType) {
-      dice[index] = { ...diceTypes.find(t => t.value === parseInt(newType)), result: null };
+      dice[index] = {
+        ...diceTypes.find(t => t.value === parseInt(newType)),
+        result: null
+      };
       renderDice();
+      updateTotal();
     }
 
     function addDie() {
-      dice.push({ ...diceTypes[0], result: null });
+      dice.push({
+        ...diceTypes[0],
+        result: null
+      });
       renderDice();
     }
 
     function removeDie(index) {
       dice.splice(index, 1);
       renderDice();
+      updateTotal();
+    }
+
+    function addToHistory(entry) {
+      history.unshift(entry);
+      if (history.length > 10) history.pop();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = history.map(entry => `<li class="bg-gray-700 bg-opacity-50 p-2 rounded">${entry}</li>`).join('');
+    }
+
+    function clearHistory() {
+      history = [];
+      renderHistory();
+    }
+
+    function updateTotal() {
+      const total = dice.reduce((sum, die) => sum + (die.result || 0), 0);
+      totalValue.textContent = total;
     }
 
     function renderDice() {
@@ -73,24 +213,25 @@
       dice.forEach((die, index) => {
         const dieElement = document.createElement('div');
         dieElement.className = 'relative perspective';
-
         const button = document.createElement('button');
-        button.className = 'w-full flex flex-col items-center justify-center p-6 rounded-xl bg-gradient-to-br from-gray-700 to-gray-600 shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(255,255,255,0.05)] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] active:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-200 ease-in-out hover-glow';
-        button.onclick = () => rollDice(index);
-        
+        button.className = 'w-full flex flex-col items-center justify-center p-6 rounded-xl bg-gradient-to-br from-gray-700 to-gray-600 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 active:translate-y-0 hover-glow';
+        button.onclick = () => {
+          button.classList.add('roll-animation');
+          setTimeout(() => {
+            rollDice(index);
+            button.classList.remove('roll-animation');
+          }, 500);
+        };
         const spanLabel = document.createElement('span');
         spanLabel.className = 'text-lg font-semibold mt-2 text-blue-200';
         spanLabel.textContent = die.label;
-
         const spanResult = document.createElement('span');
-        spanResult.className = 'text-3xl font-bold mt-1 text-blue-100';
+        spanResult.className = 'text-3xl font-bold mt-1 text-yellow-400';
         spanResult.textContent = die.result || '-';
-
         button.appendChild(spanLabel);
         button.appendChild(spanResult);
-
         const select = document.createElement('select');
-        select.className = 'absolute top-2 left-2 text-xs bg-gray-600 text-blue-200 rounded-md border-none shadow-[inset_1px_1px_2px_rgba(0,0,0,0.3),inset_-1px_-1px_2px_rgba(255,255,255,0.1)]';
+        select.className = 'absolute top-2 left-2 text-xs bg-gray-600 text-blue-200 rounded-md border-none shadow-inner';
         select.onchange = (e) => changeDiceType(index, e.target.value);
         diceTypes.forEach(type => {
           const option = document.createElement('option');
@@ -101,39 +242,50 @@
           }
           select.appendChild(option);
         });
-
         const removeButton = document.createElement('button');
         removeButton.className = 'absolute top-2 right-2 text-red-400 hover:text-red-300 text-shadow';
         removeButton.textContent = '×';
-        removeButton.onclick = () => removeDie(index);
-
+        removeButton.onclick = (e) => {
+          e.stopPropagation();
+          removeDie(index);
+        };
         dieElement.appendChild(button);
         dieElement.appendChild(select);
         dieElement.appendChild(removeButton);
-
         diceContainer.appendChild(dieElement);
       });
-
       const addDieButton = document.createElement('button');
-      addDieButton.className = 'flex flex-col items-center justify-center p-6 rounded-xl bg-gradient-to-br from-gray-700 to-gray-600 shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(255,255,255,0.05)] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] active:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-200 ease-in-out hover-glow';
+      addDieButton.className = 'flex flex-col items-center justify-center p-6 rounded-xl bg-gradient-to-br from-gray-700 to-gray-600 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 active:translate-y-0 hover-glow';
       addDieButton.onclick = addDie;
-
       const addDieSpan = document.createElement('span');
       addDieSpan.className = 'text-4xl font-bold text-green-400';
       addDieSpan.textContent = '+';
       addDieButton.appendChild(addDieSpan);
-
       const addDieText = document.createElement('span');
       addDieText.className = 'text-sm mt-2 text-blue-200';
       addDieText.textContent = 'Add Die';
       addDieButton.appendChild(addDieText);
-
       diceContainer.appendChild(addDieButton);
     }
-
-    document.getElementById('roll-all-dice').onclick = rollAllDice;
-
+    document.getElementById('roll-all-dice').onclick = () => {
+      dice.forEach((die, index) => {
+        const button = diceContainer.children[index].querySelector('button');
+        button.classList.add('roll-animation');
+      });
+      setTimeout(() => {
+        rollAllDice();
+        dice.forEach((die, index) => {
+          const button = diceContainer.children[index].querySelector('button');
+          button.classList.remove('roll-animation');
+        });
+      }, 500);
+    };
+    clearHistoryButton.onclick = clearHistory;
     renderDice();
+    renderHistory();
+    updateTotal();
   </script>
 </body>
+<!-- Created by Marc Sonne Dahl -->
+
 </html>
