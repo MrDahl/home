@@ -6,48 +6,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Time Traveler's Dilemmas</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <!-- Made by Marc Sonne Dahl © 2024 -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+    :root {
+      --neon-blue: #00f3ff;
+      --neon-blue-alt: #0077ff;
+      --dark-bg: #0a0a0a;
+      --darker-bg: #050505;
+      --text-color: #e0e0e0;
+    }
 
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #1c2331, #0f172a);
-      color: #e2e8f0;
+      background-color: var(--dark-bg);
+      color: var(--text-color);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      user-select: none;
+      overflow-x: hidden;
     }
 
     .game-container {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
-      padding: 2rem;
+      background: var(--darker-bg);
+      border: 2px solid var(--neon-blue);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.3),
+        inset 0 0 20px rgba(0, 243, 255, 0.2);
+      padding: 2.5rem;
       max-width: 800px;
       width: 90%;
       text-align: center;
-      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-container::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: repeating-linear-gradient(0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 243, 255, 0.1) 2px,
+          rgba(0, 243, 255, 0.1) 4px);
+      animation: scanline 10s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scanline {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(50%);
+      }
     }
 
     h1 {
       font-family: 'Orbitron', sans-serif;
-      color: #60a5fa;
-      margin-bottom: 2rem;
+      color: var(--neon-blue-alt);
+      margin-bottom: 1.5rem;
       font-size: 2.5em;
-      text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 119, 255, 0.7);
+      /* Changed shadow color */
+      letter-spacing: 2px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
     }
 
     #game-status {
       display: flex;
       justify-content: space-around;
       margin-bottom: 2rem;
-      background-color: rgba(0, 0, 0, 0.2);
       padding: 1rem;
-      border-radius: 10px;
+      border-radius: 12px;
+      background: rgba(10, 10, 10, 0.6);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
     }
 
     .status-item {
@@ -58,23 +107,25 @@
 
     .status-label {
       font-size: 0.9rem;
-      color: #9ca3af;
+      color: var(--neon-blue);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      font-family: 'Orbitron', sans-serif;
     }
 
     .status-value {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: bold;
-      color: #60a5fa;
-      margin-top: 0.5rem;
+      color: var(--neon-blue-alt);
+      text-shadow: 0 0 5px rgba(0, 119, 255, 0.5);
     }
 
     #scenario {
-      margin-bottom: 2rem;
-      font-size: 1.2rem;
-      color: #e2e8f0;
-      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      padding: 1rem;
+      background: rgba(10, 10, 10, 0.6);
+      border-radius: 8px;
+      border: 1px solid var(--neon-blue);
     }
 
     #choices {
@@ -85,95 +136,78 @@
     }
 
     button {
-      background-color: #3b82f6;
-      color: white;
-      border: none;
+      background: var(--darker-bg);
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
       padding: 1rem;
-      font-size: 1rem;
-      border-radius: 10px;
+      font-size: 1.1rem;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s ease;
+      font-family: 'Orbitron', sans-serif;
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-weight: bold;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(0, 243, 255, 0.2),
+          transparent);
+      transition: 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
     }
 
     button:hover {
-      background-color: #2563eb;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 8px rgba(59, 130, 246, 0.4);
-    }
-
-    #choices button {
-      background-color: #4b5563;
-      border-left: 5px solid #3b82f6;
-    }
-
-    #choices button:hover {
-      background-color: #374151;
-      border-left-color: #2563eb;
-    }
-
-    #next-period,
-    #restart-game {
-      background-color: #10b981;
-    }
-
-    #next-period:hover,
-    #restart-game:hover {
-      background-color: #059669;
-    }
-
-    #transfer-energy {
-      background-color: #ef4444;
-    }
-
-    #transfer-energy:hover {
-      background-color: #dc2626;
+      background: var(--neon-blue);
+      color: var(--darker-bg);
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
     }
 
     .button-container {
       display: flex;
       justify-content: center;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .fa {
-      margin-right: 0.5rem;
-    }
-
-    #title-screen {
-      text-align: center;
-    }
-
-    #start-game {
-      margin-top: 2rem;
+      gap: 1.5rem;
     }
 
     img {
       max-width: 100%;
       height: auto;
       border-radius: 10px;
-      margin-bottom: 2rem;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      margin-bottom: 1.5rem;
+      border: 2px solid var(--neon-blue-alt);
+      box-shadow: 0 0 20px rgba(0, 119, 255, 0.3);
     }
 
     #epoch {
-      font-size: 1.5rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
       font-weight: bold;
-      color: #60a5fa;
-      margin-bottom: 1rem;
+      color: var(--neon-blue);
+      margin-bottom: 1.2rem;
       text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+      letter-spacing: 2px;
     }
 
     #scenario-image {
       max-width: 100%;
       height: auto;
-      margin-bottom: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+      border: 2px solid var(--neon-blue-alt);
+      box-shadow: 0 0 20px rgba(0, 119, 255, 0.3);
     }
 
     @media (max-width: 768px) {
@@ -183,11 +217,6 @@
 
       h1 {
         font-size: 2em;
-      }
-
-      #game-status {
-        flex-direction: column;
-        gap: 1rem;
       }
 
       button {
@@ -207,6 +236,7 @@
       <p>Be careful with your Temporal Energy - if it runs out, you'll be lost in the void of time forever! You can recharge your Temporal Energy, by sacrificing the Timeline Stability.</p>
       <p> Make sure to balance your energy and stability of the timeline, otherwise you will be faced with the consequences of your actions.</p>
       <p>Hint: <i>All the choices you make affect the timeline differently. Make sure you understand which timeperiod you are in. And what kind of world you want to live in when you get back to your own time after your mission.</i></p>
+      <!-- Made by Marc Sonne Dahl © 2024 -->
       <img src="https://mrdahl.github.io/home/title.jpeg" alt="Time Traveler's Dilemmas">
       <button id="start-game">Start Game</button>
     </div>
@@ -248,7 +278,7 @@
                   text: "Negotiate peace with the tribe.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -257,7 +287,7 @@
                   text: "Prepare your warriors for battle.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -266,7 +296,7 @@
                   text: "Innovate new defensive technologies.",
                   effect: {
                     stability: 8,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -275,7 +305,7 @@
                   text: "Use historical knowledge to anticipate their moves.",
                   effect: {
                     stability: 7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -288,7 +318,7 @@
                   text: "Trade with neighboring tribes for resources.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -297,7 +327,7 @@
                   text: "Lead a hunting party to gather more food.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-paw"
@@ -306,7 +336,7 @@
                   text: "Create new storage techniques to preserve food.",
                   effect: {
                     stability: 8,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -315,7 +345,7 @@
                   text: "Consult ancient knowledge on surviving winters.",
                   effect: {
                     stability: 7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -333,7 +363,7 @@
                   text: "Negotiate water-sharing agreements.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -342,7 +372,7 @@
                   text: "Use force to take water from others.",
                   effect: {
                     stability: -10,
-                    energy: -20,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-fist-raised"
@@ -351,7 +381,7 @@
                   text: "Develop irrigation systems to conserve water.",
                   effect: {
                     stability: 30,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-water"
@@ -360,7 +390,7 @@
                   text: "Consult ancient texts for solutions.",
                   effect: {
                     stability: 7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -373,7 +403,7 @@
                   text: "Propose a peaceful resolution.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-peace"
@@ -382,7 +412,7 @@
                   text: "Prepare your armies for defense.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-shield-alt"
@@ -391,7 +421,7 @@
                   text: "Create advanced weapons for your soldiers.",
                   effect: {
                     stability: -18,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-hammer"
@@ -400,7 +430,7 @@
                   text: "Use historical strategies to outmaneuver them.",
                   effect: {
                     stability: 17,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-brain"
@@ -418,7 +448,7 @@
                   text: "Negotiate better working conditions for laborers.",
                   effect: {
                     stability: -5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -427,7 +457,7 @@
                   text: "Use force to suppress the disputes.",
                   effect: {
                     stability: 25,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -436,7 +466,7 @@
                   text: "Introduce technological advancements to speed up construction.",
                   effect: {
                     stability: -10,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -445,7 +475,7 @@
                   text: "Apply historical methods of labor management.",
                   effect: {
                     stability: -7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -458,7 +488,7 @@
                   text: "Propose an alliance through diplomacy.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -467,7 +497,7 @@
                   text: "Mobilize the army to defend the borders.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-shield-alt"
@@ -476,7 +506,7 @@
                   text: "Utilize new military technologies for defense.",
                   effect: {
                     stability: 4,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -485,7 +515,7 @@
                   text: "Use ancient military tactics to prepare for battle.",
                   effect: {
                     stability: 17,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -503,7 +533,7 @@
                   text: "Convince the assassins to abandon their plot.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -512,7 +542,7 @@
                   text: "Neutralize the threat directly with force.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -521,7 +551,7 @@
                   text: "Set up an early warning system using technology.",
                   effect: {
                     stability: -8,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -530,7 +560,7 @@
                   text: "Subtly guide events to protect the pharaoh.",
                   effect: {
                     stability: 37,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -543,7 +573,7 @@
                   text: "Negotiate with neighboring regions for food.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -552,7 +582,7 @@
                   text: "Organize a raid to steal supplies.",
                   effect: {
                     stability: -10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-fist-raised"
@@ -561,7 +591,7 @@
                   text: "Implement new irrigation techniques.",
                   effect: {
                     stability: 14,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-water"
@@ -570,7 +600,7 @@
                   text: "Advise the pharaoh using historical knowledge.",
                   effect: {
                     stability: 7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -588,7 +618,7 @@
                   text: "Negotiate with the conspirators.",
                   effect: {
                     stability: 15,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -597,7 +627,7 @@
                   text: "Expose the plot and arrest the conspirators.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -606,7 +636,7 @@
                   text: "Use advanced technology to secure the emperor's safety.",
                   effect: {
                     stability: 28,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -615,7 +645,7 @@
                   text: "Employ historical strategies to counter the coup.",
                   effect: {
                     stability: -7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -628,7 +658,7 @@
                   text: "Coordinate a city-wide evacuation and aid.",
                   effect: {
                     stability: 25,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -637,7 +667,7 @@
                   text: "Mobilize the military to maintain order.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-shield-alt"
@@ -646,7 +676,7 @@
                   text: "Use engineering skills to rebuild quickly.",
                   effect: {
                     stability: 13,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -655,7 +685,7 @@
                   text: "Rely on historical fire management techniques.",
                   effect: {
                     stability: -7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -673,7 +703,7 @@
                   text: "Attempt to negotiate peace.",
                   effect: {
                     stability: -5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -682,7 +712,7 @@
                   text: "Crush the rebellion with military force.",
                   effect: {
                     stability: 22,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -691,7 +721,7 @@
                   text: "Use technology to monitor and disrupt the rebels.",
                   effect: {
                     stability: -25,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -700,7 +730,7 @@
                   text: "Use historical knowledge to prevent the rebellion.",
                   effect: {
                     stability: 2,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -713,7 +743,7 @@
                   text: "Organize relief efforts with diplomacy.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -722,7 +752,7 @@
                   text: "Seize food supplies from the wealthy.",
                   effect: {
                     stability: -10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-fist-raised"
@@ -731,7 +761,7 @@
                   text: "Implement new agricultural techniques.",
                   effect: {
                     stability: -10,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -740,7 +770,7 @@
                   text: "Consult historical records on surviving famines.",
                   effect: {
                     stability: 17,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -758,7 +788,7 @@
                   text: "Organize quarantine zones to contain the plague.",
                   effect: {
                     stability: 25,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -767,7 +797,7 @@
                   text: "Enforce strict measures to isolate the infected.",
                   effect: {
                     stability: 1,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -776,7 +806,7 @@
                   text: "Develop new medical techniques to combat the plague.",
                   effect: {
                     stability: 3,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -785,7 +815,7 @@
                   text: "Use historical knowledge of previous plagues.",
                   effect: {
                     stability: 17,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -798,7 +828,7 @@
                   text: "Negotiate a truce with the warlord.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -807,7 +837,7 @@
                   text: "Rally the local populace to fight back.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-shield-alt"
@@ -816,7 +846,7 @@
                   text: "Use advanced fortification techniques.",
                   effect: {
                     stability: -8,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -825,7 +855,7 @@
                   text: "Apply historical strategies to outmaneuver the warlord.",
                   effect: {
                     stability: 27,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -843,7 +873,7 @@
                   text: "Mediate between the conspirators and the Medici.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -852,7 +882,7 @@
                   text: "Expose the conspirators to the Medici guards.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -861,7 +891,7 @@
                   text: "Develop a covert communication system to warn the Medici.",
                   effect: {
                     stability: 8,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -870,7 +900,7 @@
                   text: "Draw on your knowledge of similar historical plots.",
                   effect: {
                     stability: 3,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -883,7 +913,7 @@
                   text: "Discuss the ethical implications with da Vinci.",
                   effect: {
                     stability: 15,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -892,7 +922,7 @@
                   text: "Sabotage the invention to prevent misuse.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-fist-raised"
@@ -901,7 +931,7 @@
                   text: "Secure the invention and hide its key components.",
                   effect: {
                     stability: 8,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -910,7 +940,7 @@
                   text: "Consult your historical knowledge to advise da Vinci on safe use.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -928,7 +958,7 @@
                   text: "Negotiate better conditions with factory owners.",
                   effect: {
                     stability: -5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -937,7 +967,7 @@
                   text: "Form a militia to keep the peace.",
                   effect: {
                     stability: 15,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -946,7 +976,7 @@
                   text: "Introduce new technology to improve working conditions.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -955,7 +985,7 @@
                   text: "Educate the workers on historical labor movements.",
                   effect: {
                     stability: 27,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -968,7 +998,7 @@
                   text: "Conduct a public test to prove its safety.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -977,7 +1007,7 @@
                   text: "Destroy the prototype to prevent accidents.",
                   effect: {
                     stability: -10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-fist-raised"
@@ -986,7 +1016,7 @@
                   text: "Enhance the design with your knowledge of modern engineering.",
                   effect: {
                     stability: 16,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -995,7 +1025,7 @@
                   text: "Advise based on historical accidents and safety improvements.",
                   effect: {
                     stability: 4,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -1013,7 +1043,7 @@
                   text: "Negotiate a temporary truce to boost morale.",
                   effect: {
                     stability: -5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -1022,7 +1052,7 @@
                   text: "Lead a surprise offensive to break the stalemate.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -1031,7 +1061,7 @@
                   text: "Develop new technologies to gain an advantage.",
                   effect: {
                     stability: 18,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -1040,7 +1070,7 @@
                   text: "Use historical strategies to improve tactics.",
                   effect: {
                     stability: 7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -1053,7 +1083,7 @@
                   text: "Negotiate with medical authorities for better treatment.",
                   effect: {
                     stability: 14,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -1062,7 +1092,7 @@
                   text: "Implement strict quarantine measures.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-shield-alt"
@@ -1071,7 +1101,7 @@
                   text: "Use modern medical technology to combat the flu.",
                   effect: {
                     stability: -8,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -1080,7 +1110,7 @@
                   text: "Apply historical knowledge of past epidemics.",
                   effect: {
                     stability: 7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -1098,7 +1128,7 @@
                   text: "Use diplomacy to gather intelligence and allies.",
                   effect: {
                     stability: 15,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -1107,7 +1137,7 @@
                   text: "Lead a strategic offensive to win the battle.",
                   effect: {
                     stability: -10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -1116,7 +1146,7 @@
                   text: "Introduce new military technologies for an edge.",
                   effect: {
                     stability: 18,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -1125,7 +1155,7 @@
                   text: "Draw on historical battle strategies.",
                   effect: {
                     stability: 12,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -1138,7 +1168,7 @@
                   text: "Advice on using the bomb.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -1147,7 +1177,7 @@
                   text: "Decide to not use the bombs.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-shield-alt"
@@ -1156,7 +1186,7 @@
                   text: "Create the Atomic-Peace-Organisation, that prevents any future exploration on atomic energy.",
                   effect: {
                     stability: 22,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -1165,7 +1195,7 @@
                   text: "Advice on dropping two bombs.",
                   effect: {
                     stability: 1,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -1183,7 +1213,7 @@
                   text: "Negotiate with other nations for support.",
                   effect: {
                     stability: -15,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -1192,7 +1222,7 @@
                   text: "Lead a team to ensure the missions success.",
                   effect: {
                     stability: 20,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -1201,7 +1231,7 @@
                   text: "Develop new technologies to retrieve the austronauts.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -1210,7 +1240,7 @@
                   text: "Use historical knowledge of past launches.",
                   effect: {
                     stability: -25,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -1223,7 +1253,7 @@
                   text: "Use diplomacy to sign a non-atomic treaty.",
                   effect: {
                     stability: 20,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -1232,7 +1262,7 @@
                   text: "Launch everything you've got.",
                   effect: {
                     stability: -37,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-shield-alt"
@@ -1241,7 +1271,7 @@
                   text: "Develop advanced spying techniques to infiltrate and disable Soviet bases.",
                   effect: {
                     stability: -6,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -1250,7 +1280,7 @@
                   text: "Let Soviets take over Cuba.",
                   effect: {
                     stability: -12,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -1268,7 +1298,7 @@
                   text: "Educate the population on the matter.",
                   effect: {
                     stability: 25,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-comments"
@@ -1277,7 +1307,7 @@
                   text: "Implement a glitch to disable all the computers at midnight.",
                   effect: {
                     stability: -20,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-person-rifle"
@@ -1286,7 +1316,7 @@
                   text: "Develop a protocol on how to react if the systems crash.",
                   effect: {
                     stability: 25,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-lightbulb"
@@ -1295,7 +1325,7 @@
                   text: "Navigate humanity towards quantum computing instead.",
                   effect: {
                     stability: -17,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-book"
@@ -1308,7 +1338,7 @@
                   text: "Discuss the ethical implications with developers.",
                   effect: {
                     stability: -15,
-                    energy: -10,
+                    energy: -7,
                     skill: "diplomacy"
                   },
                   icon: "fa-handshake"
@@ -1317,7 +1347,7 @@
                   text: "Sabotage the project to prevent potential dangers.",
                   effect: {
                     stability: 5,
-                    energy: -10,
+                    energy: -7,
                     skill: "combat"
                   },
                   icon: "fa-fist-raised"
@@ -1326,7 +1356,7 @@
                   text: "Enhance the project with your technological knowledge.",
                   effect: {
                     stability: 10,
-                    energy: -10,
+                    energy: -7,
                     skill: "technology"
                   },
                   icon: "fa-flask"
@@ -1335,7 +1365,7 @@
                   text: "Consult historical knowledge of technological advances.",
                   effect: {
                     stability: -7,
-                    energy: -10,
+                    energy: -7,
                     skill: "historicalKnowledge"
                   },
                   icon: "fa-scroll"
@@ -1422,7 +1452,7 @@
     }
 
     function transferEnergy() {
-      const transferAmount = Math.min(20, gameData.timelineStability);
+      const transferAmount = Math.min(25, gameData.timelineStability);
       gameData.timelineStability -= transferAmount;
       gameData.temporalEnergy = Math.min(100, gameData.temporalEnergy + transferAmount);
       updateGameStatus();
@@ -1434,22 +1464,22 @@
       let endMessage = "";
       let imageUrl = "";
       if (outOfEnergy) {
-        endMessage = "Your time machine has run out of Temporal Energy. You are now floating alone in the vast nothingness of time, destined to drift until the heat death of the universe claims you. Your journey ends here, lost in the cosmic tapestry of eternity.";
+        endMessage = "Your time machine has run out of Temporal Energy. You are now floating alone in the vast nothingness of time, enveloped by an eerie silence that stretches endlessly in all directions. The vibrant colors of the temporal streams have faded, leaving you suspended in an infinite void where time itself seems to stand still. Destined to drift until the heat death of the universe claims you, you reflect on the adventures and choices that brought you to this point. Each moment feels both significant and insignificant, as you become a solitary observer of the cosmic tapestry of eternity. Your journey ends here, a bittersweet conclusion to a life filled with exploration, leaving behind echoes of your presence in the fabric of time.";
         imageUrl = "https://mrdahl.github.io/home/void.jpeg";
       } else if (gameData.timelineStability <= 20) {
-        endMessage = "The world has descended into apocalyptic chaos. Civilization as we know it has collapsed.";
+        endMessage = "The world has descended into apocalyptic chaos. Civilization as we know it has collapsed, with once-thriving cities reduced to crumbling ruins, overrun by lawlessness and despair. Governments have fallen, infrastructures lie in ruins, and survival has become the only priority in a landscape ravaged by natural disasters, war, and famine. Humanity clings to life amid the ashes of its former glory, as scattered groups fight for dwindling resources in a bleak and hostile world, where hope is as scarce as food and safety";
         imageUrl = "https://mrdahl.github.io/home/20.jpeg";
       } else if (gameData.timelineStability <= 40) {
-        endMessage = "The timeline is in shambles, with countless lives lost and widespread despair.";
+        endMessage = "The timeline is in shambles, with countless lives lost and widespread despair. Communities struggle to rebuild as the once-stable world teeters on the edge of disorder. Governments are weakened, resources are strained, and the sense of normalcy has been fractured. Though hope remains, the path to recovery is uncertain and decades away, and the weight of lost opportunities and shattered dreams lingers in the hearts of those who remain. The world is damaged almost beyond repair, as people seek to find stability in a time of great uncertainty.";
         imageUrl = "https://mrdahl.github.io/home/40.jpeg";
       } else if (gameData.timelineStability <= 60) {
-        endMessage = "The world is in a state of chaos. While civilization persists, stability is a distant dream.";
+        endMessage = "The world is in a state of chaos. While civilization persists, stability is a distant dream, with nations and communities grappling to maintain order amidst constant unrest. Societal structures are strained, and uncertainty has become the norm. Conflicts simmer beneath the surface, and the foundations of governance are fragile, with leaders struggling to keep control. Yet, daily life continues, though overshadowed by the ever-present tension of a world on the verge of deeper turmoil. People adapt and endure, but the sense of security that once anchored society feels more elusive with each passing day.";
         imageUrl = "https://mrdahl.github.io/home/60.jpeg";
       } else if (gameData.timelineStability <= 80) {
-        endMessage = "The timeline is relatively stable. The world is much like it is today, with both challenges and progress.";
+        endMessage = "The timeline is relatively stable. The world resembles the one we know today, characterized by a blend of challenges and progress. Technological advancements have transformed everyday life, fostering connectivity and innovation, yet social and environmental issues persist, demanding attention and action. Communities strive for balance, facing economic disparities and political tensions while also celebrating cultural diversity and collective achievements. Amid these complexities, people remain hopeful, actively working towards solutions and improvements, forging a path that acknowledges both the struggles and triumphs of contemporary existence.";
         imageUrl = "https://mrdahl.github.io/home/80.jpeg";
       } else {
-        endMessage = "You have created a utopian future. The world is at peace, and humanity thrives in harmony.";
+        endMessage = "You have created a utopian future. The world is at peace, and humanity thrives in harmony, where cooperation and understanding have replaced conflict and division. Communities are built on principles of equity and sustainability, with resources shared and technologies harnessed for the betterment of all. Nature is respected and integrated into daily life, with green spaces flourishing alongside urban environments. Education and innovation are prioritized, empowering individuals to pursue their passions and contribute meaningfully to society. In this idyllic landscape, cultural diversity is celebrated, and the bonds between people transcend borders, fostering a collective sense of purpose and well-being.";
         imageUrl = "https://mrdahl.github.io/home/100.jpeg";
       }
       content.innerHTML = `
