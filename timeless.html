@@ -11,32 +11,49 @@
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
 
     :root {
-      --neon-blue: #00f3ff;
-      --neon-blue-alt: #0077ff;
-      --dark-bg: #0a0a0a;
-      --darker-bg: #050505;
-      --text-color: #e0e0e0;
+      --space-purple: #8A2BE2;
+      --space-blue: #4169E1;
+      --star-color: #FFFFFF;
+      --nebula-pink: #FF69B4;
+      --dark-space: #0B0B2E;
+      --text-color: #E0E0E0;
     }
 
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: var(--dark-bg);
+      background-color: var(--dark-space);
       color: var(--text-color);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       overflow-x: hidden;
+      background-image:
+        radial-gradient(white, rgba(255, 255, 255, .2) 2px, transparent 40px),
+        radial-gradient(white, rgba(255, 255, 255, .15) 1px, transparent 30px),
+        radial-gradient(white, rgba(255, 255, 255, .1) 2px, transparent 40px);
+      background-size: 550px 550px, 350px 350px, 250px 250px;
+      animation: space-travel 60s linear infinite;
+    }
+
+    @keyframes space-travel {
+      0% {
+        background-position: 0 0, 0 0, 0 0;
+      }
+
+      100% {
+        background-position: 550px 550px, 350px 350px, 250px 250px;
+      }
     }
 
     .game-container {
-      background: var(--darker-bg);
-      border: 2px solid var(--neon-blue);
+      background: rgba(11, 11, 46, 0.8);
+      border: 2px solid var(--space-purple);
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 243, 255, 0.3),
-        inset 0 0 20px rgba(0, 243, 255, 0.2);
+      box-shadow: 0 0 20px rgba(138, 43, 226, 0.3),
+        inset 0 0 20px rgba(138, 43, 226, 0.2);
       padding: 2.5rem;
       max-width: 800px;
       width: 90%;
@@ -52,33 +69,31 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: repeating-linear-gradient(0deg,
-          transparent,
-          transparent 2px,
-          rgba(0, 243, 255, 0.1) 2px,
-          rgba(0, 243, 255, 0.1) 4px);
-      animation: scanline 10s linear infinite;
+      background: linear-gradient(45deg,
+          transparent 0%,
+          rgba(138, 43, 226, 0.1) 50%,
+          transparent 100%);
+      animation: time-warp 10s linear infinite;
       pointer-events: none;
     }
 
-    @keyframes scanline {
+    @keyframes time-warp {
       0% {
-        transform: translateY(0);
+        transform: translate(-50%, -50%) rotate(0deg);
       }
 
       100% {
-        transform: translateY(50%);
+        transform: translate(-50%, -50%) rotate(360deg);
       }
     }
 
     h1 {
       font-family: 'Orbitron', sans-serif;
-      color: var(--neon-blue-alt);
+      color: var(--nebula-pink);
       margin-bottom: 1.5rem;
       font-size: 2.5em;
       text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(0, 119, 255, 0.7);
-      /* Changed shadow color */
+      text-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
       letter-spacing: 2px;
     }
 
@@ -94,9 +109,9 @@
       margin-bottom: 2rem;
       padding: 1rem;
       border-radius: 12px;
-      background: rgba(10, 10, 10, 0.6);
-      border: 1px solid var(--neon-blue);
-      box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+      background: rgba(11, 11, 46, 0.6);
+      border: 1px solid var(--space-blue);
+      box-shadow: 0 0 10px rgba(65, 105, 225, 0.3);
     }
 
     .status-item {
@@ -107,7 +122,7 @@
 
     .status-label {
       font-size: 0.9rem;
-      color: var(--neon-blue);
+      color: var(--space-blue);
       text-transform: uppercase;
       font-family: 'Orbitron', sans-serif;
     }
@@ -115,17 +130,17 @@
     .status-value {
       font-size: 1.4rem;
       font-weight: bold;
-      color: var(--neon-blue-alt);
-      text-shadow: 0 0 5px rgba(0, 119, 255, 0.5);
+      color: var(--nebula-pink);
+      text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
     }
 
     #scenario {
       margin-bottom: 1.5rem;
       font-size: 1.1rem;
       padding: 1rem;
-      background: rgba(10, 10, 10, 0.6);
+      background: rgba(11, 11, 46, 0.6);
       border-radius: 8px;
-      border: 1px solid var(--neon-blue);
+      border: 1px solid var(--space-purple);
     }
 
     #choices {
@@ -133,12 +148,13 @@
       flex-direction: column;
       gap: 1rem;
       margin-bottom: 2rem;
+      width: 100%;
     }
 
     button {
-      background: var(--darker-bg);
-      color: var(--neon-blue);
-      border: 2px solid var(--neon-blue);
+      background: var(--dark-space);
+      color: var(--space-blue);
+      border: 2px solid var(--space-blue);
       padding: 1rem;
       font-size: 1.1rem;
       border-radius: 8px;
@@ -160,7 +176,7 @@
       height: 100%;
       background: linear-gradient(90deg,
           transparent,
-          rgba(0, 243, 255, 0.2),
+          rgba(65, 105, 225, 0.2),
           transparent);
       transition: 0.5s;
     }
@@ -170,9 +186,9 @@
     }
 
     button:hover {
-      background: var(--neon-blue);
-      color: var(--darker-bg);
-      box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+      background: var(--space-blue);
+      color: var(--dark-space);
+      box-shadow: 0 0 20px rgba(65, 105, 225, 0.5);
     }
 
     .button-container {
@@ -186,19 +202,110 @@
       height: auto;
       border-radius: 10px;
       margin-bottom: 1.5rem;
-      border: 2px solid var(--neon-blue-alt);
-      box-shadow: 0 0 20px rgba(0, 119, 255, 0.3);
+      border: 2px solid var(--nebula-pink);
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
     }
 
     #epoch {
       font-family: 'Orbitron', sans-serif;
       font-size: 1.6rem;
       font-weight: bold;
-      color: var(--neon-blue);
+      color: var(--space-blue);
       margin-bottom: 1.2rem;
       text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+      text-shadow: 0 0 10px rgba(65, 105, 225, 0.5);
       letter-spacing: 2px;
+    }
+
+    .timeline {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      padding: 10px;
+      background: rgba(11, 11, 46, 0.6);
+      border-radius: 12px;
+      border: 1px solid var(--space-purple);
+      box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+    }
+
+    .epoch {
+      display: inline-block;
+      width: auto;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      background-color: var(--dark-space);
+      color: var(--space-blue);
+      transition: all 0.3s ease;
+      writing-mode: vertical-lr;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      border: 1px solid var(--space-purple);
+      box-shadow: 0 0 5px rgba(138, 43, 226, 0.3);
+    }
+
+    .epoch.completed {
+      background-color: var(--space-purple);
+      color: var(--star-color);
+      box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+    }
+
+    .epoch:not(.completed):hover {
+      background-color: rgba(138, 43, 226, 0.2);
+      box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+    }
+
+    #choices button {
+      position: relative;
+      padding-left: 4.7em;
+      text-align: left;
+      min-height: 4em;
+      display: flex;
+      align-items: center;
+    }
+
+    #choices button i.fas,
+    #choices button i.fa {
+      position: absolute;
+      left: 0.5em;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.8em;
+      /* Adjust this value to change the icon size */
+      color: var(--space-purple);
+      /* Use your preferred color variable */
+      padding: 5px;
+    }
+
+    #choices button span {
+      flex: 1;
+    }
+
+    /* Hover effects */
+    #choices button {
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #choices button:hover {
+      background-color: var(--space-purple);
+      color: var(--star-color);
+    }
+
+    #choices button:hover i.fas,
+    #choices button:hover i.fa {
+      color: var(--star-color);
+    }
+
+    .game-container h1:nth-child(2) i {
+      display: inline-block;
+      transition: transform 0.3s ease-in-out;
+      font-size: 2em;
+      color: #000;
+    }
+
+    .game-container h1:nth-child(2):hover i {
+      transform: rotate(270deg);
     }
 
     @media (max-width: 768px) {
@@ -213,49 +320,7 @@
       button {
         padding: 0.8rem;
       }
-    }
 
-    .timeline {
-      display: flex;
-      justify-content: space-around;
-      margin: 20px 0;
-      padding: 10px;
-      background: rgba(10, 10, 10, 0.6);
-      border-radius: 12px;
-      border: 1px solid var(--neon-blue);
-      box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
-    }
-
-    .epoch {
-      display: inline-block;
-      width: auto;
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
-      background-color: var(--darker-bg);
-      color: var(--neon-blue);
-      transition: all 0.3s ease;
-      writing-mode: vertical-lr;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      border: 1px solid var(--neon-blue);
-      box-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
-    }
-
-    .epoch.completed {
-      background-color: var(--neon-blue);
-      color: var(--darker-bg);
-      box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-    }
-
-    /* Add this new style for hover effect */
-    .epoch:not(.completed):hover {
-      background-color: rgba(0, 243, 255, 0.2);
-      box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
-    }
-
-    @media (max-width: 768px) {
       .timeline {
         flex-wrap: wrap;
         justify-content: center;
@@ -265,7 +330,25 @@
         margin: 5px;
         writing-mode: horizontal-tb;
       }
-    }
+
+      @media (max-width: 768px) {
+        .timeline {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .epoch {
+          margin: 5px;
+          writing-mode: horizontal-tb;
+        }
+
+        #choices {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          margin-bottom: 2rem;
+        }
+      }
   </style>
 </head>
 
@@ -278,7 +361,7 @@
       <p>Navigate through different historical periods, make crucial decisions, and maintain the stability of time itself.</p>
       <p>Be careful with your Temporal Energy - if it runs out, you'll be lost in the void of time forever! You can recharge your Temporal Energy, by sacrificing the Timeline Stability.</p>
       <p> Make sure to balance your energy and stability of the timeline, otherwise you will be faced with the consequences of your actions.</p>
-      <p>Hint: <i>All the choices you make affect the timeline differently. Make sure you understand which timeperiod you are in. And what kind of world you want to live in when you get back to your own time after your mission.</i></p>
+      <p>Hint: <i>All the choices you make affect the timeline differently. Make sure you understand which timeperiod you are in. And what kind of world you want to live in when you get back to your own time after your mission.</i><br><i>You can see the order of the epochs you will be traveling through. Make sure you have enough Temporal Energy to get home after the last epoch!</i></p>
       <!-- Made by Marc Sonne Dahl © 2024 -->
       <img src="https://mrdahl.github.io/home/title.jpeg" alt="Time Traveler's Dilemmas">
       <button id="start-game">Start Game</button>
