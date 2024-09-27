@@ -1,232 +1,210 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rock Paper Scissors Lizard Spock - Emoji Edition</title>
+  <title>Rock Paper Scissors Lizard Spock - Galaxy Edition</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
     :root {
-      --background-color: #131419;
-      --box-shadow-color-1: rgba(0, 0, 0, .51);
-      --box-shadow-color-2: rgba(255, 255, 255, .05);
-      --border-color: #0081cb;
-      --text-color-primary: #ffffff;
-      --text-color-secondary: #0081cb;
-      --hover-border-color: #ff4081;
-      --reel-border-color: #131419;
-      --primary-gradient: linear-gradient(145deg, #1f1f25, #0e0e12);
-      --secondary-gradient: linear-gradient(145deg, #0e0e12, #1f1f25);
+      --bg-color: #0a0e17;
+      --text-color: #e0e0e0;
+      --primary-color: #00b4d8;
+      --secondary-color: #ff5e78;
+      --accent-color: #7209b7;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      font-family: 'Arial', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0;
-      background: var(--primary-gradient);
-      user-select: none;
-      flex-direction: column;
-      height: 100vh;
-      color: var(--text-color-primary);
-    }
-
-    .container {
+      font-family: 'Orbitron', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      max-width: 400px;
-      background: var(--secondary-gradient);
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 8px 8px 15px var(--box-shadow-color-1), -8px -8px 15px var(--box-shadow-color-2);
-      border: 2px solid var(--border-color);
-      color: var(--text-color-primary);
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .player-choices {
-      display: flex;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
+      overflow-x: hidden;
     }
 
-    .choice-btn {
-      width: 60px;
-      height: 60px;
-      border: none;
-      border-radius: 15px;
-      background: var(--primary-gradient);
-      font-size: 1.5em;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 5px 5px 10px var(--box-shadow-color-1), -5px -5px 10px var(--box-shadow-color-2);
-      border: 3px solid var(--border-color);
-    }
-
-    .choice-btn:hover {
-      box-shadow: inset 5px 5px 10px var(--box-shadow-color-1), inset -5px -5px 10px var(--box-shadow-color-2);
-      border: 4px solid var(--hover-border-color);
-      transform: scale(1.1);
-    }
-
-    .game-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    }
-
-    .slot-rules-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      margin-top: 20px;
-    }
-
-    #slot {
-      font-size: 50px;
-      margin: 0 20px;
-      height: 80px;
-      width: 80px;
-      overflow: hidden;
-      background: var(--primary-gradient);
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 5px 5px 10px var(--box-shadow-color-1), -5px -5px 10px var(--box-shadow-color-2);
-      border: 4px solid var(--border-color);
-    }
-
-    .reel {
-      height: 80px;
-      width: 80px;
-      overflow: hidden;
-      text-align: center;
-      box-sizing: border-box;
-      background: var(--secondary-gradient);
-      position: relative;
-      border-radius: 10px;
-      box-shadow: inset 2px 2px 5px var(--box-shadow-color-1), inset -2px -2px 5px var(--box-shadow-color-2);
-      border: 1px solid var(--reel-border-color);
-    }
-
-    .reel-inner {
-      position: absolute;
+    .stars {
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      transition: top 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
     }
 
-    .emoji {
-      height: 80px;
-      line-height: 80px;
+    .game-container {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 0 20px rgba(0, 180, 216, 0.3);
+      max-width: 600px;
+      width: 90%;
+      backdrop-filter: blur(5px);
     }
 
-    .results {
+    h1 {
       text-align: center;
-      font-size: 1.5em;
-      min-height: 40px;
-      margin-top: 10px;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: var(--primary-color);
+      text-shadow: 0 0 10px var(--primary-color);
     }
 
-    .scores {
+    .choices {
       display: flex;
-      justify-content: space-between;
-      width: 40%;
-      font-size: 1.2em;
-      background: var(--secondary-gradient);
-      padding: 10px 20px;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .choice {
+      font-size: 2rem;
+      width: 80px;
+      height: 80px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #0f1620, #050709);
+      color: var(--text-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 5px 5px 10px #030507, -5px -5px 10px #111927;
+    }
+
+    .choice:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px var(--primary-color);
+    }
+
+    .battle-area {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .player,
+    .computer {
+      text-align: center;
+    }
+
+    .vs {
+      font-size: 1.5rem;
+      color: var(--secondary-color);
+    }
+
+    .result {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      min-height: 2rem;
+    }
+
+    .score {
+      display: flex;
+      justify-content: space-around;
+      font-size: 1.2rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem;
       border-radius: 10px;
-      box-shadow: inset 2px 2px 5px var(--box-shadow-color-1), inset -2px -2px 5px var(--box-shadow-color-2);
-      border: 2px solid var(--border-color);
-      margin-top: 10px;
-    }
-
-    h3 {
-      text-align: center;
-      color: var(--text-color-secondary);
-      margin-bottom: 20px;
-      text-shadow: 1px 1px 2px var(--text-shadow-color);
-    }
-
-    h4 {
-      text-align: center;
-      color: var(--text-color-secondary);
-      margin-top: 20px;
-      text-shadow: 1px 1px 0px var(--text-shadow-color-secondary);
     }
 
     .rules {
-      margin: 0 20px;
-      text-align: left;
-      background: var(--primary-gradient);
-      border-radius: 10px;
-      padding: 10px;
-      align-items: center;
-      box-shadow: inset 2px 2px 5px var(--box-shadow-color-1), inset -2px -2px 5px var(--box-shadow-color-2);
-      border: 2px solid var(--border-color);
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-color);
+      opacity: 0.7;
     }
 
-    .footer {
+    .rules ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .rules li {
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      margin-top: 2rem;
       text-align: center;
-      margin-top: 20px;
+      font-size: 0.8rem;
+      color: var(--text-color);
+      opacity: 0.5;
+    }
+
+    @keyframes twinkle {
+      0% {
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h3>Rock Paper Scissors Lizard Spock</h3>
-    <div class="player-choices">
-      <button class="choice-btn" data-choice="rock">✊</button>
-      <button class="choice-btn" data-choice="paper">✋</button>
-      <button class="choice-btn" data-choice="scissors">✌️</button>
-      <button class="choice-btn" data-choice="lizard">🤏</button>
-      <button class="choice-btn" data-choice="spock">🖖</button>
+  <div class="stars"></div>
+  <div class="game-container">
+    <h1>Galaxy RPSLS</h1>
+    <div class="choices">
+      <button class="choice" data-choice="rock">✊</button>
+      <button class="choice" data-choice="paper">✋</button>
+      <button class="choice" data-choice="scissors">✌️</button>
+      <button class="choice" data-choice="lizard">🤏</button>
+      <button class="choice" data-choice="spock">🖖</button>
     </div>
-    <div class="game-area">
-      <div class="slot-rules-container">
-        <div class="rules">
-          <span>✊ » ✌️ 🤏</span><br>
-          <span>✋ » ✊ 🖖</span><br>
-          <span>✌️ » ✋ 🤏</span><br>
-          <span>🤏 » 🖖 ✋</span><br>
-          <span>🖖 » ✌️ ✊</span>
-        </div>
-        <div id="slot">
-          <div class="reel">
-            <div class="reel-inner"></div>
-          </div>
-        </div>
+    <div class="battle-area">
+      <div class="player">
+        <div id="player-choice" style="font-size: 3rem;">❓</div>
+        <div>You</div>
       </div>
-      <div class="results">
-        <p>Results</p>
-      </div>
-      <div class="scores">
-        <p>👤<span id="player-score">0</span></p>
-        <p>💻<span id="computer-score">0</span></p>
+      <div class="vs">VS</div>
+      <div class="computer">
+        <div id="computer-choice" style="font-size: 3rem;">❓</div>
+        <div>AI</div>
       </div>
     </div>
+    <div class="result" id="result">Choose your weapon!</div>
+    <div class="score">
+      <div>You: <span id="player-score">0</span></div>
+      <div>AI: <span id="computer-score">0</span></div>
+    </div>
+    <div class="rules">
+      <h3>Rules</h3>
+      <ul>
+        <li>✊ crushes ✌️ and 🤏</li>
+        <li>✋ covers ✊ and disproves 🖖</li>
+        <li>✌️ cuts ✋ and decapitates 🤏</li>
+        <li>🤏 poisons 🖖 and eats ✋</li>
+        <li>🖖 smashes ✌️ and vaporizes ✊</li>
+      </ul>
+    </div>
   </div>
-  <div class="footer">
-    <h4>Created by Marc Sonne Dahl © 2024</h4>
-  </div>
+  <footer>
+    <p>Created by Marc Sonne Dahl © 2024</p>
+  </footer>
 
   <script>
     const choices = {
@@ -251,82 +229,65 @@
         wins: ['scissors', 'rock']
       }
     };
-    const choiceButtons = document.querySelectorAll('.choice-btn');
-    const resultsDiv = document.querySelector('.results p');
-    const playerScoreSpan = document.getElementById('player-score');
-    const computerScoreSpan = document.getElementById('computer-score');
-    const reelInner = document.querySelector('.reel-inner');
+    const playerChoiceDisplay = document.getElementById('player-choice');
+    const computerChoiceDisplay = document.getElementById('computer-choice');
+    const resultDisplay = document.getElementById('result');
+    const playerScoreDisplay = document.getElementById('player-score');
+    const computerScoreDisplay = document.getElementById('computer-score');
+    const choiceButtons = document.querySelectorAll('.choice');
     let playerScore = 0;
     let computerScore = 0;
-    let isSpinning = false;
 
-    function createReelContent() {
-      reelInner.innerHTML = '';
-      const reelContent = [];
-      for (let i = 0; i < 30; i++) {
-        const emoji = Object.values(choices)[Math.floor(Math.random() * 5)].emoji;
-        reelContent.push(emoji);
-      }
-      // Duplicate the content to create a seamless loop
-      reelInner.innerHTML = reelContent.concat(reelContent).map(emoji => `<div class="emoji">${emoji}</div>`).join('');
+    function computerPlay() {
+      const choicesArray = Object.keys(choices);
+      return choicesArray[Math.floor(Math.random() * choicesArray.length)];
     }
-    createReelContent();
+
+    function playRound(playerSelection, computerSelection) {
+      if (playerSelection === computerSelection) {
+        return "It's a tie!";
+      }
+      if (choices[playerSelection].wins.includes(computerSelection)) {
+        playerScore++;
+        return "You win!";
+      }
+      computerScore++;
+      return "You lose!";
+    }
+
+    function updateDisplay(playerChoice, computerChoice, result) {
+      playerChoiceDisplay.textContent = choices[playerChoice].emoji;
+      computerChoiceDisplay.textContent = choices[computerChoice].emoji;
+      resultDisplay.textContent = result;
+      playerScoreDisplay.textContent = playerScore;
+      computerScoreDisplay.textContent = computerScore;
+    }
     choiceButtons.forEach(button => {
       button.addEventListener('click', () => {
-        if (!isSpinning) {
-          const playerChoice = button.dataset.choice;
-          spinAndPlay(playerChoice);
-        }
+        const playerChoice = button.dataset.choice;
+        const computerChoice = computerPlay();
+        const result = playRound(playerChoice, computerChoice);
+        updateDisplay(playerChoice, computerChoice, result);
       });
     });
-
-    function spin(duration) {
-      return new Promise((resolve) => {
-        const itemHeight = 80;
-        const totalItems = reelInner.children.length / 2; // We duplicated the content
-        // Calculate a random stopping position
-        const stopPosition = Math.floor(Math.random() * totalItems);
-        const spinDistance = (totalItems + stopPosition) * itemHeight;
-        reelInner.style.transition = `top ${duration}ms cubic-bezier(0.25, 0.1, 0.25, 1)`;
-        reelInner.style.top = `-${spinDistance}px`;
-        setTimeout(() => {
-          reelInner.style.transition = 'none';
-          reelInner.style.top = `-${stopPosition * itemHeight}px`;
-          const result = reelInner.children[stopPosition].textContent;
-          resolve(result);
-        }, duration);
-      });
+    // Create stars
+    function createStars() {
+      const starsContainer = document.querySelector('.stars');
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.style.position = 'absolute';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.width = `${Math.random() * 3}px`;
+        star.style.height = star.style.width;
+        star.style.backgroundColor = 'white';
+        star.style.borderRadius = '50%';
+        star.style.opacity = Math.random();
+        star.style.animation = `twinkle ${Math.random() * 5 + 3}s infinite`;
+        starsContainer.appendChild(star);
+      }
     }
-    async function spinAndPlay(playerChoice) {
-      isSpinning = true;
-      resultsDiv.textContent = 'Spinning...';
-      const computerEmoji = await spin(3000);
-      const computerChoice = Object.keys(choices).find(key => choices[key].emoji === computerEmoji);
-      const result = getResult(playerChoice, computerChoice);
-      updateScores(result);
-      displayResult(result, playerChoice, computerChoice);
-      isSpinning = false;
-    }
-
-    function getResult(playerChoice, computerChoice) {
-      if (playerChoice === computerChoice) return 'draw';
-      if (choices[playerChoice].wins.includes(computerChoice)) return 'win';
-      return 'lose';
-    }
-
-    function updateScores(result) {
-      if (result === 'win') playerScore++;
-      else if (result === 'lose') computerScore++;
-      playerScoreSpan.textContent = playerScore;
-      computerScoreSpan.textContent = computerScore;
-    }
-
-    function displayResult(result, playerChoice, computerChoice) {
-      const resultText = result === 'win' ? 'You win!' :
-        result === 'lose' ? 'You lose!' :
-        "It's a draw!";
-      resultsDiv.textContent = `${resultText} ${choices[playerChoice].emoji} vs ${choices[computerChoice].emoji}`;
-    }
+    createStars();
   </script>
 </body>
 
