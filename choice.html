@@ -1,199 +1,128 @@
-<html lang="da">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChoiceForge by Marc Sonne Dahl</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Righteous&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Frijole&display=swap');
-
     :root {
-      --bg-color: #e0e5ec;
-      --text-color: #4a4a4a;
-      --shadow-light: #ffffff;
-      --shadow-dark: #a3b1c6;
-      --accent-color: #88a396;
-      --logo-color: #4a4a4a;
+      --primary-color: #4a90e2;
+      --secondary-color: #f39c12;
+      --bg-color: #f4f4f4;
+      --text-color: #333;
+      --card-bg: #fff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     body.dark-mode {
-      --bg-color: #1e1e1e;
-      --text-color: #f1f1f1;
-      --shadow-light: #2e2e2e;
-      --shadow-dark: #000000;
-      --accent-color: #88a396;
-      --logo-color: #e0e5ec;
+      --primary-color: #3a7bd5;
+      --secondary-color: #f1c40f;
+      --bg-color: #2c3e50;
+      --text-color: #ecf0f1;
+      --card-bg: #34495e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
       font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 20px;
       background-color: var(--bg-color);
       color: var(--text-color);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      user-select: none;
       transition: background-color 0.3s, color 0.3s;
     }
 
     .container {
-      max-width: 1200px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
+      max-width: 800px;
       margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
     }
 
     .logo {
-      font-family: "Frijole", system-ui;
-      font-weight: 400;
-      font-style: normal;
+      font-family: 'Righteous', cursive;
+      font-size: 3rem;
+      color: var(--primary-color);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .controls {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 5rem;
-      font-weight: 900;
-      color: var(--logo-color);
-      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
 
-    h1,
-    h2,
-    h3,
-    h4 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .tooltip {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      cursor: pointer;
-      color: var(--text-color);
-      font-size: 1em;
-    }
-
-    .tooltip .tooltiptext {
-      visibility: hidden;
-      width: 250px;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      text-align: left;
-      padding: 10px;
-      border-radius: 5px;
-      box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-      position: absolute;
-      z-index: 1;
-      top: 100%;
-      right: 0;
-      margin-top: 10px;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .tooltip:hover .tooltiptext {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .btn-toggle-dark-mode {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      cursor: pointer;
-      font-size: 1.5em;
-      background: none;
-      border: none;
-      color: var(--text-color);
-      transition: color 0.3s;
-    }
-
-    .input-wrapper {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .input-field {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 15px;
+    input,
+    button {
+      font-family: 'Poppins', sans-serif;
       font-size: 1rem;
-      background: var(--bg-color);
-      box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
-      color: var(--text-color);
-      box-sizing: border-box;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 15px;
+      padding: 0.5rem 1rem;
       border: none;
-      border-radius: 15px;
-      font-size: 1rem;
-      cursor: pointer;
-      background: var(--bg-color);
+      border-radius: 4px;
+    }
+
+    input {
+      flex-grow: 1;
+      background-color: var(--card-bg);
       color: var(--text-color);
-      box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-      font-weight: bold;
-      box-sizing: border-box;
-      transition: background-color 0.3s, color 0.3s;
     }
 
-    .btn:hover {
-      background: var(--accent-color);
-      color: var(--shadow-light);
+    button {
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      transition: background-color 0.3s;
     }
 
-    .add-btn {
-      color: #46bc46;
-    }
-
-    .clear-btn {
-      color: #ff5050;
+    button:hover {
+      background-color: var(--secondary-color);
     }
 
     #board {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
     }
 
     .card {
-      width: calc(33.333% - 20px);
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
       height: 100px;
-      perspective: 1000px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
     }
 
     .card-inner {
-      position: relative;
       width: 100%;
       height: 100%;
-      text-align: center;
       transition: transform 0.6s;
       transform-style: preserve-3d;
     }
 
-    .card:hover .card-inner {
-      transform: scale(1.05);
-    }
-
-    .card.flip .card-inner {
-      transform: rotateX(180deg);
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
     }
 
     .card-front,
@@ -205,136 +134,103 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: 15px;
-      box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-      font-weight: 600;
-      transition: background-color 0.3s, color 0.3s;
+      padding: 1rem;
+      text-align: center;
     }
 
     .card-front {
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background-color: var(--primary-color);
+      color: white;
     }
 
     .card-back {
-      background-color: var(--accent-color);
-      color: white;
-      transform: rotateX(180deg);
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      transform: rotateY(180deg);
     }
 
-    @media (max-width: 768px) {
-      .card {
-        width: calc(50% - 20px);
-      }
-    }
-
-    @media (max-width: 480px) {
-      .card {
-        width: 100%;
-      }
-
-      .input-wrapper {
-        flex-direction: column;
-      }
-
-      .input-field,
-      .btn {
-        width: 100%;
-      }
+    .toggle-dark-mode {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
-
   <div class="container">
-    <div class="logo">CF</div>
-    <h1>ChoiceForge</h1>
-    <p>by Marc Sonne Dahl</p>
-    <div class="tooltip">💡
-      <div class="tooltiptext">
-        <ol>
-          <li>Enter your choices</li>
-          <li>Separate choices with commas,"Add" or "Enter"</li>
-          <li>Cards shuffle automatically.</li>
-          <li>Click on a card to reveal your choice.</li>
-          <li>"Clear" to start over with new choices.</li>
-        </ol>
-      </div>
-    </div>
-    <button id="toggleDarkMode" class="btn-toggle-dark-mode">🪬</button>
-    <div class="input-wrapper">
-      <input type="text" id="inputField" class="input-field" placeholder="Enter your choices here" required>
-      <button id="addBtn" class="btn add-btn">Add</button>
-      <button id="clearBtn" class="btn clear-btn">Clear</button>
+    <header>
+      <div class="logo">CF</div>
+      <h1>ChoiceForge</h1>
+      <p>by Marc Sonne Dahl</p>
+    </header>
+    <div class="controls">
+      <input type="text" id="choiceInput" placeholder="Enter your choices (comma-separated)">
+      <button id="addBtn">Add</button>
+      <button id="clearBtn">Clear</button>
     </div>
     <div id="board"></div>
   </div>
+  <button class="toggle-dark-mode" id="darkModeToggle">🌓</button>
 
   <script>
-    const board = document.getElementById("board");
-    const inputField = document.getElementById("inputField");
-    const addBtn = document.getElementById("addBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const cards = [];
-    inputField.addEventListener("keyup", function(event) {
-      if (event.key === "Enter" || event.key === ",") {
-        addChoices();
-      }
-    });
-    addBtn.addEventListener("click", addChoices);
-    clearBtn.addEventListener("click", clearBoard);
+    const choiceInput = document.getElementById('choiceInput');
+    const addBtn = document.getElementById('addBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const board = document.getElementById('board');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    let choices = [];
 
     function addChoices() {
-      const choices = inputField.value
-        .split(",")
-        .map(choice => choice.trim())
-        .filter(choice => choice !== "");
-      choices.forEach(createCard);
-      shuffleCards();
-      inputField.value = "";
+      const newChoices = choiceInput.value.split(',').map(choice => choice.trim()).filter(Boolean);
+      choices = [...choices, ...newChoices];
+      renderBoard();
+      choiceInput.value = '';
     }
 
-    function createCard(input) {
-      if (input) {
-        const card = document.createElement("div");
-        card.classList.add("card");
+    function clearChoices() {
+      choices = [];
+      renderBoard();
+    }
+
+    function renderBoard() {
+      board.innerHTML = '';
+      shuffleArray(choices).forEach((choice, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
         card.innerHTML = `
-          <div class="card-inner">
-            <div class="card-front"></div>
-            <div class="card-back">${input}</div>
-          </div>
-        `;
-        card.addEventListener("click", function() {
-          flipCard(card);
-        });
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <span>Choice ${index + 1}</span>
+                        </div>
+                        <div class="card-back">
+                            <span>${choice}</span>
+                        </div>
+                    </div>
+                `;
+        card.addEventListener('click', () => card.classList.toggle('flipped'));
         board.appendChild(card);
-        cards.push(card);
-      }
+      });
     }
 
-    function shuffleCards() {
-      for (let i = cards.length - 1; i > 0; i--) {
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]];
+        [array[i], array[j]] = [array[j], array[i]];
       }
-      cards.forEach((card) => board.appendChild(card));
+      return array;
     }
-
-    function flipCard(card) {
-      card.classList.toggle("flip");
-    }
-
-    function clearBoard() {
-      while (board.firstChild) {
-        board.removeChild(board.firstChild);
-      }
-      cards.length = 0;
-    }
-    const toggleDarkModeBtn = document.getElementById("toggleDarkMode");
-    const body = document.body;
-    toggleDarkModeBtn.addEventListener("click", () => {
-      body.classList.toggle("dark-mode");
+    addBtn.addEventListener('click', addChoices);
+    clearBtn.addEventListener('click', clearChoices);
+    choiceInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addChoices();
+    });
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
     });
   </script>
 </body>
