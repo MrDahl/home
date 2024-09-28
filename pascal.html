@@ -1,26 +1,33 @@
 <html lang="en">
+
 <head>
+  <!-- Created by Marc Sonne Dahl (c) 2024 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neumorphic Pascal's Triangle</title>
+  <title>Pascal's Probability Extravaganza</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
     :root {
-      --bg-color: #e0e5ec;
-      --shadow-light: #ffffff;
-      --shadow-dark: #a3b1c6;
-      --text-color: #4a4a4a;
-      --accent-color: #6d5dfc;
+      --primary-color: #6c5ce7;
+      --secondary-color: #00cec9;
+      --accent-color: #fd79a8;
+      --bg-color: #2d3436;
+      --text-color: #dfe6e9;
+      --peg-color: #fdcb6e;
+      --ball-color: #ff7675;
     }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      margin: 0;
-      background-color: var(--bg-color);
-      color: var(--text-color);
     }
 
     #gameContainer {
@@ -31,12 +38,32 @@
       box-sizing: border-box;
     }
 
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px var(--primary-color), 0 0 10px var(--primary-color);
+      }
+
+      to {
+        text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+      }
+    }
+
     canvas {
-      border-radius: 20px;
-      background-color: var(--bg-color);
-      box-shadow: 
-        8px 8px 16px var(--shadow-dark),
-        -8px -8px 16px var(--shadow-light);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(108, 92, 231, 0.3);
+      transition: box-shadow 0.3s ease;
+    }
+
+    canvas:hover {
+      box-shadow: 0 0 30px rgba(108, 92, 231, 0.5);
     }
 
     .controls {
@@ -47,43 +74,77 @@
       margin-top: 30px;
     }
 
-    .neumorphic-btn {
-      padding: 15px 25px;
+    .neon-btn {
+      padding: 12px 24px;
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
       border: none;
-      border-radius: 10px;
-      background-color: var(--bg-color);
+      border-radius: 50px;
+      background-color: var(--primary-color);
       color: var(--text-color);
-      box-shadow: 
-        5px 5px 10px var(--shadow-dark),
-        -5px -5px 10px var(--shadow-light);
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      outline: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .neumorphic-btn:hover {
-      box-shadow: 
-        3px 3px 6px var(--shadow-dark),
-        -3px -3px 6px var(--shadow-light);
+    .neon-btn::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      z-index: -1;
+      filter: blur(5px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
-    .neumorphic-btn:active {
-      box-shadow: inset 
-        3px 3px 6px var(--shadow-dark),
-        inset -3px -3px 6px var(--shadow-light);
+    .neon-btn:hover::before {
+      opacity: 1;
     }
 
-    .neumorphic-input {
+    .neon-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+    }
+
+    .neon-btn:active {
+      transform: translateY(0);
+    }
+
+    .neon-input {
       width: 70px;
       padding: 10px;
       font-size: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 50px;
       background-color: var(--bg-color);
       color: var(--text-color);
-      box-shadow: inset 
-        3px 3px 6px var(--shadow-dark),
-        inset -3px -3px 6px var(--shadow-light);
+      box-shadow: inset 0 0 5px rgba(108, 92, 231, 0.5);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .neon-input:focus {
+      box-shadow: inset 0 0 10px rgba(108, 92, 231, 0.8);
+    }
+
+    #dropBall {
+      background-color: var(--primary-color);
+    }
+
+    #reset {
+      background-color: var(--secondary-color);
+    }
+
+    #dropMultiple {
+      background-color: var(--accent-color);
     }
 
     @media (max-width: 600px) {
@@ -92,28 +153,32 @@
         align-items: center;
       }
 
-      .neumorphic-btn,
-      .neumorphic-input {
+      .neon-btn,
+      .neon-input {
         width: 100%;
         max-width: 200px;
       }
     }
   </style>
+  <!-- Created by Marc Sonne Dahl (c) 2024 -->
 </head>
+
 <body>
   <div id="gameContainer">
+    <h1>Pascal's Probability Extravaganza</h1>
     <canvas id="gameCanvas"></canvas>
     <div class="controls">
-      <button id="dropBall" class="neumorphic-btn">Drop Ball</button>
-      <button id="reset" class="neumorphic-btn">Reset Game</button>
+      <button id="dropBall" class="neon-btn">Single</button>
+      <button id="dropMultiple" class="neon-btn">Multiple</button>
       <div>
-        <label for="ballCount">Balls to drop:</label>
-        <input type="number" id="ballCount" value="1" min="1" max="100" class="neumorphic-input">
+        <label for="ballCount">X</label>
+        <input type="number" id="ballCount" value="1" min="1" max="100" class="neon-input">
       </div>
-      <button id="dropMultiple" class="neumorphic-btn">Drop Multiple</button>
+      <button id="reset" class="neon-btn">Reset</button>
+
     </div>
   </div>
-
+  <!-- Created by Marc Sonne Dahl (c) 2024 -->
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -144,8 +209,8 @@
       }
       canvas.width = GAME_WIDTH;
       canvas.height = GAME_HEIGHT;
-      PEG_RADIUS = GAME_WIDTH * 0.006;
-      BALL_RADIUS = GAME_WIDTH * 0.006;
+      PEG_RADIUS = GAME_WIDTH * 0.008;
+      BALL_RADIUS = GAME_WIDTH * 0.008;
       BUCKET_WIDTH = GAME_WIDTH * 0.08;
       BUCKET_HEIGHT = GAME_HEIGHT * 0.06;
       initializeGame();
@@ -159,18 +224,37 @@
         for (let i = 0; i <= level; i++) {
           const x = (i + 1) * pegSpacing + (LEVELS - level - 1) * pegSpacing / 2;
           const y = (level + 1) * verticalSpacing + GAME_HEIGHT * 0.1;
-          pegs.push({ x, y });
+          pegs.push({
+            x,
+            y
+          });
         }
       }
-      trianglePoints = [
-        { x: GAME_WIDTH / 2, y: GAME_HEIGHT * 0.02 },
-        { x: -GAME_WIDTH * 0.1, y: GAME_HEIGHT * 1.05 },
-        { x: GAME_WIDTH * 1.1, y: GAME_HEIGHT * 1.05 }
+      trianglePoints = [{
+          x: GAME_WIDTH / 2,
+          y: GAME_HEIGHT * 0.02
+        },
+        {
+          x: -GAME_WIDTH * 0.1,
+          y: GAME_HEIGHT * 1.05
+        },
+        {
+          x: GAME_WIDTH * 1.1,
+          y: GAME_HEIGHT * 1.05
+        }
       ];
     }
 
+    function drawBackground() {
+      const gradient = ctx.createRadialGradient(GAME_WIDTH / 2, GAME_HEIGHT / 2, 0, GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_HEIGHT);
+      gradient.addColorStop(0, '#2c3e50');
+      gradient.addColorStop(1, '#34495e');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+    }
+
     function drawTriangle() {
-      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+      ctx.strokeStyle = '#ecf0f1';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(trianglePoints[0].x, trianglePoints[0].y);
@@ -178,47 +262,62 @@
       ctx.lineTo(trianglePoints[2].x, trianglePoints[2].y);
       ctx.closePath();
       ctx.stroke();
+      // Add glow effect
+      ctx.shadowColor = '#3498db';
+      ctx.shadowBlur = 10;
+      ctx.strokeStyle = '#3498db';
+      ctx.stroke();
+      ctx.shadowBlur = 0;
     }
 
     function drawPegs() {
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
       pegs.forEach(peg => {
+        // Glow effect
+        ctx.shadowColor = '#f39c12';
+        ctx.shadowBlur = 15;
+        ctx.fillStyle = '#f1c40f';
         ctx.beginPath();
         ctx.arc(peg.x, peg.y, PEG_RADIUS, 0, Math.PI * 2);
         ctx.fill();
-        
-        // Add highlight
+        // Inner highlight
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#f39c12';
         ctx.beginPath();
         ctx.arc(peg.x - PEG_RADIUS / 3, peg.y - PEG_RADIUS / 3, PEG_RADIUS / 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(66, 135, 245, 1)';
         ctx.fill();
       });
     }
 
     function drawBuckets() {
       const bucketSpacing = GAME_WIDTH / (LEVELS + 1);
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
       for (let i = 0; i < LEVELS; i++) {
         const x = (i + 1) * bucketSpacing;
+        // Bucket glow
+        ctx.shadowColor = '#3498db';
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = '#2980b9';
         ctx.fillRect(x - BUCKET_WIDTH / 2, GAME_HEIGHT - BUCKET_HEIGHT, BUCKET_WIDTH, BUCKET_HEIGHT);
-        
-        // Add shadow effect
-        ctx.fillStyle = 'rgba(163, 177, 198, 0.5)';
-        ctx.fillRect(x - BUCKET_WIDTH / 2 + 5, GAME_HEIGHT - BUCKET_HEIGHT + 5, BUCKET_WIDTH, BUCKET_HEIGHT);
+        // Bucket highlight
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#3498db';
+        ctx.fillRect(x - BUCKET_WIDTH / 2 + 2, GAME_HEIGHT - BUCKET_HEIGHT + 2, BUCKET_WIDTH - 4, 5);
       }
     }
 
     function drawBalls() {
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
       balls.forEach(ball => {
+        // Ball glow
+        ctx.shadowColor = '#e74c3c';
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = '#e74c3c';
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2);
         ctx.fill();
-        
-        // Add highlight
+        // Ball highlight
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#f5a6a0';
         ctx.beginPath();
         ctx.arc(ball.x - BALL_RADIUS / 3, ball.y - BALL_RADIUS / 3, BALL_RADIUS / 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(66, 135, 245, 1)';
         ctx.fill();
       });
     }
@@ -230,12 +329,18 @@
       for (let i = 0; i < LEVELS; i++) {
         const x = (i + 1) * bucketSpacing;
         const height = maxBalls > 0 ? (buckets[i] / maxBalls) * maxHeight : 0;
-        ctx.fillStyle = 'rgba(109, 93, 252, 0.7)';
+        // Graph bar glow
+        ctx.shadowColor = '#1abc9c';
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = 'rgba(26, 188, 156, 0.7)';
         ctx.fillRect(x - BUCKET_WIDTH / 4, GAME_HEIGHT - BUCKET_HEIGHT - height, BUCKET_WIDTH / 2, height);
+        // Percentage text
+        ctx.shadowBlur = 0;
         const percentage = totalBalls > 0 ? (buckets[i] / totalBalls * 100).toFixed(1) + '%' : '0%';
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim();
-        ctx.font = `${GAME_WIDTH * 0.015}px Arial`;
-        ctx.fillText(percentage, x - GAME_WIDTH * 0.02, GAME_HEIGHT - BUCKET_HEIGHT - height - 5);
+        ctx.fillStyle = '#ecf0f1';
+        ctx.font = `bold ${GAME_WIDTH * 0.018}px Poppins`;
+        ctx.textAlign = 'center';
+        ctx.fillText(percentage, x, GAME_HEIGHT - BUCKET_HEIGHT - height - 10);
       }
     }
 
@@ -257,6 +362,8 @@
           const overlap = BALL_RADIUS + PEG_RADIUS - distance(ball.x, ball.y, peg.x, peg.y);
           ball.x += Math.cos(angle) * overlap;
           ball.y += Math.sin(angle) * overlap;
+          // Add particle effect on collision
+          createParticles(ball.x, ball.y);
         }
       });
       // Check collision with triangle walls
@@ -269,11 +376,15 @@
         ball.vy = Math.sin(angle) * speed * 0.8;
         ball.x = closestPoint.x + Math.cos(angle) * BALL_RADIUS;
         ball.y = closestPoint.y + Math.sin(angle) * BALL_RADIUS;
+        // Add particle effect on wall collision
+        createParticles(ball.x, ball.y);
       }
       if (ball.y >= GAME_HEIGHT - BUCKET_HEIGHT - BALL_RADIUS) {
         const bucketIndex = Math.floor((ball.x / GAME_WIDTH) * LEVELS);
         buckets[Math.min(Math.max(bucketIndex, 0), LEVELS - 1)]++;
         totalBalls++;
+        // Add celebration effect when ball enters a bucket
+        createCelebrationEffect(ball.x, GAME_HEIGHT - BUCKET_HEIGHT);
         return false;
       }
       return true;
@@ -291,37 +402,128 @@
     }
 
     function closestPointOnLine(a, b, p) {
-      const atob = { x: b.x - a.x, y: b.y - a.y };
-      const atop = { x: p.x - a.x, y: p.y - a.y };
+      const atob = {
+        x: b.x - a.x,
+        y: b.y - a.y
+      };
+      const atop = {
+        x: p.x - a.x,
+        y: p.y - a.y
+      };
       const len = atob.x * atob.x + atob.y * atob.y;
       let dot = atop.x * atob.x + atop.y * atob.y;
       const t = Math.min(1, Math.max(0, dot / len));
-      return { x: a.x + atob.x * t, y: a.y + atob.y * t };
+      return {
+        x: a.x + atob.x * t,
+        y: a.y + atob.y * t
+      };
+    }
+    // Particle system
+    let particles = [];
+
+    function createParticles(x, y) {
+      for (let i = 0; i < 10; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 5,
+          vy: (Math.random() - 0.5) * 5,
+          radius: Math.random() * 3 + 1,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          life: 30
+        });
+      }
+    }
+
+    function updateParticles() {
+      particles = particles.filter(p => p.life > 0);
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        p.radius *= 0.95;
+      });
+    }
+
+    function drawParticles() {
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+    }
+    // Celebration effect
+    let celebrationParticles = [];
+
+    function createCelebrationEffect(x, y) {
+      for (let i = 0; i < 50; i++) {
+        celebrationParticles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 8,
+          vy: -Math.random() * 10 - 5,
+          radius: Math.random() * 4 + 2,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          life: 60
+        });
+      }
+    }
+
+    function updateCelebrationParticles() {
+      celebrationParticles = celebrationParticles.filter(p => p.life > 0);
+      celebrationParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.2; // Gravity
+        p.life--;
+        p.radius *= 0.98;
+      });
+    }
+
+    function drawCelebrationParticles() {
+      celebrationParticles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
     }
 
     function gameLoop() {
       ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      drawBackground();
       drawTriangle();
       drawPegs();
       drawBuckets();
       drawBalls();
       drawGraphs();
+      drawParticles();
+      drawCelebrationParticles();
       balls = balls.filter(updateBall);
+      updateParticles();
+      updateCelebrationParticles();
       requestAnimationFrame(gameLoop);
     }
 
-   function dropBall() {
+    function dropBall() {
       const startX = GAME_WIDTH / 2 + (Math.random() * GAME_WIDTH * 0.02 - GAME_WIDTH * 0.01);
       const startY = GAME_HEIGHT * 0.05;
-      balls.push({ x: startX, y: startY, vx: 0, vy: 0 });
+      balls.push({
+        x: startX,
+        y: startY,
+        vx: 0,
+        vy: 0
+      });
     }
 
     function reset() {
       balls = [];
       buckets = Array(LEVELS).fill(0);
       totalBalls = 0;
+      particles = [];
+      celebrationParticles = [];
     }
-
     dropBallButton.addEventListener('click', dropBall);
     resetButton.addEventListener('click', reset);
     dropMultipleButton.addEventListener('click', () => {
@@ -330,10 +532,11 @@
         setTimeout(dropBall, i * 100);
       }
     });
-
     window.addEventListener('resize', resizeGame);
     resizeGame();
     gameLoop();
   </script>
+  <!-- Created by Marc Sonne Dahl (c) 2024 -->
 </body>
+
 </html>
