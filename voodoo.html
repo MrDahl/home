@@ -1,187 +1,151 @@
 <html lang="da">
 <!-- Copyright Marc Sonne Dahl - Created July 2024 -->
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Voodoo Rush Fitness</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Concert+One">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --card-height: min(70vh, 500px);
-      --card-width: calc(var(--card-height) / 1.5);
-      --primary-color: #e0e0e0;
-      --on-primary-color: #212121;
-      --accent-color: #3f51b5;
-      --shadow-color: rgba(0, 0, 0, 0.2);
-      --highlight-color: rgba(255, 255, 255, 0.7);
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --background-color: #ecf0f1;
+      --text-color: #34495e;
+      --card-width: min(90vw, 400px);
+      --card-height: calc(var(--card-width) * 1.4);
     }
 
     body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      font-family: "Concert One", sans-serif;
-      background-color: var(--primary-color);
       user-select: none;
     }
 
     .game-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       width: 100%;
+      max-width: 600px;
       padding: 20px;
       box-sizing: border-box;
     }
 
     .card {
-      background: var(--primary-color);
       width: var(--card-width);
       height: var(--card-height);
-      padding: 3px;
-      position: relative;
-      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      text-align: center;
-      font-size: calc(var(--card-width) * 0.2);
-      color: var(--on-primary-color);
       cursor: pointer;
-      box-shadow: 9px 9px 16px var(--shadow-color),
-        -9px -9px 16px var(--highlight-color);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin: 0 auto;
     }
 
-    .card::before {
-      content: "";
-      width: 102%;
-      height: 101%;
-      border-radius: 13px;
-      position: absolute;
-      z-index: -1;
-      top: -0.5%;
-      left: -1%;
-      background-color: var(--primary-color);
-      box-shadow: 4px 4px 6px var(--shadow-color),
-        -4px -4px 6px var(--highlight-color);
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
     }
 
-    .card .top-left-text,
-    .card .bottom-right-text {
-      position: absolute;
-      font-size: 40%;
-      color: #757575;
-    }
-
-    .card .top-left-text {
-      top: 5%;
-      left: 5%;
-    }
-
-    .card .bottom-right-text {
-      bottom: 5%;
-      right: 5%;
-      transform: rotate(180deg);
+    .card-content {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 600;
+      text-align: center;
     }
 
     .progress-container {
       width: var(--card-width);
-      height: 16px;
-      background: var(--primary-color);
-      border-radius: 8px;
-      margin-top: 20px;
+      height: 10px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      margin: 20px auto;
       overflow: hidden;
-      box-shadow: inset 4px 4px 6px var(--shadow-color),
-        inset -4px -4px 6px var(--highlight-color);
     }
 
     .progress-bar {
-      width: 0;
       height: 100%;
-      background: rgba(68, 117, 151, 1);
+      background-color: var(--accent-color);
       transition: width 0.3s ease;
-      box-shadow: inset 4px 4px 6px var(--shadow-color),
-        inset -1px -1px 1px var(--highlight-color);
     }
 
-    .controls {
+    .stats {
       display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .button {
-      background-color: var(--primary-color);
-      color: var(--accent-color);
-      border: none;
-      padding: 10px 20px;
-      border-radius: 12px;
+      justify-content: space-between;
       width: var(--card-width);
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 4px 4px 6px var(--shadow-color),
-        -4px -4px 6px var(--highlight-color);
-      transition: background-color 0.3s ease;
+      margin: 20px auto;
     }
 
-    .button:hover {
-      background-color: #d0d0d0;
+    .timer,
+    .score {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary-color);
     }
 
     .workout-inputs {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
-      width: var(--card-width - 30px);
-      margin-left: -1vh;
+      width: var(--card-width);
+      margin: 20px auto;
     }
 
     .workout-input {
       display: flex;
       align-items: center;
       margin-bottom: 10px;
-      width: 100%;
     }
 
     .workout-input label {
+      font-size: 1.5rem;
       margin-right: 10px;
-      font-size: 20px;
+      color: var(--primary-color);
     }
 
     .workout-input input {
       flex-grow: 1;
-      padding: 5px;
+      padding: 10px;
       border: none;
       border-radius: 5px;
-      background-color: var(--primary-color);
-      box-shadow: inset 2px 2px 4px var(--shadow-color),
-        inset -2px -2px 4px var(--highlight-color);
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      font-size: 1rem;
     }
 
-    .timer,
-    .score {
-      font-size: 24px;
-      margin-top: 10px;
-      color: rgba(0, 0, 0, .2);
-      background-color: transparent;
-      text-shadow: rgba(255, 255, 255, .3) 1px 1px 1px;
+    .button {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .button:hover {
+      background-color: #c0392b;
     }
 
     @media (max-width: 480px) {
       :root {
-        --card-height: 60vh;
+        --card-width: 90vw;
       }
     }
   </style>
 </head>
-
+<!-- Copyright Marc Sonne Dahl - Created July 2024 -->
 <body>
   <div class="game-container">
     <div id="deck" class="card" onclick="pickCard()">
@@ -190,8 +154,10 @@
     <div class="progress-container">
       <div id="progress-bar" class="progress-bar"></div>
     </div>
-    <div class="timer" id="timer">Time: 00:00</div>
-    <div class="score" id="score">Score: 0</div>
+    <div class="stats">
+      <div class="timer" id="timer">Time: 00:00</div>
+      <div class="score" id="score">Score: 0</div>
+    </div>
     <div class="workout-inputs">
       <div class="workout-input">
         <label>♦</label>
@@ -210,10 +176,9 @@
         <input type="text" id="spades-workout" placeholder="Spades workout">
       </div>
     </div>
-    <div class="controls">
-      <button class="button" onclick="resetGame()">✖️ Reset</button>
-    </div>
+    <button class="button" onclick="resetGame()">Reset Game</button>
   </div>
+<!-- Copyright Marc Sonne Dahl - Created July 2024 -->
   <script>
     const suits = ['♦', '♣', '♥', '♠'];
     const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -301,14 +266,13 @@
       }
       const card = currentDeck.pop();
       const [value, suit] = card.split('<br>');
-      const suitColor = '♦♥'.includes(suit) ? 'red' : 'black';
+      const suitColor = '♦♥'.includes(suit) ? '#e74c3c' : '#2c3e50';
       const workout = getWorkout(suit);
       updateCardContent(`
-        <span class="middle-suit" style="color: ${suitColor};">${suit}</span>
-        <span class="top-left-text">${card}</span>
-        <span class="bottom-right-text">${card}</span>
+        <span style="font-size: 4rem; color: ${suitColor};">${suit}</span>
+        <span style="font-size: 3rem;">${value}</span>
         <br>
-        <span style="font-size: 0.5em;">${workout}</span>
+        <span style="font-size: 1rem;">${workout}</span>
       `);
       updateProgressBar();
       updateScore(card);
@@ -326,5 +290,5 @@
     window.onload = resetGame;
   </script>
 </body>
-
+<!-- Copyright Marc Sonne Dahl - Created July 2024 -->
 </html>
