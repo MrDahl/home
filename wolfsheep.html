@@ -1,40 +1,57 @@
 <html lang="en">
-
+<!-- By Marc Sonne Dahl (c) 2024 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <title>Wolf vs. Sheeps Game</title>
   <style>
     :root {
       --cell-size: min(50px, 10vw);
       --board-size: calc(var(--cell-size) * 8);
+      --primary-color: rgba(0, 255, 255, 0.2);
+      --secondary-color: rgba(255, 0, 255, 0.2);
+      --text-color: #ffffff;
+      --neon-blue: #00ffff;
+      --neon-pink: #ff00ff;
     }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+    body,
+    html {
+      height: 100%;
       margin: 0;
-      background-color: #e0e5ec;
-      color: #444;
-    }
-
-    h2,
-    h4 {
-      font-weight: bold;
-      color: rgba(100, 100, 100, .2);
-      background-color: transparent;
-      text-shadow: rgba(255, 255, 255, .8) 1px 1px 1px;
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+      background: #000000;
+      color: var(--text-color);
     }
 
     #game-container {
-      text-align: center;
-      padding: 20px;
-      border-radius: 20px;
-      background: #e0e5ec;
-      box-shadow: 20px 20px 60px #bec3c9, -20px -20px 60px #ffffff;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      perspective: 1000px;
+    }
+
+    #hologram-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        repeating-linear-gradient(0deg,
+          rgba(0, 255, 255, 0.1) 0px,
+          rgba(0, 255, 255, 0) 1px,
+          rgba(0, 255, 255, 0) 2px),
+        repeating-linear-gradient(90deg,
+          rgba(255, 0, 255, 0.1) 0px,
+          rgba(255, 0, 255, 0) 1px,
+          rgba(255, 0, 255, 0) 2px);
+      pointer-events: none;
     }
 
     #board {
@@ -42,10 +59,25 @@
       grid-template-columns: repeat(8, var(--cell-size));
       grid-template-rows: repeat(8, var(--cell-size));
       gap: 1px;
-      background-color: #d1d9e6;
+      background-color: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: inset 5px 5px 10px #bec3c9, inset -5px -5px 10px #ffffff;
+      box-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-pink);
+      transform: rotateX(60deg) rotateZ(45deg);
+      transform-style: preserve-3d;
+      animation: boardFloat 15s ease-in-out infinite;
+    }
+
+    @keyframes boardFloat {
+
+      0%,
+      100% {
+        transform: rotateX(45deg) rotateZ(25deg) translateZ(10px);
+      }
+
+      50% {
+        transform: rotateX(45deg) rotateZ(25deg) translateZ(40px);
+      }
     }
 
     .cell {
@@ -57,60 +89,110 @@
       font-size: calc(var(--cell-size) * 0.7);
       cursor: pointer;
       transition: all 0.3s ease;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cell::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent 30%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      100% {
+        transform: rotate(1turn);
+      }
     }
 
     .cell:hover {
-      transform: scale(1.1);
+      transform: scale(1.1) translateZ(10px);
+      box-shadow: 0 0 15px var(--neon-blue);
+      z-index: 10;
     }
 
     .white {
-      background-color: #f0f0f0;
+      background-color: rgba(255, 255, 255, 0.1);
     }
 
     .black {
-      background-color: #d1d9e6;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    h1,
+    h2 {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin: 10px 0;
+      text-shadow:
+        0 0 10px var(--neon-blue),
+        0 0 20px var(--neon-pink),
+        0 0 40px var(--neon-blue);
+    }
+
+    h1 {
+      font-size: 3em;
+    }
+
+    h2 {
+      font-size: 1.5em;
     }
 
     #message {
       margin-top: 20px;
       font-weight: bold;
-      font-weight: bold;
-      color: rgba(100, 100, 100, .2);
-      background-color: transparent;
-      text-shadow: rgba(255, 255, 255, .8) 1px 1px 1px;
+      color: var(--neon-blue);
+      font-size: 1.2em;
+      min-height: 1.5em;
+      text-shadow: 0 0 10px var(--neon-blue);
     }
 
     button {
       margin: 10px;
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 16px;
       border: none;
-      border-radius: 10px;
-      background: #e0e5ec;
-      box-shadow: 5px 5px 10px #bec3c9, -5px -5px 10px #ffffff;
-      color: #444;
+      border-radius: 25px;
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      color: #ffffff;
       cursor: pointer;
       transition: all 0.3s ease;
+      box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-pink);
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     button:hover {
-      box-shadow: 3px 3px 5px #bec3c9, -3px -3px 5px #ffffff;
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-pink);
     }
 
     button:active {
-      box-shadow: inset 3px 3px 5px #bec3c9, inset -3px -3px 5px #ffffff;
+      transform: translateY(0);
+      box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-pink);
     }
 
     #restart-btn {
       display: none;
+      background: linear-gradient(45deg, #ff0000, #ff00ff);
     }
   </style>
 </head>
-
+<!-- By Marc Sonne Dahl (c) 2024 -->
 <body>
   <div id="game-container">
-    <h1>🐺 ⚔️ 🐏</h1>
-    <h2>Wolf vs Sheeps</h2>
+    <div id="hologram-effect"></div>
+    <h1 class="glitch" data-text="Wolf vs Sheep">Wolf vs Sheeps</h1>
+    <h2>Holographic Edition</h2>
     <div id="start-buttons">
       <button id="play-as-wolf">Be a Wolf</button>
       <button id="play-as-sheep">Be a Sheep</button>
@@ -118,325 +200,619 @@
     <div id="board"></div>
     <div id="message"></div>
     <button id="restart-btn">Restart Game</button>
-    <h4>by Marc Sonne Dahl</h4>
+    <h5>By Marc Sonne Dahl</h5>
   </div>
-
+<!-- By Marc Sonne Dahl (c) 2024 -->
   <script>
- 
-    
-    
+    document.addEventListener('DOMContentLoaded', () => {
+      const board = document.getElementById('board');
+      const message = document.getElementById('message');
+      const playAsWolfBtn = document.getElementById('play-as-wolf');
+      const playAsSheepBtn = document.getElementById('play-as-sheep');
+      const restartBtn = document.getElementById('restart-btn');
+      const startButtons = document.getElementById('start-buttons');
+      let selectedPiece = null;
+      let gameState = {
+        wolf: {
+          row: 7,
+          col: 4
+        },
+        sheep: [{
+            row: 0,
+            col: 1
+          },
+          {
+            row: 0,
+            col: 3
+          },
+          {
+            row: 0,
+            col: 5
+          },
+          {
+            row: 0,
+            col: 7
+          }
+        ],
+        currentTurn: 'sheep',
+        playerSide: null,
+        gameOver: false
+      };
+      playAsWolfBtn.addEventListener('click', () => startGame('wolf'));
+      playAsSheepBtn.addEventListener('click', () => startGame('sheep'));
+      restartBtn.addEventListener('click', restartGame);
 
-  document.addEventListener('DOMContentLoaded', () => {
-  const board = document.getElementById('board');
-  const message = document.getElementById('message');
-  const playAsWolfBtn = document.getElementById('play-as-wolf');
-  const playAsSheepBtn = document.getElementById('play-as-sheep');
-  const restartBtn = document.getElementById('restart-btn');
-  const startButtons = document.getElementById('start-buttons');
-  let selectedPiece = null;
-  let gameState = {
-    wolf: { row: 7, col: 4 },
-    sheep: [
-      { row: 0, col: 1 },
-      { row: 0, col: 3 },
-      { row: 0, col: 5 },
-      { row: 0, col: 7 }
-    ],
-    currentTurn: 'sheep',
-    playerSide: null,
-    gameOver: false
-  };
-
-  playAsWolfBtn.addEventListener('click', () => startGame('wolf'));
-  playAsSheepBtn.addEventListener('click', () => startGame('sheep'));
-  restartBtn.addEventListener('click', restartGame);
-
-  function startGame(side) {
-    gameState.playerSide = side;
-    startButtons.style.display = 'none';
-    restartBtn.style.display = 'inline-block';
-    createBoard();
-    if (side === 'sheep') {
-      message.textContent = "Your turn (Sheep)";
-    } else {
-      message.textContent = "AI's turn (Sheep)";
-      setTimeout(computerSheepMove, 500);
-    }
-  }
-
-  function createBoard() {
-    board.innerHTML = '';
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 8; col++) {
-        const cell = document.createElement('div');
-        cell.classList.add('cell');
-        cell.classList.add((row + col) % 2 === 0 ? 'white' : 'black');
-        cell.dataset.row = row;
-        cell.dataset.col = col;
-        cell.addEventListener('click', handleCellClick);
-        board.appendChild(cell);
-      }
-    }
-    updateBoard();
-  }
-
-  function updateBoard() {
-    const cells = board.getElementsByClassName('cell');
-    for (const cell of cells) {
-      cell.textContent = '';
-    }
-    const wolfCell = board.querySelector(`[data-row="${gameState.wolf.row}"][data-col="${gameState.wolf.col}"]`);
-    if (wolfCell) {
-      wolfCell.textContent = '🐺';
-    }
-    for (const sheep of gameState.sheep) {
-      const sheepCell = board.querySelector(`[data-row="${sheep.row}"][data-col="${sheep.col}"]`);
-      if (sheepCell) {
-        sheepCell.textContent = '🐏';
-      }
-    }
-  }
-
-  function handleCellClick(event) {
-    if (gameState.gameOver || gameState.playerSide !== gameState.currentTurn) return;
-    const clickedRow = parseInt(event.target.dataset.row);
-    const clickedCol = parseInt(event.target.dataset.col);
-    if (gameState.currentTurn === 'sheep') {
-      handleSheepMove(clickedRow, clickedCol);
-    } else {
-      handleWolfMove(clickedRow, clickedCol);
-    }
-  }
-
-  function handleSheepMove(clickedRow, clickedCol) {
-    if (selectedPiece === null) {
-      const clickedSheep = gameState.sheep.find(sheep => sheep.row === clickedRow && sheep.col === clickedCol);
-      if (clickedSheep) {
-        selectedPiece = clickedSheep;
-        message.textContent = 'Sheep selected. Click a valid destination.';
-      }
-    } else {
-      if (isValidSheepMove(selectedPiece, clickedRow, clickedCol)) {
-        selectedPiece.row = clickedRow;
-        selectedPiece.col = clickedCol;
-        selectedPiece = null;
-        gameState.currentTurn = 'wolf';
-        updateBoard();
-        message.textContent = gameState.playerSide === 'wolf' ? "Your turn (Wolf)" : "AI's turn (Wolf)";
-        checkWinCondition();
-        if (!gameState.gameOver && gameState.playerSide === 'sheep') {
-          setTimeout(computerWolfMove, 500);
+      function startGame(side) {
+        gameState.playerSide = side;
+        startButtons.style.display = 'none';
+        restartBtn.style.display = 'inline-block';
+        createBoard();
+        if (side === 'sheep') {
+          message.textContent = "Your turn (Sheep)";
+        } else {
+          message.textContent = "AI's turn (Sheep)";
+          setTimeout(computerSheepMove, 500);
         }
-      } else {
-        message.textContent = 'Invalid move. Try again.';
       }
-    }
-  }
 
-  function handleWolfMove(clickedRow, clickedCol) {
-    if (isValidWolfMove(gameState.wolf, clickedRow, clickedCol)) {
-      gameState.wolf.row = clickedRow;
-      gameState.wolf.col = clickedCol;
-      gameState.currentTurn = 'sheep';
-      updateBoard();
-      message.textContent = gameState.playerSide === 'sheep' ? "Your turn (Sheep)" : "AI's turn (Sheep)";
-      checkWinCondition();
-      if (!gameState.gameOver && gameState.playerSide === 'wolf') {
-        setTimeout(computerSheepMove, 500);
+      function createBoard() {
+        board.innerHTML = '';
+        for (let row = 0; row < 8; row++) {
+          for (let col = 0; col < 8; col++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.classList.add((row + col) % 2 === 0 ? 'white' : 'black');
+            cell.dataset.row = row;
+            cell.dataset.col = col;
+            cell.addEventListener('click', handleCellClick);
+            board.appendChild(cell);
+          }
+        }
+        updateBoard();
       }
-    }
-  }
 
-  function isValidSheepMove(sheep, newRow, newCol) {
-    return (
-      newRow === sheep.row + 1 &&
-      (newCol === sheep.col - 1 || newCol === sheep.col + 1) &&
-      newRow >= 0 && newRow < 8 && // Check for bounds
-      newCol >= 0 && newCol < 8 && // Check for bounds
-      !isCellOccupied(newRow, newCol)
-    );
-  }
+      function updateBoard() {
+        const cells = board.getElementsByClassName('cell');
+        for (const cell of cells) {
+          cell.textContent = '';
+        }
+        const wolfCell = board.querySelector(`[data-row="${gameState.wolf.row}"][data-col="${gameState.wolf.col}"]`);
+        if (wolfCell) {
+          wolfCell.textContent = '🐺';
+        }
+        for (const sheep of gameState.sheep) {
+          const sheepCell = board.querySelector(`[data-row="${sheep.row}"][data-col="${sheep.col}"]`);
+          if (sheepCell) {
+            sheepCell.textContent = '🐏';
+          }
+        }
+        document.querySelectorAll('.cell').forEach(cell => {
+          cell.style.animation = 'none';
+          cell.offsetHeight; // Trigger reflow
+          cell.style.animation = null;
+        });
+      }
 
-  function isValidWolfMove(wolf, newRow, newCol) {
-    return (
-      Math.abs(newRow - wolf.row) === 1 &&
-      Math.abs(newCol - wolf.col) === 1 &&
-      newRow >= 0 && newRow < 8 &&
-      newCol >= 0 && newCol < 8 &&
-      !isCellOccupied(newRow, newCol)
-    );
-  }
+      function animatePiece(element) {
+        element.animate([{
+            transform: 'scale(0.8) translateZ(0px)',
+            opacity: 0
+          },
+          {
+            transform: 'scale(1.1) translateZ(30px)',
+            opacity: 1
+          },
+          {
+            transform: 'scale(1) translateZ(15px)',
+            opacity: 1
+          }
+        ], {
+          duration: 500,
+          easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+        });
+      }
 
-  function isCellOccupied(row, col) {
-    return (
-      (gameState.wolf.row === row && gameState.wolf.col === col) ||
-      gameState.sheep.some(sheep => sheep.row === row && sheep.col === col)
-    );
-  }
+      function handleCellClick(event) {
+        if (gameState.gameOver || gameState.playerSide !== gameState.currentTurn) return;
+        const clickedRow = parseInt(event.target.dataset.row);
+        const clickedCol = parseInt(event.target.dataset.col);
+        if (gameState.currentTurn === 'sheep') {
+          handleSheepMove(clickedRow, clickedCol);
+        } else {
+          handleWolfMove(clickedRow, clickedCol);
+        }
+      }
 
-  function computerWolfMove() {
-    const possibleMoves = [
-      { row: gameState.wolf.row - 1, col: gameState.wolf.col - 1 },
-      { row: gameState.wolf.row - 1, col: gameState.wolf.col + 1 },
-      { row: gameState.wolf.row + 1, col: gameState.wolf.col - 1 },
-      { row: gameState.wolf.row + 1, col: gameState.wolf.col + 1 }
-    ].filter(move => isValidWolfMove(gameState.wolf, move.row, move.col));
-    if (possibleMoves.length > 0) {
-      possibleMoves.sort((a, b) => evaluateWolfMove(b) - evaluateWolfMove(a));
-      const bestMove = possibleMoves[0];
-      handleWolfMove(bestMove.row, bestMove.col);
-    } else {
-      endGame('Sheep');
-    }
-  }
-
-  function evaluateWolfMove(move) {
-    let score = 0;
-    // Prioritize moving upwards to win
-    score += (7 - move.row) * 3;
-    // Evaluate the freedom of movement after this move
-    const futureMovesCount = [
-      { row: move.row - 1, col: move.col - 1 },
-      { row: move.row - 1, col: move.col + 1 },
-      { row: move.row + 1, col: move.col - 1 },
-      { row: move.row + 1, col: move.col + 1 }
-    ].filter(futureMove => isValidWolfMove(gameState.wolf, futureMove.row, futureMove.col)).length;
-    score += futureMovesCount * 1;
-    return score;
-  }
-
-  function computerSheepMove() {
-    const movableSheep = gameState.sheep.filter(sheep =>
-      isValidSheepMove(sheep, sheep.row + 1, sheep.col - 1) ||
-      isValidSheepMove(sheep, sheep.row + 1, sheep.col + 1)
-    );
-    if (movableSheep.length > 0) {
-      let bestMove = null;
-      let bestScore = -Infinity;
-      for (const sheep of movableSheep) {
-        const possibleMoves = [
-          { row: sheep.row + 1, col: sheep.col - 1 },
-          { row: sheep.row + 1, col: sheep.col + 1 }
-        ].filter(move => isValidSheepMove(sheep, move.row, move.col));
-        for (const move of possibleMoves) {
-          const score = evaluateSheepMove(sheep, move);
-          if (score > bestScore) {
-            bestScore = score;
-            bestMove = { sheep, move };
+      function handleSheepMove(clickedRow, clickedCol) {
+        if (selectedPiece === null) {
+          const clickedSheep = gameState.sheep.find(sheep => sheep.row === clickedRow && sheep.col === clickedCol);
+          if (clickedSheep) {
+            selectedPiece = clickedSheep;
+            message.textContent = 'Sheep selected. Click a valid destination.';
+          }
+        } else {
+          if (isValidSheepMove(selectedPiece, clickedRow, clickedCol)) {
+            selectedPiece.row = clickedRow;
+            selectedPiece.col = clickedCol;
+            selectedPiece = null;
+            gameState.currentTurn = 'wolf';
+            updateBoard();
+            message.textContent = gameState.playerSide === 'wolf' ? "Your turn (Wolf)" : "AI's turn (Wolf)";
+            checkWinCondition();
+            if (!gameState.gameOver && gameState.playerSide === 'sheep') {
+              setTimeout(computerWolfMove, 500);
+            }
+          } else {
+            message.textContent = 'Invalid move. Try again.';
           }
         }
       }
-      if (bestMove) {
-        bestMove.sheep.row = bestMove.move.row;
-        bestMove.sheep.col = bestMove.move.col;
-        gameState.currentTurn = 'wolf';
-        updateBoard();
-        message.textContent = gameState.playerSide === 'wolf' ? "Your turn (Wolf)" : "AI's turn (Wolf)";
-        checkWinCondition();
-        if (!gameState.gameOver && gameState.playerSide === 'sheep') {
+
+      function handleWolfMove(clickedRow, clickedCol) {
+        if (isValidWolfMove(gameState.wolf, clickedRow, clickedCol)) {
+          gameState.wolf.row = clickedRow;
+          gameState.wolf.col = clickedCol;
+          gameState.currentTurn = 'sheep';
+          updateBoard();
+          message.textContent = gameState.playerSide === 'sheep' ? "Your turn (Sheep)" : "AI's turn (Sheep)";
+          checkWinCondition();
+          if (!gameState.gameOver && gameState.playerSide === 'wolf') {
+            setTimeout(computerSheepMove, 500);
+          }
+        }
+      }
+
+      function isValidSheepMove(sheep, newRow, newCol) {
+        return (
+          newRow === sheep.row + 1 &&
+          (newCol === sheep.col - 1 || newCol === sheep.col + 1) &&
+          newRow >= 0 && newRow < 8 && // Check for bounds
+          newCol >= 0 && newCol < 8 && // Check for bounds
+          !isCellOccupied(newRow, newCol)
+        );
+      }
+
+      function isValidWolfMove(wolf, newRow, newCol) {
+        return (
+          Math.abs(newRow - wolf.row) === 1 &&
+          Math.abs(newCol - wolf.col) === 1 &&
+          newRow >= 0 && newRow < 8 &&
+          newCol >= 0 && newCol < 8 &&
+          !isCellOccupied(newRow, newCol)
+        );
+      }
+
+      function isCellOccupied(row, col) {
+        return (
+          (gameState.wolf.row === row && gameState.wolf.col === col) ||
+          gameState.sheep.some(sheep => sheep.row === row && sheep.col === col)
+        );
+      }
+
+      function computerWolfMove() {
+        const possibleMoves = [{
+            row: gameState.wolf.row - 1,
+            col: gameState.wolf.col - 1
+          },
+          {
+            row: gameState.wolf.row - 1,
+            col: gameState.wolf.col + 1
+          },
+          {
+            row: gameState.wolf.row + 1,
+            col: gameState.wolf.col - 1
+          },
+          {
+            row: gameState.wolf.row + 1,
+            col: gameState.wolf.col + 1
+          }
+        ].filter(move => isValidWolfMove(gameState.wolf, move.row, move.col));
+        if (possibleMoves.length > 0) {
+          const bestMove = minimax(gameState, 4, true, -Infinity, Infinity).move;
+          if (bestMove) {
+            handleWolfMove(bestMove.row, bestMove.col);
+          }
+        } else {
+          endGame('Sheep');
+        }
+      }
+
+      function minimax(state, depth, isMaximizingPlayer, alpha, beta) {
+        if (depth === 0 || isGameOver(state)) {
+          return {
+            score: evaluateBoard(state)
+          };
+        }
+        if (isMaximizingPlayer) {
+          let bestScore = -Infinity;
+          let bestMove = null;
+          const possibleMoves = getValidWolfMoves(state.wolf);
+          for (const move of possibleMoves) {
+            const newState = applyMove(state, move, 'wolf');
+            const result = minimax(newState, depth - 1, false, alpha, beta);
+            if (result.score > bestScore) {
+              bestScore = result.score;
+              bestMove = move;
+            }
+            alpha = Math.max(alpha, bestScore);
+            if (beta <= alpha) break; // Alpha-Beta pruning
+          }
+          return {
+            move: bestMove,
+            score: bestScore
+          };
+        } else {
+          let bestScore = Infinity;
+          let bestMove = null;
+          const possibleMoves = getAllValidSheepMoves(state);
+          for (const move of possibleMoves) {
+            const newState = applyMove(state, move, 'sheep');
+            const result = minimax(newState, depth - 1, true, alpha, beta);
+            if (result.score < bestScore) {
+              bestScore = result.score;
+              bestMove = move;
+            }
+            beta = Math.min(beta, bestScore);
+            if (beta <= alpha) break; // Alpha-Beta pruning
+          }
+          return {
+            move: bestMove,
+            score: bestScore
+          };
+        }
+      }
+
+      function evaluateBoard(state) {
+        let score = 0;
+        // Wolf's progress towards the top
+        score += (7 - state.wolf.row) * 10;
+        // Freedom of movement for the wolf
+        const wolfMoves = getValidWolfMoves(state.wolf).length;
+        score += wolfMoves * 5;
+        // Proximity to sheep (prefer being closer to break formations)
+        const closestSheepDistance = Math.min(...state.sheep.map(sheep =>
+          Math.abs(state.wolf.row - sheep.row) + Math.abs(state.wolf.col - sheep.col)
+        ));
+        score -= closestSheepDistance * 2;
+        // Sheep formation analysis
+        const sheepFormationScore = analyzeSheepFormation(state);
+        score -= sheepFormationScore * 3;
+        // Trap detection
+        if (wolfMoves <= 1) {
+          score -= 50; // Heavily penalize positions where the wolf is nearly trapped
+        }
+        return score;
+      }
+
+      function analyzeSheepFormation(state) {
+        let formationScore = 0;
+        // Check for horizontal lines of sheep
+        for (let row = 0; row < 8; row++) {
+          const sheepInRow = state.sheep.filter(sheep => sheep.row === row).length;
+          formationScore += sheepInRow * sheepInRow; // Square it to give more weight to larger formations
+        }
+        // Check for diagonal formations
+        const diagonals = [
+          [{
+            row: 0,
+            col: 0
+          }, {
+            row: 1,
+            col: 1
+          }, {
+            row: 2,
+            col: 2
+          }, {
+            row: 3,
+            col: 3
+          }],
+          [{
+            row: 1,
+            col: 0
+          }, {
+            row: 2,
+            col: 1
+          }, {
+            row: 3,
+            col: 2
+          }, {
+            row: 4,
+            col: 3
+          }],
+          [{
+            row: 0,
+            col: 4
+          }, {
+            row: 1,
+            col: 5
+          }, {
+            row: 2,
+            col: 6
+          }, {
+            row: 3,
+            col: 7
+          }],
+          [{
+            row: 1,
+            col: 4
+          }, {
+            row: 2,
+            col: 5
+          }, {
+            row: 3,
+            col: 6
+          }, {
+            row: 4,
+            col: 7
+          }]
+        ];
+        for (const diagonal of diagonals) {
+          const sheepInDiagonal = diagonal.filter(pos =>
+            state.sheep.some(sheep => sheep.row === pos.row && sheep.col === pos.col)
+          ).length;
+          formationScore += sheepInDiagonal * sheepInDiagonal;
+        }
+        return formationScore;
+      }
+
+      function getValidWolfMoves(wolf) {
+        return [{
+            row: wolf.row - 1,
+            col: wolf.col - 1
+          },
+          {
+            row: wolf.row - 1,
+            col: wolf.col + 1
+          },
+          {
+            row: wolf.row + 1,
+            col: wolf.col - 1
+          },
+          {
+            row: wolf.row + 1,
+            col: wolf.col + 1
+          }
+        ].filter(move => isValidWolfMove(wolf, move.row, move.col));
+      }
+
+      function getAllValidSheepMoves(state) {
+        return state.sheep.flatMap(sheep => [{
+            from: sheep,
+            to: {
+              row: sheep.row + 1,
+              col: sheep.col - 1
+            }
+          },
+          {
+            from: sheep,
+            to: {
+              row: sheep.row + 1,
+              col: sheep.col + 1
+            }
+          }
+        ].filter(move => isValidSheepMove(move.from, move.to.row, move.to.col)));
+      }
+
+      function applyMove(state, move, player) {
+        const newState = JSON.parse(JSON.stringify(state));
+        if (player === 'wolf') {
+          newState.wolf = move;
+        } else {
+          const sheepIndex = newState.sheep.findIndex(s => s.row === move.from.row && s.col === move.from.col);
+          newState.sheep[sheepIndex] = move.to;
+        }
+        return newState;
+      }
+
+      function isGameOver(state) {
+        return state.wolf.row === 0 || getValidWolfMoves(state.wolf).length === 0;
+      }
+
+      function evaluateWolfMove(move) {
+        let score = 0;
+        // Prioritize moving upwards to win
+        score += (7 - move.row) * 3;
+        // Evaluate the freedom of movement after this move
+        const futureMovesCount = [{
+            row: move.row - 1,
+            col: move.col - 1
+          },
+          {
+            row: move.row - 1,
+            col: move.col + 1
+          },
+          {
+            row: move.row + 1,
+            col: move.col - 1
+          },
+          {
+            row: move.row + 1,
+            col: move.col + 1
+          }
+        ].filter(futureMove => isValidWolfMove(gameState.wolf, futureMove.row, futureMove.col)).length;
+        score += futureMovesCount * 1;
+        return score;
+      }
+
+      function computerSheepMove() {
+        const movableSheep = gameState.sheep.filter(sheep =>
+          isValidSheepMove(sheep, sheep.row + 1, sheep.col - 1) ||
+          isValidSheepMove(sheep, sheep.row + 1, sheep.col + 1)
+        );
+        if (movableSheep.length > 0) {
+          let bestMove = null;
+          let bestScore = -Infinity;
+          for (const sheep of movableSheep) {
+            const possibleMoves = [{
+                row: sheep.row + 1,
+                col: sheep.col - 1
+              },
+              {
+                row: sheep.row + 1,
+                col: sheep.col + 1
+              }
+            ].filter(move => isValidSheepMove(sheep, move.row, move.col));
+            for (const move of possibleMoves) {
+              const score = evaluateSheepMove(sheep, move);
+              if (score > bestScore) {
+                bestScore = score;
+                bestMove = {
+                  sheep,
+                  move
+                };
+              }
+            }
+          }
+          if (bestMove) {
+            bestMove.sheep.row = bestMove.move.row;
+            bestMove.sheep.col = bestMove.move.col;
+            gameState.currentTurn = 'wolf';
+            updateBoard();
+            message.textContent = gameState.playerSide === 'wolf' ? "Your turn (Wolf)" : "AI's turn (Wolf)";
+            checkWinCondition();
+            if (!gameState.gameOver && gameState.playerSide === 'sheep') {
+              setTimeout(computerWolfMove, 500);
+            }
+          }
+        } else {
+          // Sheep cannot move, let wolf continue
+          message.textContent = "Sheep cannot move. Wolf continues.";
           setTimeout(computerWolfMove, 500);
         }
       }
-    } else {
-      // Sheep cannot move, let wolf continue
-      message.textContent = "Sheep cannot move. Wolf continues.";
-      setTimeout(computerWolfMove, 500);
-    }
-  }
 
-  function evaluateSheepMove(sheep, move) {
-    let score = 0;
-    // Create a temporary game state to simulate the move
-    const tempGameState = JSON.parse(JSON.stringify(gameState));
-    const tempSheep = tempGameState.sheep.find(s => s.row === sheep.row && s.col === sheep.col);
-    tempSheep.row = move.row;
-    tempSheep.col = move.col;
-    // Evaluate how this move contributes to trapping the wolf
-    const wolfMoves = [
-      { row: tempGameState.wolf.row - 1, col: tempGameState.wolf.col - 1 },
-      { row: tempGameState.wolf.row - 1, col: tempGameState.wolf.col + 1 },
-      { row: tempGameState.wolf.row + 1, col: tempGameState.wolf.col - 1 },
-      { row: tempGameState.wolf.row + 1, col: tempGameState.wolf.col + 1 }
-    ].filter(wolfMove =>
-      wolfMove.row >= 0 && wolfMove.row < 8 &&
-      wolfMove.col >= 0 && wolfMove.col < 8 &&
-      !tempGameState.sheep.some(s => s.row === wolfMove.row && s.col === wolfMove.col)
-    );
-    score += (4 - wolfMoves.length) * 5; // Prioritize moves that limit wolf's options
-    // Prioritize forming a line to block the wolf
-    const sameRowSheep = tempGameState.sheep.filter(s => s.row === move.row).length;
-    score += sameRowSheep * 2;
-    // Avoid moving too far from other sheep
-    const averageSheepRow = tempGameState.sheep.reduce((sum, s) => sum + s.row, 0) / 4;
-    score -= Math.abs(move.row - averageSheepRow);
-    // Slightly prefer central columns
-    score -= Math.abs(move.col - 3.5);
-    return score;
-  }
+      function evaluateSheepMove(sheep, move) {
+        let score = 0;
+        // Create a temporary game state to simulate the move
+        const tempGameState = JSON.parse(JSON.stringify(gameState));
+        const tempSheep = tempGameState.sheep.find(s => s.row === sheep.row && s.col === sheep.col);
+        tempSheep.row = move.row;
+        tempSheep.col = move.col;
+        // Evaluate how this move contributes to trapping the wolf
+        const wolfMoves = [{
+            row: tempGameState.wolf.row - 1,
+            col: tempGameState.wolf.col - 1
+          },
+          {
+            row: tempGameState.wolf.row - 1,
+            col: tempGameState.wolf.col + 1
+          },
+          {
+            row: tempGameState.wolf.row + 1,
+            col: tempGameState.wolf.col - 1
+          },
+          {
+            row: tempGameState.wolf.row + 1,
+            col: tempGameState.wolf.col + 1
+          }
+        ].filter(wolfMove =>
+          wolfMove.row >= 0 && wolfMove.row < 8 &&
+          wolfMove.col >= 0 && wolfMove.col < 8 &&
+          !tempGameState.sheep.some(s => s.row === wolfMove.row && s.col === wolfMove.col)
+        );
+        score += (4 - wolfMoves.length) * 5; // Prioritize moves that limit wolf's options
+        // Prioritize forming a line to block the wolf
+        const sameRowSheep = tempGameState.sheep.filter(s => s.row === move.row).length;
+        score += sameRowSheep * 2;
+        // Avoid moving too far from other sheep
+        const averageSheepRow = tempGameState.sheep.reduce((sum, s) => sum + s.row, 0) / 4;
+        score -= Math.abs(move.row - averageSheepRow);
+        // Slightly prefer central columns
+        score -= Math.abs(move.col - 3.5);
+        return score;
+      }
 
-  function checkWinCondition() {
-    if (gameState.wolf.row === 0) {
-      endGame('Wolf');
-    } else if (!canWolfMove() && canSheepMove()) {
-      endGame('Sheep');
-    } else if (!canSheepMove()) {
-      gameState.currentTurn = 'wolf';
-      setTimeout(computerWolfMove, 500);
-    }
-  }
+      function checkWinCondition() {
+        if (gameState.wolf.row === 0) {
+          endGame('Wolf');
+        } else if (!canWolfMove() && canSheepMove()) {
+          endGame('Sheep');
+        } else if (!canSheepMove()) {
+          gameState.currentTurn = 'wolf';
+          setTimeout(computerWolfMove, 500);
+        }
+      }
 
-  function canWolfMove() {
-    const { row, col } = gameState.wolf;
-    const possibleMoves = [
-      { row: row - 1, col: col - 1 },
-      { row: row - 1, col: col + 1 },
-      { row: row + 1, col: col - 1 },
-      { row: row + 1, col: col + 1 }
-    ];
-    return possibleMoves.some(move => isValidWolfMove(gameState.wolf, move.row, move.col));
-  }
+      function canWolfMove() {
+        const {
+          row,
+          col
+        } = gameState.wolf;
+        const possibleMoves = [{
+            row: row - 1,
+            col: col - 1
+          },
+          {
+            row: row - 1,
+            col: col + 1
+          },
+          {
+            row: row + 1,
+            col: col - 1
+          },
+          {
+            row: row + 1,
+            col: col + 1
+          }
+        ];
+        return possibleMoves.some(move => isValidWolfMove(gameState.wolf, move.row, move.col));
+      }
 
-  function canSheepMove() {
-    return gameState.sheep.some(sheep =>
-      isValidSheepMove(sheep, sheep.row + 1, sheep.col - 1) ||
-      isValidSheepMove(sheep, sheep.row + 1, sheep.col + 1)
-    );
-  }
+      function canSheepMove() {
+        return gameState.sheep.some(sheep =>
+          isValidSheepMove(sheep, sheep.row + 1, sheep.col - 1) ||
+          isValidSheepMove(sheep, sheep.row + 1, sheep.col + 1)
+        );
+      }
 
-  function endGame(winner) {
-    gameState.gameOver = true;
-    message.textContent = `Game Over! ${winner} wins!`;
-    disableBoard();
-  }
+      function endGame(winner) {
+        gameState.gameOver = true;
+        message.textContent = `Game Over! ${winner} wins!`;
+        disableBoard();
+      }
 
-  function disableBoard() {
-    const cells = board.getElementsByClassName('cell');
-    for (const cell of cells) {
-      cell.removeEventListener('click', handleCellClick);
-    }
-  }
+      function disableBoard() {
+        const cells = board.getElementsByClassName('cell');
+        for (const cell of cells) {
+          cell.removeEventListener('click', handleCellClick);
+        }
+      }
 
-  function restartGame() {
-    gameState = {
-      wolf: { row: 7, col: 4 },
-      sheep: [
-        { row: 0, col: 1 },
-        { row: 0, col: 3 },
-        { row: 0, col: 5 },
-        { row: 0, col: 7 }
-      ],
-      currentTurn: 'sheep',
-      playerSide: null,
-      gameOver: false
-    };
-    selectedPiece = null;
-    startButtons.style.display = 'block';
-    restartBtn.style.display = 'none';
-    board.innerHTML = '';
-    message.textContent = '';
-  }
-});
-</script>
+      function restartGame() {
+        gameState = {
+          wolf: {
+            row: 7,
+            col: 4
+          },
+          sheep: [{
+              row: 0,
+              col: 1
+            },
+            {
+              row: 0,
+              col: 3
+            },
+            {
+              row: 0,
+              col: 5
+            },
+            {
+              row: 0,
+              col: 7
+            }
+          ],
+          currentTurn: 'sheep',
+          playerSide: null,
+          gameOver: false
+        };
+        selectedPiece = null;
+        startButtons.style.display = 'block';
+        restartBtn.style.display = 'none';
+        board.innerHTML = '';
+        message.textContent = '';
+      }
+    });
+  </script>
 </body>
-
+<!-- By Marc Sonne Dahl (c) 2024 -->
 </html>
