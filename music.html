@@ -1,11 +1,16 @@
 <html lang="en">
-
+<!-- By Marc Sonne Dahl (c) 2024 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Color Superior Sequntial Equalizer</title>
+  <title>Color Superior Sequential Equalizer</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <style>
+    :root {
+      --main-color: #00e676;
+      --hover-color: rgba(0, 230, 118, 0.1);
+    }
+
     body {
       font-family: 'Arial', sans-serif;
       background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
@@ -40,6 +45,7 @@
       width: 18px;
       border-radius: 9px;
       transition: height 0.2s ease, background-color 0.5s ease;
+      background-color: var(--main-color);
     }
 
     .controls {
@@ -61,10 +67,12 @@
       justify-content: center;
       align-items: center;
       margin: 5px;
+      color: var(--main-color);
     }
 
     button:hover {
       transform: scale(1.1);
+      background-color: var(--hover-color);
     }
 
     button:active {
@@ -80,13 +88,69 @@
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
-      color: rgba(0, 0, 0, .6);
+      color: var(--main-color);
       background-color: transparent;
-      text-shadow: rgba(255, 255, 255, .15) 1px 1px 1px;
+      text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 2px;
+    }
+
+    .volume-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    #volumeSlider {
+      -webkit-appearance: none;
+      width: 80%;
+      height: 5px;
+      border-radius: 5px;
+      background: #d3d3d3;
+      outline: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    #volumeSlider:hover {
+      opacity: 1;
+    }
+
+    #volumeSlider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--main-color);
+      cursor: pointer;
+    }
+
+    #volumeSlider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--main-color);
+      cursor: pointer;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 5px;
+      background-color: rgba(255, 255, 255, 0.3);
+      margin-top: 20px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    #progress {
+      width: 0;
+      height: 100%;
+      background-color: var(--main-color);
+      transition: width 0.5s linear;
     }
   </style>
 </head>
-
+<!-- By Marc Sonne Dahl (c) 2024 -->
 <body>
   <div class="player-container">
     <div class="equalizer" id="equalizer">
@@ -108,19 +172,29 @@
     </div>
     <div class="controls">
       <button id="prevButton"><i class="fas fa-step-backward"></i></button>
-      <button id="playButton"><i class="fas fa-play"></i></button>
-      <button id="pauseButton"><i class="fas fa-pause"></i></button>
+      <button id="playPauseButton"><i class="fas fa-play"></i></button>
       <button id="stopButton"><i class="fas fa-stop"></i></button>
       <button id="nextButton"><i class="fas fa-step-forward"></i></button>
     </div>
     <div id="trackInfo">Track 1</div>
+    <div class="volume-control">
+      <i class="fas fa-volume-down"></i>
+      <input type="range" id="volumeSlider" min="0" max="100" value="50">
+      <i class="fas fa-volume-up"></i>
+    </div>
+    <div class="progress-bar">
+      <div id="progress"></div>
+    </div>
   </div>
-
+<!-- By Marc Sonne Dahl (c) 2024 -->
   <script>
     const MAX_BAR_HEIGHT = 200;
     let intervalId;
-    let isPaused = false;
+    let isPaused = true;
     let currentTrack = 0;
+    let volume = 50;
+    let progress = 0;
+    const trackDuration = 180; // 3 minutes in seconds
     const trackColors = [{
         main: '#00e676',
         hover: 'rgba(0, 230, 118, 0.1)'
@@ -150,41 +224,61 @@
         hover: 'rgba(63, 81, 181, 0.1)'
       } // Indigo
     ];
-    document.getElementById('playButton').addEventListener('click', playEqualizer);
-    document.getElementById('pauseButton').addEventListener('click', pauseEqualizer);
-    document.getElementById('stopButton').addEventListener('click', stopEqualizer);
-    document.getElementById('prevButton').addEventListener('click', previousTrack);
-    document.getElementById('nextButton').addEventListener('click', nextTrack);
+    const playPauseButton = document.getElementById('playPauseButton');
+    const stopButton = document.getElementById('stopButton');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const progressBar = document.getElementById('progress');
+    playPauseButton.addEventListener('click', togglePlayPause);
+    stopButton.addEventListener('click', stopEqualizer);
+    prevButton.addEventListener('click', previousTrack);
+    nextButton.addEventListener('click', nextTrack);
+    volumeSlider.addEventListener('input', updateVolume);
+
+    function togglePlayPause() {
+      if (isPaused) {
+        playEqualizer();
+      } else {
+        pauseEqualizer();
+      }
+    }
 
     function playEqualizer() {
       if (!intervalId) {
-        isPaused = false;
-        intervalId = setInterval(() => {
-          if (!isPaused) {
-            setRandomBars();
-          }
-        }, 200);
-      } else {
-        isPaused = false;
+        intervalId = setInterval(updateEqualizer, 200);
       }
+      isPaused = false;
+      playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
     }
 
     function pauseEqualizer() {
       isPaused = true;
+      playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+      // We don't clear the interval here, just set isPaused to true
     }
 
     function stopEqualizer() {
       clearInterval(intervalId);
       intervalId = null;
-      isPaused = false;
+      isPaused = true;
+      playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
       resetBars();
+      resetProgress();
+    }
+
+    function updateEqualizer() {
+      if (!isPaused) {
+        setRandomBars();
+        updateProgress();
+      }
     }
 
     function setRandomBars() {
       const bars = document.getElementsByClassName('equalizer-bar');
       for (let i = 0; i < bars.length; i++) {
         let height = getRandomHeight(MAX_BAR_HEIGHT);
-        bars[i].style.height = `${height}px`;
+        bars[i].style.height = `${height * (volume / 100)}px`;
       }
     }
 
@@ -202,11 +296,13 @@
     function previousTrack() {
       currentTrack = (currentTrack - 1 + trackColors.length) % trackColors.length;
       updateTrackColors();
+      resetProgress();
     }
 
     function nextTrack() {
       currentTrack = (currentTrack + 1) % trackColors.length;
       updateTrackColors();
+      resetProgress();
     }
 
     function updateTrackColors() {
@@ -222,10 +318,34 @@
         button.style.color = color.main;
       }
       document.getElementById('trackInfo').textContent = `Track ${currentTrack + 1}`;
+      progressBar.style.backgroundColor = color.main;
+    }
+
+    function updateVolume() {
+      volume = volumeSlider.value;
+      if (!isPaused) {
+        setRandomBars();
+      }
+    }
+
+    function updateProgress() {
+      progress += 0.2;
+      if (progress >= trackDuration) {
+        nextTrack();
+        resetProgress();
+      } else {
+        const percentage = (progress / trackDuration) * 100;
+        progressBar.style.width = `${percentage}%`;
+      }
+    }
+
+    function resetProgress() {
+      progress = 0;
+      progressBar.style.width = '0%';
     }
     // Initialize with the first track's colors
     updateTrackColors();
   </script>
 </body>
-
+<!-- By Marc Sonne Dahl (c) 2024 -->
 </html>
