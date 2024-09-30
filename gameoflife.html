@@ -1,5 +1,5 @@
 <html lang="en">
-<!-- Created by Marc Sonne Dahl -->
+<!-- Created by Marc Sonne Dahl © 2024 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,21 +15,24 @@
       font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
+      transition: background-color 0.3s, color 0.3s;
+      color: var(--text-color);
     }
 
     #controls {
-      background-color: #f0f0f0;
+      background-color: var(--bg-controls);
       padding: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid var(--border-color);
     }
 
     #gameArea {
       flex-grow: 1;
       position: relative;
       overflow: hidden;
+      background-color: var(--bg-game);
     }
 
     #gameCanvas {
@@ -43,14 +46,14 @@
     label,
     input {
       margin: 0 10px;
-      font-size: 16px;
+      font-size: 1rem;
     }
 
     button {
-      padding: 10px 40px;
+      padding: 10px 20px;
       cursor: pointer;
-      background-color: #4CAF50;
-      color: white;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
       border: none;
       border-radius: 5px;
       display: flex;
@@ -60,7 +63,7 @@
     }
 
     button:hover {
-      background-color: #45a049;
+      background-color: var(--btn-hover);
     }
 
     button i {
@@ -69,12 +72,32 @@
 
     #speedControl {
       max-width: 100%;
-      width: 150x;
-      background-color: #4CAF50;
+    }
+
+    :root {
+      --bg-body: #ffffff;
+      --bg-controls: #f0f0f0;
+      --border-color: #ccc;
+      --btn-bg: #4CAF50;
+      --btn-text: white;
+      --btn-hover: #45a049;
+      --bg-game: #ffffff;
+      --text-color: #3498db;
+    }
+
+    body.dark {
+      --bg-body: #1e1e1e;
+      --bg-controls: #333333;
+      --border-color: #555;
+      --btn-bg: #3498db;
+      --btn-text: white;
+      --btn-hover: #2980b9;
+      --bg-game: #2c3e50;
+      --text-color: #4CAF50;
     }
   </style>
 </head>
-<!-- Created by Marc Sonne Dahl -->
+<!-- Created by Marc Sonne Dahl © 2024 -->
 <body>
   <div id="controls">
     <button id="startStopBtn"><i class="fas fa-play"></i></button>
@@ -82,10 +105,12 @@
     <label for="speedControl"><i class="fa-solid fa-gauge-high"></i></label>
     <input type="range" id="speedControl" min="1" max="60" value="10">
     <span id="speedValue"></span>
+    <button id="themeToggleBtn"><i class="fas fa-adjust"></i></button>
   </div>
   <div id="gameArea">
     <canvas id="gameCanvas"></canvas>
   </div>
+<!-- Created by Marc Sonne Dahl © 2024 -->
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -94,6 +119,7 @@
     const speedControl = document.getElementById('speedControl');
     const speedValue = document.getElementById('speedValue');
     const gameArea = document.getElementById('gameArea');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
     let width, height, cols, rows;
     let cellSize = 10;
     let grid;
@@ -116,7 +142,7 @@
 
     function draw() {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = '#3498db';
+      ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--btn-bg');
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
           const x = i * cellSize;
@@ -235,10 +261,18 @@
         speed = parseInt(this.value);
         speedValue.textContent = ``;
       });
+      // Detect theme preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+      }
+      // Theme toggle button
+      themeToggleBtn.addEventListener('click', function() {
+        document.body.classList.toggle('dark');
+      });
     }
     window.addEventListener('resize', setup);
     init();
   </script>
 </body>
-<!-- Created by Marc Sonne Dahl -->
+<!-- Created by Marc Sonne Dahl © 2024 -->
 </html>
