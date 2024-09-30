@@ -83,6 +83,56 @@
       margin-bottom: 30px;
     }
 
+    .log {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      color: var(--text-color);
+      width: 100%;
+      max-width: 300px;
+      float: bottom;
+    }
+
+    .clear-history-btn {
+      background-color: var(--clear-history-bg, #f56565);
+      color: var(--bg-color);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      display: block;
+      float: right;
+    }
+
+    .clear-history-btn:hover {
+      background-color: var(--text-color);
+    }
+
+    .shuffling {
+      animation: shuffle 0.5s ease-in-out;
+    }
+
+    @keyframes shuffle {
+      0% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(20px);
+      }
+
+      50% {
+        transform: translateX(-20px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
     .tooltip {
       position: fixed;
       top: 20px;
@@ -304,6 +354,10 @@
     </div>
     <div id="board"></div>
   </div>
+  <div id="historyLog" class="log">
+    History log:
+    <button id="clearHistoryBtn" class="clear-history-btn">Clear History</button>
+  </div>
 
   <script>
     const board = document.getElementById("board");
@@ -356,15 +410,30 @@
     }
 
     function shuffleCards() {
+      cards.forEach(card => card.classList.add('shuffling'));
+      setTimeout(() => {
+        cards.forEach(card => card.classList.remove('shuffling'));
+      }, 500);
       for (let i = cards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [cards[i], cards[j]] = [cards[j], cards[i]];
       }
-      cards.forEach((card) => board.appendChild(card));
+      cards.forEach(card => board.appendChild(card));
     }
+    const historyLog = document.getElementById("historyLog");
 
     function flipCard(card) {
       card.classList.toggle("flip");
+      if (card.classList.contains("flip")) {
+        const choice = card.querySelector('.card-back').textContent;
+        addToHistoryLog(choice);
+      }
+    }
+
+    function addToHistoryLog(choice) {
+      const logItem = document.createElement('div');
+      logItem.textContent = `Revealed: ${choice}`;
+      historyLog.appendChild(logItem);
     }
 
     function clearBoard() {
@@ -377,6 +446,14 @@
     const body = document.body;
     toggleDarkModeBtn.addEventListener("click", () => {
       body.classList.toggle("dark-mode");
+    });
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      body.classList.add('dark-mode');
+    }
+    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+    clearHistoryBtn.addEventListener("click", function() {
+      const logItems = historyLog.querySelectorAll('div');
+      logItems.forEach(item => item.remove());
     });
   </script>
 </body>
