@@ -1,5 +1,5 @@
 <html lang="da">
-
+<!-- Created by Marc Sonne Dahl (c) 2024 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -105,6 +105,8 @@
       font-size: 0.8rem;
       display: block;
       float: right;
+      width: 100%;
+      margin-top: 5px;
     }
 
     .clear-history-btn:hover {
@@ -325,9 +327,58 @@
         width: 100%;
       }
     }
+
+    .export-import-btns {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 600px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+
+    .export-btn,
+    .import-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: var(--accent-color);
+      color: var(--bg-color);
+      font-weight: 600;
+      transition: background-color 0.3s, transform 0.1s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .export-btn:hover,
+    .import-btn:hover {
+      background: var(--text-color);
+      transform: translateY(-2px);
+    }
+
+    .export-btn:active,
+    .import-btn:active {
+      transform: translateY(0);
+    }
+
+    #importInput {
+      display: none;
+    }
+
+    #historyLog {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #logEntries {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
   </style>
 </head>
-
+<!-- Created by Marc Sonne Dahl (c) 2024 -->
 <body>
   <div class="container">
     <div class="logo">
@@ -351,20 +402,35 @@
       <input type="text" id="inputField" class="input-field" placeholder="Enter your choices" required>
       <button id="addBtn" class="btn add-btn"><i class="fa-solid fa-plus"></i></button>
       <button id="clearBtn" class="btn clear-btn"><i class="fa-regular fa-trash-can"></i></button>
+      <div class="export-import-btns">
+        <button id="exportBtn" class="export-btn">Export Data</button>
+        <button id="importBtn" class="import-btn">Import Data</button>
+        <input type="file" id="importInput" accept=".json">
+      </div>
     </div>
+
     <div id="board"></div>
   </div>
   <div id="historyLog" class="log">
     History log:
     <button id="clearHistoryBtn" class="clear-history-btn">Clear History</button>
+    <div id="logEntries"></div>
   </div>
-
+<!-- Created by Marc Sonne Dahl (c) 2024 -->
   <script>
     const board = document.getElementById("board");
     const inputField = document.getElementById("inputField");
     const addBtn = document.getElementById("addBtn");
     const clearBtn = document.getElementById("clearBtn");
-    const cards = [];
+    const exportBtn = document.getElementById("exportBtn");
+    const importBtn = document.getElementById("importBtn");
+    const importInput = document.getElementById("importInput");
+    const historyLog = document.getElementById("historyLog");
+    const logEntries = document.getElementById("logEntries");
+    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+    const toggleDarkModeBtn = document.getElementById("toggleDarkMode");
+    const body = document.body;
+    let cards = [];
     inputField.addEventListener("input", function(event) {
       const lastChar = event.target.value.slice(-1);
       if (lastChar === ",") {
@@ -378,6 +444,11 @@
     });
     addBtn.addEventListener("click", addChoices);
     clearBtn.addEventListener("click", clearBoard);
+    exportBtn.addEventListener("click", exportData);
+    importBtn.addEventListener("click", () => importInput.click());
+    importInput.addEventListener("change", importData);
+    toggleDarkModeBtn.addEventListener("click", () => body.classList.toggle("dark-mode"));
+    clearHistoryBtn.addEventListener("click", clearHistory);
 
     function addChoices() {
       const choices = inputField.value
@@ -386,21 +457,24 @@
         .filter(choice => choice !== "");
       choices.forEach(choice => {
         createCard(choice);
-        shuffleCards();
       });
+      shuffleCards();
       inputField.value = "";
     }
 
-    function createCard(input) {
+    function createCard(input, isFlipped = false) {
       if (input) {
         const card = document.createElement("div");
         card.classList.add("card");
+        if (isFlipped) {
+          card.classList.add("flip");
+        }
         card.innerHTML = `
-          <div class="card-inner">
-            <div class="card-front"><i class="fa-solid fa-fingerprint"></i></div>
-            <div class="card-back">${input}</div>
-          </div>
-        `;
+      <div class="card-inner">
+        <div class="card-front"><i class="fa-solid fa-fingerprint"></i></div>
+        <div class="card-back">${input}</div>
+      </div>
+    `;
         card.addEventListener("click", function() {
           flipCard(card);
         });
@@ -420,7 +494,6 @@
       }
       cards.forEach(card => board.appendChild(card));
     }
-    const historyLog = document.getElementById("historyLog");
 
     function flipCard(card) {
       card.classList.toggle("flip");
@@ -433,29 +506,71 @@
     function addToHistoryLog(choice) {
       const logItem = document.createElement('div');
       logItem.textContent = `Revealed: ${choice}`;
-      historyLog.appendChild(logItem);
+      logEntries.appendChild(logItem);
+      logEntries.scrollTop = logEntries.scrollHeight; // Auto-scroll to the bottom
     }
 
     function clearBoard() {
       while (board.firstChild) {
         board.removeChild(board.firstChild);
       }
-      cards.length = 0;
+      cards = [];
     }
-    const toggleDarkModeBtn = document.getElementById("toggleDarkMode");
-    const body = document.body;
-    toggleDarkModeBtn.addEventListener("click", () => {
-      body.classList.toggle("dark-mode");
-    });
+
+    function clearHistory() {
+      logEntries.innerHTML = '';
+    }
+
+    function exportData() {
+      const exportData = {
+        cards: cards.map(card => ({
+          text: card.querySelector('.card-back').textContent,
+          isFlipped: card.classList.contains('flip')
+        })),
+        history: Array.from(logEntries.querySelectorAll('div')).map(item => item.textContent)
+      };
+      const dataStr = JSON.stringify(exportData);
+      const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+      const exportFileDefaultName = 'choiceforge_data.json';
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          // Clear existing data
+          clearBoard();
+          clearHistory();
+          // Import cards
+          importedData.cards.forEach(cardData => {
+            createCard(cardData.text, cardData.isFlipped);
+          });
+          // Import history
+          importedData.history.forEach(historyItem => {
+            const logItem = document.createElement('div');
+            logItem.textContent = historyItem;
+            logEntries.appendChild(logItem);
+          });
+          // Reset the file input
+          importInput.value = '';
+        } catch (error) {
+          console.error('Error importing data:', error);
+          alert('Error importing data. Please check the file format.');
+        }
+      };
+      reader.readAsText(file);
+    }
+    // Check for dark mode preference
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       body.classList.add('dark-mode');
     }
-    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
-    clearHistoryBtn.addEventListener("click", function() {
-      const logItems = historyLog.querySelectorAll('div');
-      logItems.forEach(item => item.remove());
-    });
   </script>
 </body>
-
+<!-- Created by Marc Sonne Dahl (c) 2024 -->
 </html>
