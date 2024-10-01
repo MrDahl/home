@@ -1,5 +1,6 @@
 <html lang="en">
 <!-- Created by Marc Sonne Dahl © 2024 -->
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +27,7 @@
       align-items: center;
       justify-content: center;
       border-bottom: 1px solid var(--border-color);
+      flex-wrap: wrap;
     }
 
     #gameArea {
@@ -44,8 +46,9 @@
 
     button,
     label,
-    input {
-      margin: 0 10px;
+    input,
+    select {
+      margin: 5px;
       font-size: 1rem;
     }
 
@@ -67,11 +70,18 @@
     }
 
     button i {
-      margin-right: 0px;
+      margin-right: 5px;
     }
 
-    #speedControl {
-      max-width: 100%;
+    #speedControl,
+    #cellSizeControl {
+      max-width: 100px;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      margin: 5px;
     }
 
     :root {
@@ -83,6 +93,7 @@
       --btn-hover: #45a049;
       --bg-game: #ffffff;
       --text-color: #3498db;
+      --grid-color: rgba(200, 200, 200, 0.2);
     }
 
     body.dark {
@@ -94,23 +105,89 @@
       --btn-hover: #2980b9;
       --bg-game: #2c3e50;
       --text-color: #4CAF50;
+      --grid-color: rgba(100, 100, 100, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      #controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .control-group {
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .control-group button {
+        flex: 1;
+        margin: 2px;
+      }
+
+      .slider-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .slider-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+
+      #speedControl,
+      #cellSizeControl {
+        flex: 1;
+        margin-right: 5px;
+      }
+
+      #presetPatterns {
+        width: 100%;
+      }
+
+      label {
+        margin-right: 5px;
+      }
     }
   </style>
 </head>
-<!-- Created by Marc Sonne Dahl © 2024 -->
+
 <body>
   <div id="controls">
-    <button id="startStopBtn"><i class="fas fa-play"></i></button>
-    <button id="clearBtn"><i class="fas fa-trash-alt"></i></button>
-    <label for="speedControl"><i class="fa-solid fa-gauge-high"></i></label>
-    <input type="range" id="speedControl" min="1" max="60" value="10">
-    <span id="speedValue"></span>
-    <button id="themeToggleBtn"><i class="fas fa-adjust"></i></button>
+    <div class="control-group">
+      <button id="startStopBtn"><i class="fas fa-play"></i> Start/Stop</button>
+      <button id="clearBtn"><i class="fas fa-trash-alt"></i> Clear</button>
+      <button id="themeToggleBtn"><i class="fas fa-adjust"></i> Theme</button>
+    </div>
+    <div class="control-group slider-group">
+      <div class="slider-container">
+        <label for="speedControl"><i class="fa-solid fa-gauge-high"></i> Speed:</label>
+        <input type="range" id="speedControl" min="1" max="60" value="10">
+        <span id="speedValue"></span>
+      </div>
+      <div class="slider-container">
+        <label for="cellSizeControl"><i class="fa-solid fa-expand"></i> Cell Size:</label>
+        <input type="range" id="cellSizeControl" min="5" max="20" value="10">
+        <span id="cellSizeValue"></span>
+      </div>
+    </div>
+    <div class="control-group">
+      <select id="presetPatterns">
+        <option value="">Select a preset pattern</option>
+        <option value="glider">Glider</option>
+        <option value="blinker">Blinker</option>
+        <option value="toad">Toad</option>
+        <option value="beacon">Beacon</option>
+        <option value="pulsar">Pulsar</option>
+      </select>
+    </div>
   </div>
   <div id="gameArea">
     <canvas id="gameCanvas"></canvas>
   </div>
-<!-- Created by Marc Sonne Dahl © 2024 -->
+  <!-- Created by Marc Sonne Dahl © 2024 -->
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -118,6 +195,9 @@
     const clearBtn = document.getElementById('clearBtn');
     const speedControl = document.getElementById('speedControl');
     const speedValue = document.getElementById('speedValue');
+    const cellSizeControl = document.getElementById('cellSizeControl');
+    const cellSizeValue = document.getElementById('cellSizeValue');
+    const presetPatterns = document.getElementById('presetPatterns');
     const gameArea = document.getElementById('gameArea');
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     let width, height, cols, rows;
@@ -140,8 +220,26 @@
       draw();
     }
 
+    function drawGrid() {
+      ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--grid-color');
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x <= width; x += cellSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= height; y += cellSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+    }
+
     function draw() {
       ctx.clearRect(0, 0, width, height);
+      drawGrid();
       ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--btn-bg');
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
@@ -197,17 +295,17 @@
     function startStop() {
       isRunning = !isRunning;
       if (isRunning) {
-        startStopBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        startStopBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
         animate();
       } else {
-        startStopBtn.innerHTML = '<i class="fas fa-play"></i>';
+        startStopBtn.innerHTML = '<i class="fas fa-play"></i> Start';
         clearTimeout(animationId);
       }
     }
 
     function clear() {
       isRunning = false;
-      startStopBtn.innerHTML = '<i class="fas fa-play"></i>';
+      startStopBtn.innerHTML = '<i class="fas fa-play"></i> Start';
       clearTimeout(animationId);
       grid = new Array(cols).fill(null)
         .map(() => new Array(rows).fill(0));
@@ -246,6 +344,65 @@
       isDrawing = false;
     }
 
+    function applyPresetPattern(pattern) {
+      clear();
+      const centerX = Math.floor(cols / 2);
+      const centerY = Math.floor(rows / 2);
+      switch (pattern) {
+        case 'glider':
+          grid[centerX][centerY] = 1;
+          grid[centerX + 1][centerY + 1] = 1;
+          grid[centerX + 1][centerY + 2] = 1;
+          grid[centerX][centerY + 2] = 1;
+          grid[centerX - 1][centerY + 2] = 1;
+          break;
+        case 'blinker':
+          grid[centerX][centerY - 1] = 1;
+          grid[centerX][centerY] = 1;
+          grid[centerX][centerY + 1] = 1;
+          break;
+        case 'toad':
+          grid[centerX - 1][centerY] = 1;
+          grid[centerX][centerY] = 1;
+          grid[centerX + 1][centerY] = 1;
+          grid[centerX][centerY + 1] = 1;
+          grid[centerX + 1][centerY + 1] = 1;
+          grid[centerX + 2][centerY + 1] = 1;
+          break;
+        case 'beacon':
+          grid[centerX - 1][centerY - 1] = 1;
+          grid[centerX][centerY - 1] = 1;
+          grid[centerX - 1][centerY] = 1;
+          grid[centerX + 2][centerY + 1] = 1;
+          grid[centerX + 1][centerY + 2] = 1;
+          grid[centerX + 2][centerY + 2] = 1;
+          break;
+        case 'pulsar':
+          const pulsar = [
+            [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+            [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0]
+          ];
+          for (let i = 0; i < pulsar.length; i++) {
+            for (let j = 0; j < pulsar[i].length; j++) {
+              grid[centerX - 6 + i][centerY - 6 + j] = pulsar[i][j];
+            }
+          }
+          break;
+      }
+      draw();
+    }
+
     function init() {
       setup();
       canvas.addEventListener('mousedown', handleDrawStart);
@@ -259,7 +416,17 @@
       clearBtn.addEventListener('click', clear);
       speedControl.addEventListener('input', function() {
         speed = parseInt(this.value);
-        speedValue.textContent = ``;
+        speedValue.textContent = `${speed} fps`;
+      });
+      cellSizeControl.addEventListener('input', function() {
+        cellSize = parseInt(this.value);
+        cellSizeValue.textContent = `${cellSize}px`;
+        setup();
+      });
+      presetPatterns.addEventListener('change', function() {
+        if (this.value) {
+          applyPresetPattern(this.value);
+        }
       });
       // Detect theme preference
       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -268,11 +435,16 @@
       // Theme toggle button
       themeToggleBtn.addEventListener('click', function() {
         document.body.classList.toggle('dark');
+        draw(); // Redraw to update colors
       });
+      // Initialize speed and cell size displays
+      speedValue.textContent = `${speed} fps`;
+      cellSizeValue.textContent = `${cellSize}px`;
     }
     window.addEventListener('resize', setup);
     init();
   </script>
 </body>
 <!-- Created by Marc Sonne Dahl © 2024 -->
+
 </html>
