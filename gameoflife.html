@@ -53,7 +53,7 @@
     }
 
     button {
-      padding: 10px 20px;
+      padding: 15px 40px;
       cursor: pointer;
       background-color: var(--btn-bg);
       color: var(--btn-text);
@@ -63,6 +63,7 @@
       align-items: center;
       justify-content: center;
       transition: background-color 0.3s;
+      width: 5vh;
     }
 
     button:hover {
@@ -70,12 +71,17 @@
     }
 
     button i {
-      margin-right: 5px;
+      margin-right: 0px;
     }
 
     #speedControl,
     #cellSizeControl {
-      max-width: 100px;
+      max-width: 90%;
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
     }
 
     .control-group {
@@ -106,6 +112,28 @@
       --bg-game: #2c3e50;
       --text-color: #4CAF50;
       --grid-color: rgba(100, 100, 100, 0.2);
+    }
+
+    #presetPatterns {
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 5px;
+      padding: 15px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    #presetPatterns:hover {
+      background-color: var(--btn-hover);
+    }
+
+    #presetPatterns option {
+      background-color: var(--bg-controls);
+      color: var(--text-color);
     }
 
     @media (max-width: 768px) {
@@ -140,47 +168,53 @@
       #speedControl,
       #cellSizeControl {
         flex: 1;
-        margin-right: 5px;
+        margin-right: 10px;
       }
 
-      #presetPatterns {
-        width: 100%;
+      @media (max-width: 768px) {
+        #presetPatterns {
+          width: 100%;
+          max-width: none;
+        }
       }
-
-      label {
-        margin-right: 5px;
-      }
-    }
   </style>
 </head>
 
 <body>
   <div id="controls">
     <div class="control-group">
-      <button id="startStopBtn"><i class="fas fa-play"></i> Start/Stop</button>
-      <button id="clearBtn"><i class="fas fa-trash-alt"></i> Clear</button>
-      <button id="themeToggleBtn"><i class="fas fa-adjust"></i> Theme</button>
+      <button id="startStopBtn"><i class="fas fa-play"></i></button>
+      <button id="clearBtn"><i class="fas fa-trash-alt"></i></button>
+      <button id="themeToggleBtn"><i class="fas fa-adjust"></i></button>
     </div>
     <div class="control-group slider-group">
       <div class="slider-container">
-        <label for="speedControl"><i class="fa-solid fa-gauge-high"></i> Speed:</label>
+        <label for="speedControl"><i class="fa-solid fa-gauge-high"></i></label>
         <input type="range" id="speedControl" min="1" max="60" value="10">
         <span id="speedValue"></span>
       </div>
       <div class="slider-container">
-        <label for="cellSizeControl"><i class="fa-solid fa-expand"></i> Cell Size:</label>
+        <label for="cellSizeControl"><i class="fa-solid fa-expand"></i></label>
         <input type="range" id="cellSizeControl" min="5" max="20" value="10">
         <span id="cellSizeValue"></span>
       </div>
     </div>
     <div class="control-group">
       <select id="presetPatterns">
-        <option value="">Select a preset pattern</option>
+        <option value="">Pattern</option>
         <option value="glider">Glider</option>
         <option value="blinker">Blinker</option>
         <option value="toad">Toad</option>
         <option value="beacon">Beacon</option>
         <option value="pulsar">Pulsar</option>
+        <option value="block">Block</option>
+        <option value="boat">Boat</option>
+        <option value="tub">Tub</option>
+        <option value="beehive">Beehive</option>
+        <option value="lwss">LWSS</option>
+        <option value="pentadecathlon">Pentadecathlon</option>
+        <option value="diehard">Diehard</option>
+        <option value="gosper-glider-gun">Gosper Glider Gun</option>
       </select>
     </div>
   </div>
@@ -295,17 +329,17 @@
     function startStop() {
       isRunning = !isRunning;
       if (isRunning) {
-        startStopBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+        startStopBtn.innerHTML = '<i class="fas fa-pause"></i>';
         animate();
       } else {
-        startStopBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+        startStopBtn.innerHTML = '<i class="fas fa-play"></i>';
         clearTimeout(animationId);
       }
     }
 
     function clear() {
       isRunning = false;
-      startStopBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+      startStopBtn.innerHTML = '<i class="fas fa-play"></i>';
       clearTimeout(animationId);
       grid = new Array(cols).fill(null)
         .map(() => new Array(rows).fill(0));
@@ -356,6 +390,48 @@
           grid[centerX][centerY + 2] = 1;
           grid[centerX - 1][centerY + 2] = 1;
           break;
+        case 'gosper-glider-gun':
+          // Left square block
+          grid[centerX][centerY + 4] = 1;
+          grid[centerX][centerY + 5] = 1;
+          grid[centerX + 1][centerY + 4] = 1;
+          grid[centerX + 1][centerY + 5] = 1;
+          // Left part
+          grid[centerX + 10][centerY + 4] = 1;
+          grid[centerX + 10][centerY + 5] = 1;
+          grid[centerX + 10][centerY + 6] = 1;
+          grid[centerX + 11][centerY + 3] = 1;
+          grid[centerX + 11][centerY + 7] = 1;
+          grid[centerX + 12][centerY + 2] = 1;
+          grid[centerX + 12][centerY + 8] = 1;
+          grid[centerX + 13][centerY + 2] = 1;
+          grid[centerX + 13][centerY + 8] = 1;
+          grid[centerX + 14][centerY + 5] = 1;
+          grid[centerX + 15][centerY + 3] = 1;
+          grid[centerX + 15][centerY + 7] = 1;
+          grid[centerX + 16][centerY + 4] = 1;
+          grid[centerX + 16][centerY + 5] = 1;
+          grid[centerX + 16][centerY + 6] = 1;
+          grid[centerX + 17][centerY + 5] = 1;
+          // Right part
+          grid[centerX + 20][centerY + 2] = 1;
+          grid[centerX + 20][centerY + 3] = 1;
+          grid[centerX + 20][centerY + 4] = 1;
+          grid[centerX + 21][centerY + 2] = 1;
+          grid[centerX + 21][centerY + 3] = 1;
+          grid[centerX + 21][centerY + 4] = 1;
+          grid[centerX + 22][centerY + 1] = 1;
+          grid[centerX + 22][centerY + 5] = 1;
+          grid[centerX + 24][centerY] = 1;
+          grid[centerX + 24][centerY + 1] = 1;
+          grid[centerX + 24][centerY + 5] = 1;
+          grid[centerX + 24][centerY + 6] = 1;
+          // Far right block
+          grid[centerX + 34][centerY + 2] = 1;
+          grid[centerX + 34][centerY + 3] = 1;
+          grid[centerX + 35][centerY + 2] = 1;
+          grid[centerX + 35][centerY + 3] = 1;
+          break;
         case 'blinker':
           grid[centerX][centerY - 1] = 1;
           grid[centerX][centerY] = 1;
@@ -376,6 +452,63 @@
           grid[centerX + 2][centerY + 1] = 1;
           grid[centerX + 1][centerY + 2] = 1;
           grid[centerX + 2][centerY + 2] = 1;
+          break;
+        case 'block':
+          grid[centerX][centerY] = 1;
+          grid[centerX + 1][centerY] = 1;
+          grid[centerX][centerY + 1] = 1;
+          grid[centerX + 1][centerY + 1] = 1;
+          break;
+        case 'boat':
+          grid[centerX][centerY] = 1;
+          grid[centerX + 1][centerY] = 1;
+          grid[centerX][centerY + 1] = 1;
+          grid[centerX + 2][centerY + 1] = 1;
+          grid[centerX + 1][centerY + 2] = 1;
+          break;
+        case 'tub':
+          grid[centerX][centerY] = 1;
+          grid[centerX - 1][centerY + 1] = 1;
+          grid[centerX + 1][centerY + 1] = 1;
+          grid[centerX][centerY + 2] = 1;
+          break;
+        case 'beehive':
+          grid[centerX][centerY] = 1;
+          grid[centerX + 1][centerY - 1] = 1;
+          grid[centerX + 1][centerY + 1] = 1;
+          grid[centerX + 2][centerY] = 1;
+          grid[centerX + 2][centerY - 1] = 1;
+          grid[centerX + 2][centerY + 1] = 1;
+          break;
+        case 'lwss':
+          grid[centerX][centerY] = 1;
+          grid[centerX + 3][centerY] = 1;
+          grid[centerX + 4][centerY + 1] = 1;
+          grid[centerX + 4][centerY + 2] = 1;
+          grid[centerX + 4][centerY + 3] = 1;
+          grid[centerX][centerY + 1] = 1;
+          grid[centerX][centerY + 2] = 1;
+          grid[centerX + 1][centerY + 3] = 1;
+          grid[centerX + 3][centerY + 3] = 1;
+          break;
+        case 'pentadecathlon':
+          for (let i = 0; i < 10; i++) {
+            if (i === 0 || i === 9) {
+              grid[centerX + i][centerY] = 1;
+            } else {
+              grid[centerX + i][centerY - 1] = 1;
+              grid[centerX + i][centerY + 1] = 1;
+            }
+          }
+          break;
+        case 'diehard':
+          grid[centerX - 3][centerY] = 1;
+          grid[centerX - 2][centerY] = 1;
+          grid[centerX + 2][centerY + 1] = 1;
+          grid[centerX + 3][centerY + 1] = 1;
+          grid[centerX + 4][centerY + 1] = 1;
+          grid[centerX + 4][centerY - 1] = 1;
+          grid[centerX + 4][centerY - 2] = 1;
           break;
         case 'pulsar':
           const pulsar = [
@@ -416,11 +549,11 @@
       clearBtn.addEventListener('click', clear);
       speedControl.addEventListener('input', function() {
         speed = parseInt(this.value);
-        speedValue.textContent = `${speed} fps`;
+        speedValue.textContent = `${speed}`;
       });
       cellSizeControl.addEventListener('input', function() {
         cellSize = parseInt(this.value);
-        cellSizeValue.textContent = `${cellSize}px`;
+        cellSizeValue.textContent = `${cellSize}`;
         setup();
       });
       presetPatterns.addEventListener('change', function() {
@@ -438,8 +571,8 @@
         draw(); // Redraw to update colors
       });
       // Initialize speed and cell size displays
-      speedValue.textContent = `${speed} fps`;
-      cellSizeValue.textContent = `${cellSize}px`;
+      speedValue.textContent = `${speed}`;
+      cellSizeValue.textContent = `${cellSize}`;
     }
     window.addEventListener('resize', setup);
     init();
