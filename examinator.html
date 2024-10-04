@@ -77,12 +77,24 @@
       padding: 0.5rem;
       border-radius: 6px;
       transition: background-color 0.2s;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-width: 200px;
+      /* Adjust this value as needed */
+      max-height: 100px;
+      /* Adjust this value as needed */
+      overflow-y: auto;
     }
 
     .editable:focus {
       outline: none;
       background-color: #f8fafc;
       box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    td {
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
     }
 
     input,
@@ -255,10 +267,13 @@
       return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
     }
 
+    function timeToMinutes(timeStr) {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      return hours * 60 + minutes;
+    }
+
     function createRow(student = null, index = 0) {
-      const startMinutes = index === 0 ?
-        getStartTimeInMinutes() :
-        students[index - 1].endMinutes;
+      const startMinutes = index === 0 ? getStartTimeInMinutes() : (student ? student.startMinutes : students[index - 1].endMinutes);
       const duration = student ? student.duration : 20;
       const endMinutes = startMinutes + duration;
       if (!student) {
@@ -273,17 +288,17 @@
       }
       const row = document.createElement('tr');
       row.innerHTML = `
-                <td contenteditable="true" class="editable">${student.name}</td>
-                <td>${minutesToTime(startMinutes)}</td>
-                <td>${minutesToTime(endMinutes)}</td>
-                <td><input type="number" value="${duration}" min="1"></td>
-                <td><select>
-                    <option value="">Select grade</option>
-                    ${grades.map(g => `<option value="${g}" ${g === student.grade ? 'selected' : ''}>${g}</option>`).join('')}
-                </select></td>
-                <td contenteditable="true" class="editable">${student.feedback}</td>
-                <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
-            `;
+    <td contenteditable="true" class="editable">${student.name}</td>
+    <td>${minutesToTime(startMinutes)}</td>
+    <td>${minutesToTime(endMinutes)}</td>
+    <td><input type="number" value="${duration}" min="1"></td>
+    <td><select>
+        <option value="">Select grade</option>
+        ${grades.map(g => `<option value="${g}" ${g === student.grade ? 'selected' : ''}>${g}</option>`).join('')}
+    </select></td>
+    <td contenteditable="true" class="editable">${student.feedback}</td>
+    <td><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+  `;
       const nameCell = row.cells[0];
       nameCell.addEventListener('blur', updateStudentData);
       const durationInput = row.querySelector('input[type="number"]');
@@ -314,11 +329,15 @@
       students = [];
       const tbody = document.getElementById('scheduleBody');
       Array.from(tbody.children).forEach(row => {
+        const startTime = row.cells[1].textContent;
+        const endTime = row.cells[2].textContent;
         students.push({
           name: row.cells[0].textContent,
           duration: parseInt(row.querySelector('input[type="number"]').value) || 20,
           grade: row.querySelector('select').value,
-          feedback: row.cells[5].textContent
+          feedback: row.cells[5].textContent,
+          startMinutes: timeToMinutes(startTime),
+          endMinutes: timeToMinutes(endTime)
         });
       });
       updateTimes();
@@ -335,9 +354,18 @@
         currentMinutes = endMinutes;
       });
     }
-    // Export schedule to JSON file
+
     function exportSchedule() {
-      const className = document.getElementById('className').value || "exam_schedule"; // Default filename if no class is input
+      const className = document.getElementById('className').value || "exam_schedule";
+      const tbody = document.getElementById('scheduleBody');
+      const students = Array.from(tbody.children).map(row => ({
+        name: row.cells[0].textContent,
+        start: row.cells[1].textContent,
+        end: row.cells[2].textContent,
+        duration: parseInt(row.querySelector('input[type="number"]').value) || 20,
+        grade: row.querySelector('select').value,
+        feedback: row.cells[5].textContent
+      }));
       const data = {
         examDate: document.getElementById('examDate').value,
         startTime: document.getElementById('startTime').value,
@@ -350,26 +378,34 @@
       });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `${className}.json`; // Set the filename as the class name
+      link.download = `${className}.json`;
       link.click();
     }
-    // Import schedule from JSON file
+
     function importSchedule(event) {
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(e) {
-        const data = JSON.parse(e.target.result);
-        document.getElementById('examDate').value = data.examDate;
-        document.getElementById('startTime').value = data.startTime;
-        document.getElementById('className').value = data.className;
-        const tbody = document.getElementById('scheduleBody');
-        tbody.innerHTML = '';
-        data.students.forEach((student, index) => {
-          const row = createRow(student, index);
-          tbody.appendChild(row);
-        });
-        updateStudentData();
+        try {
+          const data = JSON.parse(e.target.result);
+          document.getElementById('examDate').value = data.examDate || '';
+          document.getElementById('startTime').value = data.startTime || '08:00';
+          document.getElementById('className').value = data.className || '';
+          const tbody = document.getElementById('scheduleBody');
+          tbody.innerHTML = '';
+          data.students.forEach((student, index) => {
+            student.startMinutes = timeToMinutes(student.start);
+            student.endMinutes = timeToMinutes(student.end);
+            const row = createRow(student, index);
+            tbody.appendChild(row);
+          });
+          updateTimes();
+          updateStudentData();
+        } catch (error) {
+          console.error('Error importing JSON:', error);
+          alert('Failed to import schedule. Please check the file format.');
+        }
       };
       reader.readAsText(file);
     }
