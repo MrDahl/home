@@ -200,22 +200,27 @@
       </div>
     </div>
     <div class="control-group">
-      <select id="presetPatterns">
-        <option value="">Pattern</option>
-        <option value="glider">Glider</option>
-        <option value="blinker">Blinker</option>
-        <option value="toad">Toad</option>
-        <option value="beacon">Beacon</option>
-        <option value="pulsar">Pulsar</option>
-        <option value="block">Block</option>
-        <option value="boat">Boat</option>
-        <option value="tub">Tub</option>
-        <option value="beehive">Beehive</option>
-        <option value="lwss">LWSS</option>
-        <option value="pentadecathlon">Pentadecathlon</option>
-        <option value="diehard">Diehard</option>
-        <option value="gosper-glider-gun">Gosper Glider Gun</option>
-      </select>
+<select id="presetPatterns">
+  <option value="">Pattern</option>
+  <option value="glider">Glider</option>
+  <option value="blinker">Blinker</option>
+  <option value="toad">Toad</option>
+  <option value="beacon">Beacon</option>
+  <option value="pulsar">Pulsar</option>
+  <option value="block">Block</option>
+  <option value="boat">Boat</option>
+  <option value="tub">Tub</option>
+  <option value="beehive">Beehive</option>
+  <option value="lwss">LWSS</option>
+  <option value="pentadecathlon">Pentadecathlon</option>
+  <option value="diehard">Diehard</option>
+  <option value="gosperGliderGun">Gosper Glider Gun</option>
+  <option value="acorn">Acorn</option>
+  <option value="spaceship">Spaceship</option>
+  <option value="rpentomino">R-pentomino</option>
+  <option value="octagon">Octagon</option>
+  <option value="loafer">Loafer</option>
+</select>
     </div>
   </div>
   <div id="gameArea">
@@ -378,163 +383,149 @@
       isDrawing = false;
     }
 
-    function applyPresetPattern(pattern) {
-      clear();
-      const centerX = Math.floor(cols / 2);
-      const centerY = Math.floor(rows / 2);
-      switch (pattern) {
-        case 'glider':
-          grid[centerX][centerY] = 1;
-          grid[centerX + 1][centerY + 1] = 1;
-          grid[centerX + 1][centerY + 2] = 1;
-          grid[centerX][centerY + 2] = 1;
-          grid[centerX - 1][centerY + 2] = 1;
-          break;
-        case 'gosper-glider-gun':
-          // Left square block
-          grid[centerX][centerY + 4] = 1;
-          grid[centerX][centerY + 5] = 1;
-          grid[centerX + 1][centerY + 4] = 1;
-          grid[centerX + 1][centerY + 5] = 1;
-          // Left part
-          grid[centerX + 10][centerY + 4] = 1;
-          grid[centerX + 10][centerY + 5] = 1;
-          grid[centerX + 10][centerY + 6] = 1;
-          grid[centerX + 11][centerY + 3] = 1;
-          grid[centerX + 11][centerY + 7] = 1;
-          grid[centerX + 12][centerY + 2] = 1;
-          grid[centerX + 12][centerY + 8] = 1;
-          grid[centerX + 13][centerY + 2] = 1;
-          grid[centerX + 13][centerY + 8] = 1;
-          grid[centerX + 14][centerY + 5] = 1;
-          grid[centerX + 15][centerY + 3] = 1;
-          grid[centerX + 15][centerY + 7] = 1;
-          grid[centerX + 16][centerY + 4] = 1;
-          grid[centerX + 16][centerY + 5] = 1;
-          grid[centerX + 16][centerY + 6] = 1;
-          grid[centerX + 17][centerY + 5] = 1;
-          // Right part
-          grid[centerX + 20][centerY + 2] = 1;
-          grid[centerX + 20][centerY + 3] = 1;
-          grid[centerX + 20][centerY + 4] = 1;
-          grid[centerX + 21][centerY + 2] = 1;
-          grid[centerX + 21][centerY + 3] = 1;
-          grid[centerX + 21][centerY + 4] = 1;
-          grid[centerX + 22][centerY + 1] = 1;
-          grid[centerX + 22][centerY + 5] = 1;
-          grid[centerX + 24][centerY] = 1;
-          grid[centerX + 24][centerY + 1] = 1;
-          grid[centerX + 24][centerY + 5] = 1;
-          grid[centerX + 24][centerY + 6] = 1;
-          // Far right block
-          grid[centerX + 34][centerY + 2] = 1;
-          grid[centerX + 34][centerY + 3] = 1;
-          grid[centerX + 35][centerY + 2] = 1;
-          grid[centerX + 35][centerY + 3] = 1;
-          break;
-        case 'blinker':
-          grid[centerX][centerY - 1] = 1;
-          grid[centerX][centerY] = 1;
-          grid[centerX][centerY + 1] = 1;
-          break;
-        case 'toad':
-          grid[centerX - 1][centerY] = 1;
-          grid[centerX][centerY] = 1;
-          grid[centerX + 1][centerY] = 1;
-          grid[centerX][centerY + 1] = 1;
-          grid[centerX + 1][centerY + 1] = 1;
-          grid[centerX + 2][centerY + 1] = 1;
-          break;
-        case 'beacon':
-          grid[centerX - 1][centerY - 1] = 1;
-          grid[centerX][centerY - 1] = 1;
-          grid[centerX - 1][centerY] = 1;
-          grid[centerX + 2][centerY + 1] = 1;
-          grid[centerX + 1][centerY + 2] = 1;
-          grid[centerX + 2][centerY + 2] = 1;
-          break;
-        case 'block':
-          grid[centerX][centerY] = 1;
-          grid[centerX + 1][centerY] = 1;
-          grid[centerX][centerY + 1] = 1;
-          grid[centerX + 1][centerY + 1] = 1;
-          break;
-        case 'boat':
-          grid[centerX][centerY] = 1;
-          grid[centerX + 1][centerY] = 1;
-          grid[centerX][centerY + 1] = 1;
-          grid[centerX + 2][centerY + 1] = 1;
-          grid[centerX + 1][centerY + 2] = 1;
-          break;
-        case 'tub':
-          grid[centerX][centerY] = 1;
-          grid[centerX - 1][centerY + 1] = 1;
-          grid[centerX + 1][centerY + 1] = 1;
-          grid[centerX][centerY + 2] = 1;
-          break;
-        case 'beehive':
-          grid[centerX][centerY] = 1;
-          grid[centerX + 1][centerY - 1] = 1;
-          grid[centerX + 1][centerY + 1] = 1;
-          grid[centerX + 2][centerY] = 1;
-          grid[centerX + 2][centerY - 1] = 1;
-          grid[centerX + 2][centerY + 1] = 1;
-          break;
-        case 'lwss':
-          grid[centerX][centerY] = 1;
-          grid[centerX + 3][centerY] = 1;
-          grid[centerX + 4][centerY + 1] = 1;
-          grid[centerX + 4][centerY + 2] = 1;
-          grid[centerX + 4][centerY + 3] = 1;
-          grid[centerX][centerY + 1] = 1;
-          grid[centerX][centerY + 2] = 1;
-          grid[centerX + 1][centerY + 3] = 1;
-          grid[centerX + 3][centerY + 3] = 1;
-          break;
-        case 'pentadecathlon':
-          for (let i = 0; i < 10; i++) {
-            if (i === 0 || i === 9) {
-              grid[centerX + i][centerY] = 1;
-            } else {
-              grid[centerX + i][centerY - 1] = 1;
-              grid[centerX + i][centerY + 1] = 1;
-            }
-          }
-          break;
-        case 'diehard':
-          grid[centerX - 3][centerY] = 1;
-          grid[centerX - 2][centerY] = 1;
-          grid[centerX + 2][centerY + 1] = 1;
-          grid[centerX + 3][centerY + 1] = 1;
-          grid[centerX + 4][centerY + 1] = 1;
-          grid[centerX + 4][centerY - 1] = 1;
-          grid[centerX + 4][centerY - 2] = 1;
-          break;
-        case 'pulsar':
-          const pulsar = [
-            [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-            [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
-            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0]
-          ];
-          for (let i = 0; i < pulsar.length; i++) {
-            for (let j = 0; j < pulsar[i].length; j++) {
-              grid[centerX - 6 + i][centerY - 6 + j] = pulsar[i][j];
-            }
-          }
-          break;
+function applyPresetPattern(pattern) {
+  clear();
+  const centerX = Math.floor(cols / 2);
+  const centerY = Math.floor(rows / 2);
+
+  const patterns = {
+    glider: [
+      [0, 1, 0],
+      [0, 0, 1],
+      [1, 1, 1]
+    ],
+    blinker: [
+      [1, 1, 1]
+    ],
+    toad: [
+      [0, 1, 1, 1],
+      [1, 1, 1, 0]
+    ],
+    beacon: [
+      [1, 1, 0, 0],
+      [1, 1, 0, 0],
+      [0, 0, 1, 1],
+      [0, 0, 1, 1]
+    ],
+    pulsar: [
+      [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+      [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+      [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0]
+    ],
+    block: [
+      [1, 1],
+      [1, 1]
+    ],
+    boat: [
+      [1, 1, 0],
+      [1, 0, 1],
+      [0, 1, 0]
+    ],
+    tub: [
+      [0, 1, 0],
+      [1, 0, 1],
+      [0, 1, 0]
+    ],
+    beehive: [
+      [0, 1, 1, 0],
+      [1, 0, 0, 1],
+      [0, 1, 1, 0]
+    ],
+    lwss: [
+      [0, 1, 0, 0, 1],
+      [1, 0, 0, 0, 0],
+      [1, 0, 0, 0, 1],
+      [1, 1, 1, 1, 0]
+    ],
+    pentadecathlon: [
+      [1, 1, 1],
+      [1, 0, 1],
+      [1, 1, 1],
+      [1, 1, 1],
+      [1, 1, 1],
+      [1, 1, 1],
+      [1, 0, 1],
+      [1, 1, 1]
+    ],
+    diehard: [
+      [0, 0, 0, 0, 0, 0, 1, 0],
+      [1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 1, 0, 0, 0, 1, 1, 1]
+    ],
+    gosperGliderGun: [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+      [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ],
+    // New patterns
+    acorn: [
+      [0, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 0, 0, 0],
+      [1, 1, 0, 0, 1, 1, 1]
+    ],
+    spaceship: [
+      [0, 0, 1, 1, 0],
+      [1, 1, 0, 1, 1],
+      [1, 1, 1, 1, 0],
+      [0, 1, 1, 0, 0]
+    ],
+    rpentomino: [
+      [0, 1, 1],
+      [1, 1, 0],
+      [0, 1, 0]
+    ],
+    octagon: [
+      [0, 1, 1, 0],
+      [1, 0, 0, 1],
+      [1, 0, 0, 1],
+      [0, 1, 1, 0]
+    ],
+    loafer: [
+      [0, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 0, 0, 0, 0, 0],
+      [1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 0],
+      [0, 0, 0, 0, 1, 0, 0, 1],
+      [0, 0, 0, 0, 1, 0, 1, 0],
+      [0, 0, 0, 0, 0, 1, 0, 0]
+    ]
+  };
+
+  if (patterns[pattern]) {
+    const patternGrid = patterns[pattern];
+    const offsetX = Math.floor((cols - patternGrid[0].length) / 2);
+    const offsetY = Math.floor((rows - patternGrid.length) / 2);
+
+    for (let y = 0; y < patternGrid.length; y++) {
+      for (let x = 0; x < patternGrid[y].length; x++) {
+        if (patternGrid[y][x] === 1) {
+          grid[offsetX + x][offsetY + y] = 1;
+        }
       }
-      draw();
     }
+  } else {
+    console.error('Pattern not found:', pattern);
+  }
+
+  draw();
+}
 
     function init() {
       setup();
