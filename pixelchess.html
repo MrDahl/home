@@ -1,0 +1,519 @@
+<html lang="en">
+<!-- Created by Marc Sonne Dahl and Namik Zade (c) 2024 -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Chess - by Namik Zade</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #1a1a2e;
+      color: #ffffff;
+      font-family: 'Arial', sans-serif;
+      padding: 2rem;
+    }
+
+    canvas {
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    .square canvas {
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    #gameArea {
+      display: grid;
+      grid-template-columns: auto 250px;
+      gap: 2rem;
+      background: #16213e;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .board-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    #chessBoard {
+      display: grid;
+      grid-template-columns: repeat(8, 5px);
+      grid-template-rows: repeat(8, 5px);
+      gap: 0;
+      border: 3px solid #0f3460;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      zoom: 10;
+      background: #0f3460;
+    }
+
+    .square {
+      width: 5px;
+      height: 5px;
+      position: relative;
+      display: flex;
+    }
+
+    .light-blue {
+      background-color: #a5d7e8;
+    }
+
+    .dark-blue {
+      background-color: #576cbc;
+    }
+
+    .controls-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: #a5d7e8;
+    }
+
+    .instructions {
+      margin-top: 2rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 1200px;
+      color: #ffffff;
+    }
+
+    .instructions h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: #a5d7e8;
+    }
+
+    .instruction-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .instruction-card {
+      background: #16213e;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #576cbc;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .instruction-card h3 {
+      color: #a5d7e8;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .instruction-card p {
+      color: #ffffff;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .instructions {
+        padding: 1rem;
+      }
+
+      .instruction-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    #piecesContainer {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      padding: 1rem;
+      background: #0f3460;
+      border-radius: 0.5rem;
+      border: 2px dotted #576cbc;
+    }
+
+    .pieceContainer {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 1px dotted #576cbc;
+      border-radius: 5px;
+      cursor: grab;
+      background-color: rgba(165, 215, 232, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .pieceContainer:hover {
+      background-color: rgba(165, 215, 232, 0.2);
+    }
+
+    .chooseCanvas {
+      width: 40px;
+      height: 40px;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    #dropZone {
+      width: 100%;
+      height: 60px;
+      border: 2px dashed #e94560;
+      border-radius: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #e94560;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    #dropZone:hover {
+      background-color: rgba(233, 69, 96, 0.1);
+    }
+
+    .zoom-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.25rem;
+      background-color: #576cbc;
+      color: white;
+      width: 50%;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #455595;
+    }
+
+    @media (max-width: 768px) {
+      #gameArea {
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+
+      body {
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<!-- Created by Marc Sonne Dahl and Namik Zade (c) 2024 -->
+<body>
+  <h1>Pixel Chess</h1>
+  <h3>by Namik Zade</h3>
+  <div id="gameArea">
+    <div class="board-container">
+      <div id="chessBoard"></div>
+
+    </div>
+
+    <div class="controls-section">
+      <div>
+        <h3>Pieces</h3>
+        <div id="piecesContainer"></div>
+      </div>
+      <div id="dropZone">Drop here to remove piece</div>
+      <div class="zoom-controls">
+        <button onclick="zoomIn()">Zoom In</button>
+        <button onclick="zoomOut()">Zoom Out</button>
+      </div>
+    </div>
+  </div>
+  <section class="instructions">
+    <h2>About Pixel Chess</h2>
+    <div class="instruction-grid">
+      <div class="instruction-card">
+        <h3>General</h3>
+        <p>Pixel Chess is Namik Zade’s, simple attempt to see how far down can a chess board can be scaled down digitally in order to keep the size of the board minimal in dimensions, while being able to recognize the different pieces.</p>
+      </div>
+      <div class="instruction-card">
+        <h3>Dimensions</h3>
+        <p>What Namik Zade has made, is the minimum dimensions for a chess piece that can be recognized, and not confuse the player. It is 3 pixels wide and 3 pixels high chess pieces, placed in a 5 by 5 pixel square. These dimensions give just enough freedom to create the 6 different chess pieces (Pawn, Knight, Bishop, Rook, Queen, King) in a manner to be able to see the difference between them.</p>
+      </div>
+      <div class="instruction-card">
+        <h3>Design decision</h3>
+        <p>While the chess board can still be scaled down to 24 by 24 (3×8) pixels in dimensions, Namik Zade could see that 1 pixel of free space is still needed around a chess piece in order to have a visually pleasant and recognizable chess set, that adds extra 16 pixels in both dimensions to the overall design.</p>
+      </div>
+      <div class="instruction-card">
+        <h3>Summary</h3>
+        <p>It is not that hard to see the difference between the different chess pieces, and while it might be unusual at first, one do learn the different pieces quite fast.</p>
+      </div>
+            <div class="instruction-card">
+        <h3>Copyright</h3>
+        <p>Pixel Chess by Namik Zade and Marc Sonne Dahl is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</p>
+      </div>
+    </div>
+  </section>
+  <script>
+    const chessBoard = document.getElementById('chessBoard');
+    const piecesContainer = document.getElementById('piecesContainer');
+    const dropZone = document.getElementById('dropZone');
+    let zoomLevel = 10;
+    let draggedElement = null;
+    let sourceSquare = null;
+    const boardSize = 8;
+    const lightSquareColor = 'light-blue';
+    const darkSquareColor = 'dark-blue';
+    // Create the chess board
+    for (let row = 0; row < boardSize; row++) {
+      for (let col = 0; col < boardSize; col++) {
+        const square = document.createElement('div');
+        square.classList.add('square');
+        square.classList.add((row + col) % 2 === 0 ? lightSquareColor : darkSquareColor);
+        square.addEventListener('dragover', allowDrop);
+        square.addEventListener('drop', drop);
+        chessBoard.appendChild(square);
+      }
+    }
+
+    const pieceTemplates = {
+      white_pawn: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      black_pawn: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      white_knight: [
+        [0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 1, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      black_knight: [
+        [0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 1, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      white_bishop: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      black_bishop: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      white_rook: [
+        [0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 0],
+        [0, 1, 1, 1, 0],
+        [0, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      black_rook: [
+        [0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 0],
+        [0, 1, 1, 1, 0],
+        [0, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      white_queen: [
+        [0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 0],
+        [0, 1, 0, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      black_queen: [
+        [0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 0],
+        [0, 1, 0, 1, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      white_king: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0]
+      ],
+      black_king: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0]
+      ]
+    };
+
+    for (const piece in pieceTemplates) {
+      const pieceContainer = document.createElement('div');
+      pieceContainer.classList.add('pieceContainer');
+      pieceContainer.draggable = true;
+      pieceContainer.id = piece + '_template';
+      const canvas = document.createElement('canvas');
+      canvas.classList.add('chooseCanvas');
+      canvas.width = 40;
+      canvas.height = 40;
+      const ctx = canvas.getContext('2d');
+      drawPiece(ctx, pieceTemplates[piece], piece.startsWith('white') ? 'white' : 'black');
+      pieceContainer.appendChild(canvas);
+      pieceContainer.addEventListener('dragstart', dragFromContainer);
+      piecesContainer.appendChild(pieceContainer);
+    }
+
+    function drawPiece(ctx, template, color = 'black') {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      const pixelSize = ctx.canvas.width / 5;
+      ctx.fillStyle = color;
+      for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 5; col++) {
+          if (template[row][col] === 1) {
+            ctx.fillRect(col * pixelSize, row * pixelSize, pixelSize, pixelSize);
+          }
+        }
+      }
+    }
+
+    const defaultPosition = {
+      0: ['black_rook', 'black_knight', 'black_bishop', 'black_queen', 'black_king', 'black_bishop', 'black_knight', 'black_rook'],
+      1: ['black_pawn', 'black_pawn', 'black_pawn', 'black_pawn', 'black_pawn', 'black_pawn', 'black_pawn', 'black_pawn'],
+      6: ['white_pawn', 'white_pawn', 'white_pawn', 'white_pawn', 'white_pawn', 'white_pawn', 'white_pawn', 'white_pawn'],
+      7: ['white_rook', 'white_knight', 'white_bishop', 'white_queen', 'white_king', 'white_bishop', 'white_knight', 'white_rook']
+    };
+
+    document.querySelectorAll('.square').forEach((square, i) => {
+      const row = Math.floor(i / 8);
+      const col = i % 8;
+      if (defaultPosition[row] && defaultPosition[row][col]) {
+        const piece = defaultPosition[row][col];
+        const canvas = document.createElement('canvas');
+        canvas.width = 5;
+        canvas.height = 5;
+        const ctx = canvas.getContext('2d');
+        drawPiece(ctx, pieceTemplates[piece], piece.startsWith('white') ? 'white' : 'black');
+        canvas.draggable = true;
+        canvas.id = piece;
+        square.appendChild(canvas);
+        canvas.addEventListener('dragstart', dragFromBoard);
+      }
+    });
+
+    dropZone.addEventListener('dragover', allowDrop);
+    dropZone.addEventListener('drop', removePiece);
+
+    function dragFromBoard(ev) {
+      draggedElement = ev.target;
+      sourceSquare = ev.target.parentNode;
+      ev.dataTransfer.setData("text", ev.target.id);
+      ev.dataTransfer.effectAllowed = "move";
+    }
+
+    function dragFromContainer(ev) {
+      const pieceId = ev.target.id.replace('_template', '');
+      ev.dataTransfer.setData("text", pieceId);
+      ev.dataTransfer.effectAllowed = "copy";
+    }
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("text");
+      const targetSquare = ev.target.classList.contains('square') ? ev.target : ev.target.parentNode;
+
+      while (targetSquare.firstChild) {
+        targetSquare.removeChild(targetSquare.firstChild);
+      }
+      if (draggedElement && ev.dataTransfer.effectAllowed === "move") {
+
+        targetSquare.appendChild(draggedElement);
+      } else {
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 5;
+        canvas.height = 5;
+        const ctx = canvas.getContext('2d');
+        drawPiece(ctx, pieceTemplates[data], data.startsWith('white') ? 'white' : 'black');
+        canvas.draggable = true;
+        canvas.id = data;
+        canvas.addEventListener('dragstart', dragFromBoard);
+        targetSquare.appendChild(canvas);
+      }
+      draggedElement = null;
+      sourceSquare = null;
+    }
+
+    function removePiece(ev) {
+      ev.preventDefault();
+      if (draggedElement && sourceSquare) {
+        // Remove the piece completely
+        draggedElement.remove();
+        draggedElement = null;
+        sourceSquare = null;
+      }
+    }
+
+    function zoomIn() {
+      zoomLevel += 2;
+      chessBoard.style.zoom = zoomLevel;
+    }
+
+    function zoomOut() {
+      if (zoomLevel > 2) {
+        zoomLevel -= 2;
+        chessBoard.style.zoom = zoomLevel;
+      }
+    }
+  </script>
+</body>
+<!-- Created by Marc Sonne Dahl and Namik Zade (c) 2024 -->
+</html>
