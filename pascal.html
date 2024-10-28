@@ -39,11 +39,10 @@
     }
 
     h1 {
-      font-size: 2.5em;
+      font-size: 1.8em;
       margin-bottom: 20px;
       color: var(--primary-color);
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      animation: glow 2s ease-in-out infinite alternate;
     }
 
     @keyframes glow {
@@ -324,7 +323,7 @@
 
     function drawGraphs() {
       const bucketSpacing = GAME_WIDTH / (LEVELS + 1);
-      const maxHeight = GAME_HEIGHT * 0.2;
+      const maxHeight = GAME_HEIGHT * 0.6;
       const maxBalls = Math.max(...buckets);
       for (let i = 0; i < LEVELS; i++) {
         const x = (i + 1) * bucketSpacing;
@@ -332,7 +331,7 @@
         // Graph bar glow
         ctx.shadowColor = '#1abc9c';
         ctx.shadowBlur = 10;
-        ctx.fillStyle = 'rgba(26, 188, 156, 0.7)';
+        ctx.fillStyle = 'rgba(26, 188, 156, 0.3)';
         ctx.fillRect(x - BUCKET_WIDTH / 4, GAME_HEIGHT - BUCKET_HEIGHT - height, BUCKET_WIDTH / 2, height);
         // Percentage text
         ctx.shadowBlur = 0;
