@@ -1,39 +1,129 @@
-<html lang="en">
 <!-- Created by Marc Sonne Dahl (c) 2024 -->
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Emoji Slot Machine</title>
+  <title>CRT Slot Machine</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+    :root {
+      --crt-green: #32CD32;
+      --screen-bg: #1a1a1a;
+      --overlay-grey: rgba(255, 255, 255, 0.03);
+    }
 
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: "Pixelify Sans", sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #ffffff;
+      background: #111;
+      color: var(--crt-green);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* CRT screen effects */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        repeating-linear-gradient(0deg,
+          rgba(0, 0, 0, 0.15),
+          rgba(0, 0, 0, 0.15) 1px,
+          var(--overlay-grey) 1px,
+          var(--overlay-grey) 2px);
+      pointer-events: none;
+      animation: scanline 10s linear infinite;
+      z-index: 999;
+    }
+
+    /* Dust and scratches effect */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%, rgba(255, 255, 255, 0.03) 100%),
+        linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0%, transparent 50%, rgba(255, 255, 255, 0.02) 100%),
+        radial-gradient(circle at center,
+          transparent 0%,
+          rgba(0, 0, 0, 0.3) 90%,
+          rgba(0, 0, 0, 0.95) 100%);
+      pointer-events: none;
+      z-index: 998;
+    }
+
+    @keyframes scanline {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    @keyframes textShadow {
+      0% {
+        text-shadow: 0.4389924193300864px 0 1px rgba(50, 205, 50, 0.5), -0.4389924193300864px 0 1px rgba(50, 205, 50, 0.3), 0 0 3px;
+      }
+
+      100% {
+        text-shadow: 2.6208764473832513px 0 1px rgba(50, 205, 50, 0.5), -2.6208764473832513px 0 1px rgba(50, 205, 50, 0.3), 0 0 3px;
+      }
     }
 
     #game {
       text-align: center;
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--screen-bg);
       padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      border: 2px solid rgba(50, 205, 50, 0.5);
+      box-shadow:
+        0 0 10px rgba(50, 205, 50, 0.3),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
       max-width: 400px;
       width: 100%;
+      animation: textShadow 1.6s infinite;
+      position: relative;
+    }
+
+    /* Monitor glare effect */
+    #game::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        linear-gradient(135deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.02) 45%,
+          rgba(255, 255, 255, 0.05) 50%,
+          rgba(255, 255, 255, 0.02) 55%,
+          transparent 100%);
+      pointer-events: none;
+      border-radius: 10px;
     }
 
     h1 {
       font-size: 3rem;
       margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      text-shadow: 0 0 5px var(--crt-green);
     }
 
     #slots {
@@ -46,11 +136,14 @@
     .reel {
       width: 80px;
       height: 80px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid rgba(50, 205, 50, 0.3);
+      border-radius: 5px;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow:
+        0 0 5px rgba(50, 205, 50, 0.2),
+        inset 0 0 10px rgba(0, 0, 0, 0.8);
     }
 
     .reel-inner {
@@ -61,47 +154,54 @@
       transition: top 3s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 
-    .emoji {
+    .symbol {
       height: 80px;
       line-height: 80px;
-      font-size: 3rem;
+      font-size: 2rem;
+      text-shadow: 0 0 5px var(--crt-green);
     }
 
     #coins {
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 1rem;
+      text-shadow: 0 0 5px var(--crt-green);
     }
 
     #bet {
       width: 100px;
       padding: 0.5rem;
       font-size: 1rem;
-      border: none;
+      border: 2px solid rgba(50, 205, 50, 0.3);
       border-radius: 5px;
       margin-right: 0.5rem;
-      background: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
+      background: rgba(0, 0, 0, 0.8);
+      color: var(--crt-green);
       text-align: center;
+      font-family: "Pixelify Sans", sans-serif;
     }
 
     #playButton {
       padding: 0.5rem 1.5rem;
       font-size: 1rem;
-      background: #4CAF50;
-      color: white;
-      border: none;
+      background: rgba(0, 0, 0, 0.8);
+      color: var(--crt-green);
+      border: 2px solid rgba(50, 205, 50, 0.3);
       border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
+      font-family: "Pixelify Sans", sans-serif;
+      box-shadow: 0 0 5px rgba(50, 205, 50, 0.2);
     }
 
     #playButton:hover {
-      background: #45a049;
+      background: rgba(50, 205, 50, 0.2);
     }
 
     #playButton:disabled {
-      background: #cccccc;
+      border-color: rgba(50, 205, 50, 0.1);
+      color: rgba(50, 205, 50, 0.3);
+      box-shadow: none;
       cursor: not-allowed;
     }
 
@@ -109,7 +209,8 @@
       height: 1.5rem;
       margin-top: 1rem;
       font-weight: 600;
-      color: #FFD700;
+      color: var(--crt-green);
+      text-shadow: 0 0 5px var(--crt-green);
     }
 
     #overlay {
@@ -118,32 +219,37 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.9);
       display: none;
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      z-index: 1000;
     }
 
     #houseMessage {
       font-size: 2rem;
       margin-bottom: 2rem;
       text-align: center;
+      color: var(--crt-green);
+      text-shadow: 0 0 10px var(--crt-green);
     }
 
     #restart {
       padding: 1rem 2rem;
       font-size: 1.2rem;
-      background: #4CAF50;
-      color: white;
-      border: none;
+      background: rgba(0, 0, 0, 0.8);
+      color: var(--crt-green);
+      border: 2px solid rgba(50, 205, 50, 0.3);
       border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
+      font-family: "Pixelify Sans", sans-serif;
+      box-shadow: 0 0 5px rgba(50, 205, 50, 0.2);
     }
 
     #restart:hover {
-      background: #45a049;
+      background: rgba(50, 205, 50, 0.2);
     }
 
     @keyframes spin {
@@ -161,10 +267,10 @@
     }
   </style>
 </head>
-  <!-- Created by Marc Sonne Dahl (c) 2024 -->
+
 <body>
   <div id="game">
-    <h1>🎰 Emoji Slots</h1>
+    <h1><i class="fas fa-circle-dollar-to-slot"></i> Retro Slots</h1>
     <div id="slots">
       <div class="reel" id="reel1">
         <div class="reel-inner"></div>
@@ -176,18 +282,28 @@
         <div class="reel-inner"></div>
       </div>
     </div>
-    <div id="coins">🪙 <span id="coinAmount">1000</span></div>
+    <div id="coins"><i class="fas fa-coins"></i> <span id="coinAmount">1000</span></div>
     <input type="number" id="bet" min="1" max="1000" value="10" placeholder="Bet">
     <button id="playButton" onclick="play()">Spin</button>
     <div id="message"></div>
   </div>
   <div id="overlay">
-    <div id="houseMessage">🪬 The House Always Wins...</div>
+    <div id="houseMessage"><i class="fas fa-ghost"></i> The House Always Wins...</div>
     <button id="restart" onclick="restart()">Play Again</button>
   </div>
-  <!-- Created by Marc Sonne Dahl (c) 2024 -->
   <script>
-    const emojis = ['🍒', '🍋', '🍊', '🍇', '🍉', '🍌', '🍎', '🍑', '🍍', '🪙'];
+    const symbols = [
+      '<i class="fas fa-pepper-hot"></i>',
+      '<i class="fas fa-lemon"></i>',
+      '<i class="fas fa-apple-alt"></i>',
+      '<i class="fa-solid fa-clover"></i>',
+      '<i class="fas fa-wine-glass"></i>',
+      '<i class="fas fa-star"></i>',
+      '<i class="fas fa-gem"></i>',
+      '<i class="fas fa-crown"></i>',
+      '<i class="fas fa-dice"></i>',
+      '<i class="fas fa-coins"></i>'
+    ];
     let coins = 1000;
     let isSpinning = false;
 
@@ -199,10 +315,10 @@
       reelInner.innerHTML = '';
       const reelContent = [];
       for (let i = 0; i < 30; i++) {
-        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-        reelContent.push(emoji);
+        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+        reelContent.push(symbol);
       }
-      reelInner.innerHTML = reelContent.concat(reelContent).map(emoji => `<div class="emoji">${emoji}</div>`).join('');
+      reelInner.innerHTML = reelContent.concat(reelContent).map(symbol => `<div class="symbol">${symbol}</div>`).join('');
     }
 
     function spin(reelId, duration) {
@@ -222,7 +338,7 @@
         setTimeout(() => {
           reelInner.style.transition = 'none';
           reelInner.style.top = `-${stopPosition * itemHeight}px`;
-          const result = reelInner.children[stopPosition].textContent;
+          const result = reelInner.children[stopPosition].innerHTML;
           resolve(result);
         }, duration + 1000);
       });
@@ -245,15 +361,15 @@
         spin('reel3', 3000)
       ]);
       let winAmount = 0;
-      if (result[0] === '🪙' && result[1] === '🪙' && result[2] === '🪙') {
+      if (result[0].includes('fa-coins') && result[1].includes('fa-coins') && result[2].includes('fa-coins')) {
         winAmount = bet * 100;
-        document.getElementById('message').textContent = `🎉 JACKPOT! You won ${winAmount} coins!`;
+        document.getElementById('message').innerHTML = `<i class="fas fa-trophy"></i> JACKPOT! You won ${winAmount} coins!`;
       } else if (result[0] === result[1] && result[1] === result[2]) {
         winAmount = bet * 5;
-        document.getElementById('message').textContent = `🎊 Three of a kind! You won ${winAmount} coins!`;
+        document.getElementById('message').innerHTML = `<i class="fas fa-star"></i> Three of a kind! You won ${winAmount} coins!`;
       } else if (result[0] === result[1] || result[1] === result[2] || result[0] === result[2]) {
         winAmount = bet * 2;
-        document.getElementById('message').textContent = `✨ Two of a kind! You won ${winAmount} coins!`;
+        document.getElementById('message').innerHTML = `<i class="fas fa-certificate"></i> Two of a kind! You won ${winAmount} coins!`;
       }
       coins += winAmount;
       updateCoins();
@@ -272,9 +388,10 @@
       document.getElementById('overlay').style.display = 'none';
       document.querySelectorAll('.reel-inner').forEach(createReelContent);
     }
+    // Initialize the game
     updateCoins();
     document.querySelectorAll('.reel-inner').forEach(createReelContent);
   </script>
 </body>
-  <!-- Created by Marc Sonne Dahl (c) 2024 -->
+
 </html>
