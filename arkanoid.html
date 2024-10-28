@@ -3,28 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neumorphic Arkanoid</title>
+  <title>Retro CRT Arkanoid</title>
   <style>
+    @keyframes flicker {
+      0% {
+        opacity: 0.97;
+      }
+
+      50% {
+        opacity: 0.95;
+      }
+
+      100% {
+        opacity: 0.97;
+      }
+    }
+
+    @keyframes scanline {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
     body {
       margin: 0;
       padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #e0e5ec, #ffffff);
-      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background-color: #1a1a1a;
+      font-family: 'Courier New', monospace;
       user-select: none;
     }
 
     #gameContainer {
       width: 300px;
       height: 600px;
-      background: linear-gradient(145deg, #ffffff, #d1d9e6);
+      background: #000;
       border-radius: 20px;
-      box-shadow: 8px 8px 15px #a3b1c6, -8px -8px 15px #ffffff;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(32, 255, 77, 0.2);
+    }
+
+    #gameContainer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(rgba(32, 255, 77, 0.1) 50%,
+          rgba(32, 255, 77, 0) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      animation: scanline 10s linear infinite;
+    }
+
+    #gameContainer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center,
+          transparent 0%,
+          rgba(0, 0, 0, 0.3) 100%);
+      pointer-events: none;
     }
 
     #gameCanvas {
@@ -33,22 +84,45 @@
 
     .button {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       padding: 10px 20px;
       font-size: 18px;
-      background-color: #e0e5ec;
-      border: none;
-      border-radius: 10px;
-      box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+      background-color: transparent;
+      border: 2px solid #20ff4d;
+      color: #20ff4d;
+      text-shadow: 0 0 5px #20ff4d;
+      font-family: 'Courier New', monospace;
       cursor: pointer;
       outline: none;
       z-index: 9000;
+      transition: all 0.3s;
+    }
+
+    #startButton {
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #retryButton {
+      bottom: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+
+    #nextLevelButton {
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+
+    .button:hover {
+      background-color: rgba(32, 255, 77, 0.2);
     }
 
     .button:active {
-      box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
+      background-color: rgba(32, 255, 77, 0.4);
     }
 
     #lives,
@@ -57,7 +131,10 @@
       position: absolute;
       top: 10px;
       font-size: 16px;
-      color: #333;
+      color: #20ff4d;
+      text-shadow: 0 0 5px #20ff4d;
+      z-index: 1;
+      animation: flicker 0.3s infinite;
     }
 
     #lives {
@@ -73,32 +150,34 @@
       transform: translateX(-50%);
     }
 
-    .paddle,
-    .ball,
-    .brick {
-      position: absolute;
-      background-color: #e0e5ec;
-      box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
-    }
-
     .paddle {
+      position: absolute;
       height: 8px;
       width: 100px;
       bottom: 40px;
-      border-radius: 10px;
+      background-color: #20ff4d;
+      box-shadow: 0 0 10px #20ff4d;
+      border-radius: 4px;
     }
 
     .ball {
       width: 12px;
       height: 12px;
       border-radius: 50%;
+      background-color: #20ff4d;
+      box-shadow: 0 0 10px #20ff4d;
+      position: absolute;
       transition: transform 0.1s;
     }
 
     .brick {
+      position: absolute;
       width: 18px;
       height: 18px;
-      border-radius: 5px;
+      background-color: #20ff4d;
+      box-shadow: 0 0 5px #20ff4d;
+      border-radius: 2px;
+      opacity: 0.8;
     }
   </style>
 </head>
@@ -107,17 +186,14 @@
   <div id="gameContainer">
     <canvas id="gameCanvas" width="300" height="600"></canvas>
     <button id="startButton" class="button">Start</button>
-    <button id="nextLevelButton" class="button" style="display: none;">Next Level</button>
+    <button id="retryButton" class="button">Retry</button>
+    <button id="nextLevelButton" class="button">Next Level</button>
     <div id="lives">Lives: 3</div>
     <div id="level">Level: 1</div>
     <div id="score">Score: 0</div>
     <div id="paddle" class="paddle"></div>
     <div id="ball" class="ball"></div>
   </div>
-
-  <audio id="paddleSound" src="paddle.mp3"></audio>
-  <audio id="brickSound" src="brick.mp3"></audio>
-  <audio id="wallSound" src="wall.mp3"></audio>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -130,23 +206,25 @@
     const paddleElement = document.getElementById('paddle');
     const ballElement = document.getElementById('ball');
     const gameContainer = document.getElementById('gameContainer');
-    const paddleSound = document.getElementById('paddleSound');
-    const brickSound = document.getElementById('brickSound');
-    const wallSound = document.getElementById('wallSound');
     let paddleWidth = 100;
     let paddleHeight = 8;
     let paddleX = (canvas.width - paddleWidth) / 2;
+    let paddleSpeed = 8;
     let ballRadius = 6;
     let x = canvas.width / 2;
     let y = canvas.height - paddleHeight - 50;
-    let dx = 2;
-    let dy = -2;
+    let dx = 3;
+    let dy = -3;
     let lives = 3;
     let gameRunning = false;
     let currentLevel = 1;
     let ballSqueeze = 1;
     let squeezeFrames = 0;
     let score = 0;
+    let keys = {
+      left: false,
+      right: false
+    };
     const levels = [
       // Level 1
       [
@@ -165,7 +243,7 @@
         [0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0],
         [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
       ],
-      // Level 2 (example: slightly more complex shape)
+      // Level 2
       [
         [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
         [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
@@ -185,6 +263,8 @@
       ]
     ];
     let bricks = [];
+    let isDragging = false;
+    let lastMouseX = 0;
 
     function setupBricks() {
       const currentLungShape = levels[currentLevel - 1];
@@ -211,6 +291,11 @@
       }
     }
 
+    function updatePaddlePosition() {
+      if (keys.left) paddleX = Math.max(0, paddleX - paddleSpeed);
+      if (keys.right) paddleX = Math.min(canvas.width - paddleWidth, paddleX + paddleSpeed);
+    }
+
     function animateBallSquash() {
       if (squeezeFrames > 0) {
         ballSqueeze = 0.8 + (0.2 * (5 - squeezeFrames) / 5);
@@ -232,7 +317,6 @@
           bricks = bricks.filter(b => b !== brick);
           squeezeFrames = 5;
           score += 10;
-          brickSound.play();
           if (checkLevelComplete()) {
             showNextLevelButton();
           }
@@ -262,6 +346,8 @@
     }
 
     function draw() {
+      if (!gameRunning) return;
+      updatePaddlePosition();
       animateBallSquash();
       ballElement.style.left = `${x - ballRadius}px`;
       ballElement.style.top = `${y - ballRadius}px`;
@@ -274,18 +360,15 @@
       if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
         dx = -dx;
         squeezeFrames = 5;
-        wallSound.play();
       }
       if (y + dy < ballRadius) {
         dy = -dy;
         squeezeFrames = 5;
-        wallSound.play();
       } else if (y + dy > canvas.height - ballRadius - paddleHeight - 40) {
-        if (x + ballRadius > paddleX - 10 && x - ballRadius < paddleX + paddleWidth + 10) {
+        if (x + ballRadius > paddleX && x - ballRadius < paddleX + paddleWidth) {
           // Paddle collision
           dy = -dy;
           squeezeFrames = 5;
-          paddleSound.play();
           // Calculate new angle based on where the ball hit the paddle
           let relativeIntersectX = (x - (paddleX + paddleWidth / 2)) / (paddleWidth / 2);
           let bounceAngle = relativeIntersectX * (Math.PI / 3); // Max angle: 60 degrees
@@ -295,13 +378,15 @@
           dy = -speed * Math.cos(bounceAngle);
         }
       }
+      const retryButton = document.getElementById('retryButton');
       // Ball out of bounds
       if (y > canvas.height) {
         lives--;
         if (lives === 0) {
           gameRunning = false;
-          startButton.style.display = 'block';
-          startButton.textContent = 'Restart';
+          retryButton.style.display = 'block';
+          retryButton.textContent = 'Game Over - Retry';
+          startButton.style.display = 'none';
           return;
         } else {
           resetBallAndPaddle();
@@ -309,16 +394,14 @@
       }
       x += dx;
       y += dy;
-      if (gameRunning) {
-        requestAnimationFrame(draw);
-      }
+      requestAnimationFrame(draw);
     }
 
     function resetBallAndPaddle() {
       x = canvas.width / 2;
       y = canvas.height - paddleHeight - 50;
-      dx = 2;
-      dy = -2;
+      dx = 3;
+      dy = -3;
       paddleX = (canvas.width - paddleWidth) / 2;
     }
 
@@ -331,6 +414,7 @@
       resetBallAndPaddle();
       startButton.style.display = 'none';
       nextLevelButton.style.display = 'none';
+      retryButton.style.display = 'none';
       draw();
     }
 
@@ -343,22 +427,69 @@
         gameRunning = true;
         draw();
       } else {
-        alert("Congratulations! You've completed all levels!");
+        gameRunning = false;
         startButton.style.display = 'block';
         startButton.textContent = 'Play Again';
+        nextLevelButton.style.display = 'none';
+        retryButton.style.display = 'none';
       }
     }
-    startButton.addEventListener('click', startGame);
-    nextLevelButton.addEventListener('click', nextLevel);
-    document.addEventListener('touchmove', (e) => {
+
+    function retryGame() {
+      lives = 3;
+      score = 0;
+      setupBricks();
+      resetBallAndPaddle();
+      retryButton.style.display = 'none';
+      gameRunning = true;
+      draw();
+    }
+    // Event Listeners for controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
+      if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
+    });
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
+    });
+    // Mouse controls
+    gameContainer.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      lastMouseX = e.clientX;
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const deltaX = e.clientX - lastMouseX;
+        paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, paddleX + deltaX));
+        lastMouseX = e.clientX;
+      }
+    });
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+    // Touch controls
+    gameContainer.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      lastMouseX = e.touches[0].clientX;
+    });
+    gameContainer.addEventListener('touchmove', (e) => {
       e.preventDefault();
-      const relativeX = e.touches[0].clientX - gameContainer.offsetLeft;
-      if (relativeX > 0 && relativeX < canvas.width) {
-        paddleX = relativeX - paddleWidth / 2;
+      if (isDragging) {
+        const deltaX = e.touches[0].clientX - lastMouseX;
+        paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, paddleX + deltaX));
+        lastMouseX = e.touches[0].clientX;
       }
     }, {
       passive: false
     });
+    gameContainer.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+    startButton.addEventListener('click', startGame);
+    nextLevelButton.addEventListener('click', nextLevel);
+    retryButton.addEventListener('click', retryGame);
+    // Initial setup
     setupBricks();
     drawLives();
     drawLevel();
