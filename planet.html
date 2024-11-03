@@ -1,0 +1,410 @@
+<html lang="en">
+<!-- Created by Marc Sonne Dahl (c) 2024 -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planetary Simulation</title>
+  <!-- Created by Marc Sonne Dahl (c) 2024 -->
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: black;
+      color: white;
+    }
+
+    canvas {
+      display: block;
+      border: 1px solid white;
+    }
+
+    #controls {
+      margin: 10px;
+      z-index: 1;
+    }
+
+    input[type="range"] {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="controls">
+    <label for="massSlider">MASS: </label>
+    <input type="range" id="massSlider" min="30" max="100" value="50">
+    <button id="resetButton">RESET</button>
+  </div>
+  <canvas id="spaceCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById('spaceCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    // Star properties
+    const stars = [];
+    const starCount = 100;
+    const starFlickerRate = 0.1;
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        flickering: Math.random() < starFlickerRate
+      });
+    }
+    const sun = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      radius: 40,
+      mass: 7000, // Increased mass for stronger gravitational pull
+      color: 'orange'
+    };
+    const planets = [];
+    let launchStart = null;
+    let currentPosition = null;
+    let isDragging = false;
+    const G = 0.05; // Further reduced gravitational constant for even smoother orbits
+    function calculateGravity(body1, body2) {
+      const dx = body2.x - body1.x;
+      const dy = body2.y - body1.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const force = (G * body1.mass * body2.mass) / (distance * distance);
+      const angle = Math.atan2(dy, dx);
+      return {
+        x: Math.cos(angle) * force,
+        y: Math.sin(angle) * force
+      };
+    }
+
+    function predictTrajectory(startX, startY, velocityX, velocityY, mass) {
+      const points = [];
+      let x = startX;
+      let y = startY;
+      let vx = velocityX;
+      let vy = velocityY;
+      const steps = 700; // Significantly increased prediction steps
+      const dt = 1;
+      for (let i = 0.1; i < steps; i++) {
+        points.push({
+          x,
+          y
+        });
+        let totalForceX = 0;
+        let totalForceY = 0;
+        const sunForce = calculateGravity({
+          x,
+          y,
+          mass
+        }, {
+          x: sun.x,
+          y: sun.y,
+          mass: sun.mass
+        });
+        totalForceX += sunForce.x;
+        totalForceY += sunForce.y;
+        planets.forEach(planet => {
+          const planetForce = calculateGravity({
+              x,
+              y,
+              mass
+            },
+            planet
+          );
+          totalForceX += planetForce.x;
+          totalForceY += planetForce.y;
+        });
+        vx += (totalForceX / mass) * dt;
+        vy += (totalForceY / mass) * dt;
+        x += vx * dt;
+        y += vy * dt;
+        // Check if trajectory is going too far from sun
+        const distanceToSun = Math.sqrt((x - sun.x) ** 2 + (y - sun.y) ** 2);
+        if (distanceToSun < sun.radius || distanceToSun > Math.max(canvas.width, canvas.height)) {
+          break;
+        }
+        // Check if trajectory is completing a full orbit
+        if (i > 10 && Math.abs(x - startX) < 10 && Math.abs(y - startY) < 1) {
+          break;
+        }
+      }
+      return points;
+    }
+
+    function createPlanet(mass, x, y, velocity) {
+      return {
+        x: x,
+        y: y,
+        radius: mass * (sun.radius * 0.2 / 100), // Further reduced planet size
+        mass: mass,
+        velocity: velocity,
+        isLaunched: true
+      };
+    }
+
+    function drawSun() {
+      ctx.beginPath();
+      ctx.arc(sun.x, sun.y, sun.radius, 0, Math.PI * 2);
+      ctx.fillStyle = sun.color;
+      ctx.shadowColor = 'rgba(255, 165, 0, 0.9)';
+      ctx.shadowBlur = 40;
+      ctx.fill();
+      ctx.closePath();
+      // Draw orbital guide circles
+      const orbitGuides = [95, 120, 170, 250, 350, 480, 500, 900];
+      ctx.setLineDash([35, 10]);
+      orbitGuides.forEach(radius => {
+        ctx.beginPath();
+        ctx.arc(sun.x, sun.y, radius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.stroke();
+        ctx.closePath();
+      });
+      ctx.setLineDash([]);
+    }
+
+    function drawStars() {
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.flickering ? star.radius : star.radius / 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'cyan';
+        ctx.fill();
+        ctx.closePath();
+        star.flickering = Math.random() < starFlickerRate;
+      });
+    }
+
+    function drawPlanets() {
+      planets.forEach(planet => {
+        ctx.beginPath();
+        ctx.arc(planet.x, planet.y, planet.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'lightgrey';
+        ctx.fill();
+        ctx.closePath();
+      });
+    }
+
+    function drawLaunchPreview() {
+      if (isDragging && launchStart && currentPosition) {
+        const mass = parseInt(document.getElementById('massSlider').value);
+        const radius = mass * (sun.radius * 0.4 / 100);
+        // Draw launch planet preview
+        ctx.beginPath();
+        ctx.arc(launchStart.x, launchStart.y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(100, 100, 100, 0.5)';
+        ctx.fill();
+        ctx.closePath();
+        // Draw drag line
+        ctx.beginPath();
+        ctx.moveTo(launchStart.x, launchStart.y);
+        ctx.lineTo(currentPosition.x, currentPosition.y);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const dx = launchStart.x - currentPosition.x;
+        const dy = launchStart.y - currentPosition.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const power = Math.min(distance / 300, 1); // Reduced power scaling for finer control
+        const velocity = {
+          x: dx * 0.03 * power, // Reduced velocity scaling
+          y: dy * 0.03 * power
+        };
+        // Calculate and draw trajectory
+        const trajectoryPoints = predictTrajectory(
+          launchStart.x,
+          launchStart.y,
+          velocity.x,
+          velocity.y,
+          mass
+        );
+        // Draw trajectory with gradient
+        if (trajectoryPoints.length > 1) {
+          ctx.beginPath();
+          ctx.moveTo(trajectoryPoints[0].x, trajectoryPoints[0].y);
+          for (let i = 1; i < trajectoryPoints.length; i++) {
+            ctx.lineTo(trajectoryPoints[i].x, trajectoryPoints[i].y);
+            // Draw direction arrows every 50 points
+            if (i % 100 === 0 && i < trajectoryPoints.length - 1) {
+              const angle = Math.atan2(
+                trajectoryPoints[i + 1].y - trajectoryPoints[i].y,
+                trajectoryPoints[i + 1].x - trajectoryPoints[i].x
+              );
+              ctx.save();
+              ctx.translate(trajectoryPoints[i].x, trajectoryPoints[i].y);
+              ctx.rotate(angle);
+              ctx.moveTo(0, 0);
+              ctx.lineTo(-10, -5);
+              ctx.lineTo(-10, 5);
+              ctx.closePath();
+              ctx.fillStyle = `rgba(255, 255, 255, ${0.0 - (i / trajectoryPoints.length * 1)})`;
+              ctx.fill();
+              ctx.restore();
+            }
+          }
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        // Draw launch info
+        ctx.fillStyle = 'white';
+        ctx.font = '16px Arial';
+        ctx.fillText(`Power: ${(power * 100).toFixed(0)}%`, 10, 30);
+      }
+    }
+
+    function updatePlanets() {
+      const dt = 0.5;
+      planets.forEach((planet, index) => {
+        if (planet.isLaunched) {
+          let totalForceX = 0;
+          let totalForceY = 0;
+          const sunForce = calculateGravity(planet, sun);
+          totalForceX += sunForce.x;
+          totalForceY += sunForce.y;
+          planets.forEach((otherPlanet, otherIndex) => {
+            if (index !== otherIndex) {
+              const planetForce = calculateGravity(planet, otherPlanet);
+              totalForceX += planetForce.x;
+              totalForceY += planetForce.y;
+            }
+          });
+          planet.velocity.x += (totalForceX / planet.mass) * dt;
+          planet.velocity.y += (totalForceY / planet.mass) * dt;
+          planet.x += planet.velocity.x * dt;
+          planet.y += planet.velocity.y * dt;
+          const distanceToSun = Math.sqrt((planet.x - sun.x) ** 2 + (planet.y - sun.y) ** 2);
+          if (distanceToSun < sun.radius + planet.radius) {
+            planets.splice(index, 1);
+            return;
+          }
+        }
+      });
+      // Check for collisions between planets
+      for (let i = 0; i < planets.length; i++) {
+        for (let j = i + 1; j < planets.length; j++) {
+          const dx = planets[j].x - planets[i].x;
+          const dy = planets[j].y - planets[i].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < planets[i].radius + planets[j].radius) {
+            const newMass = planets[i].mass + planets[j].mass;
+            const totalMomentumX = planets[i].mass * planets[i].velocity.x +
+              planets[j].mass * planets[j].velocity.x;
+            const totalMomentumY = planets[i].mass * planets[i].velocity.y +
+              planets[j].mass * planets[j].velocity.y;
+            const mergedPlanet = createPlanet(
+              newMass,
+              (planets[i].x * planets[i].mass + planets[j].x * planets[j].mass) / newMass,
+              (planets[i].y * planets[i].mass + planets[j].y * planets[j].mass) / newMass, {
+                x: totalMomentumX / newMass,
+                y: totalMomentumY / newMass
+              }
+            );
+            planets.splice(j, 1);
+            planets.splice(i, 1);
+            planets.push(mergedPlanet);
+            break;
+          }
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawStars();
+      drawSun();
+      drawPlanets();
+      drawLaunchPreview();
+      updatePlanets();
+      requestAnimationFrame(animate);
+    }
+    canvas.addEventListener('mousedown', (event) => {
+      isDragging = true;
+      launchStart = {
+        x: event.clientX,
+        y: event.clientY
+      };
+      currentPosition = {
+        x: event.clientX,
+        y: event.clientY
+      };
+    });
+    canvas.addEventListener('mousemove', (event) => {
+      if (isDragging) {
+        currentPosition = {
+          x: event.clientX,
+          y: event.clientY
+        };
+      }
+    });
+    canvas.addEventListener('mouseup', (event) => {
+      if (isDragging && launchStart) {
+        const mass = parseInt(document.getElementById('massSlider').value);
+        const dx = launchStart.x - currentPosition.x;
+        const dy = launchStart.y - currentPosition.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const power = Math.min(distance / 300, 1);
+        const velocity = {
+          x: dx * 0.03 * power,
+          y: dy * 0.03 * power
+        };
+        const newPlanet = createPlanet(mass, launchStart.x, launchStart.y, velocity);
+        planets.push(newPlanet);
+      }
+      isDragging = false;
+      launchStart = null;
+      currentPosition = null;
+    });
+    canvas.addEventListener('touchstart', (event) => {
+      event.preventDefault();
+      isDragging = true;
+      launchStart = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY
+      };
+      currentPosition = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY
+      };
+    });
+    canvas.addEventListener('touchmove', (event) => {
+      event.preventDefault();
+      if (isDragging) {
+        currentPosition = {
+          x: event.touches[0].clientX,
+          y: event.touches[0].clientY
+        };
+      }
+    });
+    canvas.addEventListener('touchend', (event) => {
+      if (isDragging && launchStart && currentPosition) {
+        const mass = parseInt(document.getElementById('massSlider').value);
+        const dx = launchStart.x - currentPosition.x;
+        const dy = launchStart.y - currentPosition.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const power = Math.min(distance / 200, 1);
+        const velocity = {
+          x: dx * 0.05 * power,
+          y: dy * 0.05 * power
+        };
+        const newPlanet = createPlanet(mass, launchStart.x, launchStart.y, velocity);
+        planets.push(newPlanet);
+      }
+      isDragging = false;
+      launchStart = null;
+      currentPosition = null;
+    });
+    document.getElementById('resetButton').addEventListener('click', () => {
+      planets.length = 0;
+    });
+    animate();
+  </script>
+</body>
+<!-- Created by Marc Sonne Dahl (c) 2024 -->
+
+</html>
