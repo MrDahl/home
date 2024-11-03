@@ -1,11 +1,10 @@
 <html lang="en">
 <!-- Created by Marc Sonne Dahl (c) 2024 -->
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Planetary Simulation</title>
-  <!-- Created by Marc Sonne Dahl (c) 2024 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -15,29 +14,92 @@
       align-items: center;
       background: black;
       color: white;
+      font-family: Arial, sans-serif;
     }
 
     canvas {
       display: block;
-      border: 1px solid white;
+      border: none;
     }
 
     #controls {
       margin: 10px;
       z-index: 1;
+      background-color: rgba(50, 50, 50, 0.8);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #controls label {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
     }
 
     input[type="range"] {
       cursor: pointer;
+      -webkit-appearance: none;
+      width: 200px;
+      height: 8px;
+      border-radius: 5px;
+      background: rgba(200, 200, 200, 0.5);
+      outline: none;
+      transition: background 0.3s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    input[type="range"]:hover {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    button {
+      padding: 7px 10px;
+      font-size: 16px;
+      color: white;
+      background-color: rgba(255, 0, 0, 0.8);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    button:hover {
+      background-color: rgba(255, 0, 0, 1);
+      transform: scale(1.05);
+    }
+
+    button:focus {
+      outline: none;
+    }
+
+    .icon {
+      font-size: 20px;
     }
   </style>
 </head>
 
 <body>
   <div id="controls">
-    <label for="massSlider">MASS: </label>
+    <label for="massSlider">
+      <i class="fa-solid fa-meteor icon"></i></label>
     <input type="range" id="massSlider" min="30" max="100" value="50">
-    <button id="resetButton">RESET</button>
+    <button id="resetButton"><i class="fa-solid fa-redo-alt"></i></button>
   </div>
   <canvas id="spaceCanvas"></canvas>
   <script>
@@ -46,29 +108,35 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     // Star properties
-    const stars = [];
-    const starCount = 100;
+const stars = [];
+const starCount = 200; 
+const starLayers = 3; 
+const maxSpeed = 3; 
     const starFlickerRate = 0.1;
-    for (let i = 0; i < starCount; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
+for (let i = 0; i < starCount; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * (canvas.width / 2); 
+    stars.push({
+        x: canvas.width / 2 + Math.cos(angle) * distance,
+        y: canvas.height / 2 + Math.sin(angle) * distance,
+        z: Math.random() * starLayers, // Layer/depth
         radius: Math.random() * 2 + 1,
-        flickering: Math.random() < starFlickerRate
-      });
-    }
+        angle: angle, 
+        distance: distance 
+    });
+}
     const sun = {
       x: canvas.width / 2,
       y: canvas.height / 2,
       radius: 40,
-      mass: 7000, // Increased mass for stronger gravitational pull
+      mass: 7000, 
       color: 'orange'
     };
     const planets = [];
     let launchStart = null;
     let currentPosition = null;
     let isDragging = false;
-    const G = 0.05; // Further reduced gravitational constant for even smoother orbits
+    const G = 0.05; 
     function calculateGravity(body1, body2) {
       const dx = body2.x - body1.x;
       const dy = body2.y - body1.y;
@@ -87,7 +155,7 @@
       let y = startY;
       let vx = velocityX;
       let vy = velocityY;
-      const steps = 700; // Significantly increased prediction steps
+      const steps = 3000; 
       const dt = 1;
       for (let i = 0.1; i < steps; i++) {
         points.push({
@@ -122,12 +190,12 @@
         vy += (totalForceY / mass) * dt;
         x += vx * dt;
         y += vy * dt;
-        // Check if trajectory is going too far from sun
+
         const distanceToSun = Math.sqrt((x - sun.x) ** 2 + (y - sun.y) ** 2);
         if (distanceToSun < sun.radius || distanceToSun > Math.max(canvas.width, canvas.height)) {
           break;
         }
-        // Check if trajectory is completing a full orbit
+
         if (i > 10 && Math.abs(x - startX) < 10 && Math.abs(y - startY) < 1) {
           break;
         }
@@ -139,7 +207,7 @@
       return {
         x: x,
         y: y,
-        radius: mass * (sun.radius * 0.2 / 100), // Further reduced planet size
+        radius: mass * (sun.radius * 0.2 / 100), 
         mass: mass,
         velocity: velocity,
         isLaunched: true
@@ -154,9 +222,9 @@
       ctx.shadowBlur = 40;
       ctx.fill();
       ctx.closePath();
-      // Draw orbital guide circles
-      const orbitGuides = [95, 120, 170, 250, 350, 480, 500, 900];
-      ctx.setLineDash([35, 10]);
+
+      const orbitGuides = [90, 110, ,140, 180, 230, 290, 380, 460, 550, 650, 760, 880, 1030];
+      ctx.setLineDash([7, 15]);
       orbitGuides.forEach(radius => {
         ctx.beginPath();
         ctx.arc(sun.x, sun.y, radius, 0, Math.PI * 2);
@@ -167,16 +235,40 @@
       ctx.setLineDash([]);
     }
 
-    function drawStars() {
-      stars.forEach(star => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.flickering ? star.radius : star.radius / 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'cyan';
+function drawStars() {
+    ctx.save();
+    
+    stars.forEach(star => {
+
+        star.distance += (maxSpeed * (star.z / 300)); 
+        if (star.distance > Math.max(canvas.width, canvas.height)) {
+            star.distance = 0;
+            star.angle = Math.random() * Math.PI * 2;
+        }
+        
+        star.x = canvas.width / 2 + Math.cos(star.angle) * star.distance;
+        star.y = canvas.height / 2 + Math.sin(star.angle) * star.distance;
+
+        const baseOpacity = Math.min(1, (star.distance / 100));
+        
+
+        const flicker = Math.random() * 0.2; 
+        const opacity = Math.max(0, Math.min(1, baseOpacity + flicker - 0.1));        ctx.beginPath();
+        ctx.arc(
+            star.x,
+            star.y,
+            star.radius * (0.5 + star.distance / 90000), 
+            0,
+            Math.PI * 2
+        );
+        ctx.fillStyle = `rgba(157, 157, 255, ${opacity})`;
         ctx.fill();
         ctx.closePath();
-        star.flickering = Math.random() < starFlickerRate;
-      });
-    }
+    });
+    
+    ctx.restore();
+}
+
 
     function drawPlanets() {
       planets.forEach(planet => {
@@ -212,10 +304,10 @@
         const distance = Math.sqrt(dx * dx + dy * dy);
         const power = Math.min(distance / 300, 1); // Reduced power scaling for finer control
         const velocity = {
-          x: dx * 0.03 * power, // Reduced velocity scaling
+          x: dx * 0.03 * power, 
           y: dy * 0.03 * power
         };
-        // Calculate and draw trajectory
+
         const trajectoryPoints = predictTrajectory(
           launchStart.x,
           launchStart.y,
@@ -223,29 +315,12 @@
           velocity.y,
           mass
         );
-        // Draw trajectory with gradient
+
         if (trajectoryPoints.length > 1) {
           ctx.beginPath();
           ctx.moveTo(trajectoryPoints[0].x, trajectoryPoints[0].y);
           for (let i = 1; i < trajectoryPoints.length; i++) {
             ctx.lineTo(trajectoryPoints[i].x, trajectoryPoints[i].y);
-            // Draw direction arrows every 50 points
-            if (i % 100 === 0 && i < trajectoryPoints.length - 1) {
-              const angle = Math.atan2(
-                trajectoryPoints[i + 1].y - trajectoryPoints[i].y,
-                trajectoryPoints[i + 1].x - trajectoryPoints[i].x
-              );
-              ctx.save();
-              ctx.translate(trajectoryPoints[i].x, trajectoryPoints[i].y);
-              ctx.rotate(angle);
-              ctx.moveTo(0, 0);
-              ctx.lineTo(-10, -5);
-              ctx.lineTo(-10, 5);
-              ctx.closePath();
-              ctx.fillStyle = `rgba(255, 255, 255, ${0.0 - (i / trajectoryPoints.length * 1)})`;
-              ctx.fill();
-              ctx.restore();
-            }
           }
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
           ctx.lineWidth = 1;
@@ -285,7 +360,7 @@
           }
         }
       });
-      // Check for collisions between planets
+
       for (let i = 0; i < planets.length; i++) {
         for (let j = i + 1; j < planets.length; j++) {
           const dx = planets[j].x - planets[i].x;
