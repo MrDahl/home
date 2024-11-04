@@ -1,10 +1,11 @@
 <html lang="en">
 <!-- Created by Marc Sonne Dahl (c) 2024 -->
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Planetary Simulation</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -12,7 +13,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: black;
+      background: #0F0B1F;
       color: white;
       font-family: Arial, sans-serif;
     }
@@ -37,7 +38,9 @@
     #controls label {
       display: flex;
       align-items: center;
+      margin-right: 10px;
       font-size: 18px;
+      color: orange;
     }
 
     input[type="range"] {
@@ -57,12 +60,13 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: #fff;
+      background: orange;
+      box-shadow: 1px 1px 10px #353535;
       cursor: pointer;
     }
 
     input[type="range"]:hover {
-      background: rgba(255, 255, 255, 0.8);
+      background: orange;
     }
 
     button {
@@ -91,52 +95,103 @@
     .icon {
       font-size: 20px;
     }
+
+    .speed-controls {
+      display: flex;
+      gap: 5px;
+      margin: 3px 10px;
+    }
+
+    .speed-button {
+      padding: 5px 10px;
+      background-color: rgba(100, 100, 100, 0.8);
+      margin-left: 2px;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .speed-button.active {
+      background-color: rgba(0, 255, 0, 0.5);
+    }
+
+    #playButton,
+    #pauseButton {
+      background-color: rgba(100, 100, 100, 0.8);
+      padding: 7px 15px;
+    }
+
+    #playButton:hover,
+    #pauseButton:hover {
+      background-color: rgba(150, 150, 150, 0.8);
+    }
   </style>
 </head>
 
 <body>
   <div id="controls">
     <label for="massSlider">
-      <i class="fa-solid fa-meteor icon"></i></label>
+      <i class="fa-solid fa-meteor icon"></i>
+    </label>
     <input type="range" id="massSlider" min="30" max="100" value="50">
+    <button id="playButton"><i class="fa-solid fa-play"></i></button>
+    <button id="pauseButton"><i class="fa-solid fa-pause"></i></button>
+    <div class="speed-controls">
+      <label for="speedControl"><i class="fa-solid fa-forward"></i></label>
+      <button id="speed1x" class="speed-button"><i class="fa-solid fa-1"></i></button>
+      <button id="speed2x" class="speed-button"><i class="fa-solid fa-2"></i></button>
+      <button id="speed5x" class="speed-button active"><i class="fa-solid fa-5"></i></button>
+      <button id="speed10x" class="speed-button"><i class="fa-solid fa-1"></i><i class="fa-solid fa-0"></i></button>
+      <button id="speed50x" class="speed-button"><i class="fa-solid fa-5"></i><i class="fa-solid fa-0"></i></button></button>
+    </div>
     <button id="resetButton"><i class="fa-solid fa-redo-alt"></i></button>
   </div>
   <canvas id="spaceCanvas"></canvas>
   <script>
+    let isGamePaused = false;
+    let gameSpeed = 5;
+    let lastTimestamp = 0;
+    const baseTimeStep = 0.5;
+    const TRAIL_LENGTH = 140;
+    const TRAIL_OPACITY = 0.5;
     const canvas = document.getElementById('spaceCanvas');
-    const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    // Star properties
-const stars = [];
-const starCount = 200; 
-const starLayers = 3; 
-const maxSpeed = 3; 
+    canvas.height = window.innerHeight;    
+    const ctx = canvas.getContext('2d');
+    const stars = [];
+    const starCount = 200;
+    const starLayers = 3;
+    const maxSpeed = 5;
     const starFlickerRate = 0.1;
-for (let i = 0; i < starCount; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const distance = Math.random() * (canvas.width / 2); 
-    stars.push({
+    for (let i = 0; i < starCount; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const distance = Math.random() * (canvas.width / 2);
+      stars.push({
         x: canvas.width / 2 + Math.cos(angle) * distance,
         y: canvas.height / 2 + Math.sin(angle) * distance,
-        z: Math.random() * starLayers, // Layer/depth
+        z: Math.random() * starLayers,
         radius: Math.random() * 2 + 1,
-        angle: angle, 
-        distance: distance 
-    });
-}
+        angle: angle,
+        distance: distance
+      });
+    }
     const sun = {
       x: canvas.width / 2,
       y: canvas.height / 2,
       radius: 40,
-      mass: 7000, 
+      mass: 7000,
       color: 'orange'
     };
     const planets = [];
     let launchStart = null;
     let currentPosition = null;
     let isDragging = false;
-    const G = 0.05; 
+    const G = 0.05;
+    const SUN_ANIMATION_SPEED = 0.005;
+    let sunTime = 0;
+
     function calculateGravity(body1, body2) {
       const dx = body2.x - body1.x;
       const dy = body2.y - body1.y;
@@ -155,8 +210,8 @@ for (let i = 0; i < starCount; i++) {
       let y = startY;
       let vx = velocityX;
       let vy = velocityY;
-      const steps = 3000; 
-      const dt = 1;
+      const steps = 3000;
+      const dt = 0.5;
       for (let i = 0.1; i < steps; i++) {
         points.push({
           x,
@@ -190,13 +245,8 @@ for (let i = 0; i < starCount; i++) {
         vy += (totalForceY / mass) * dt;
         x += vx * dt;
         y += vy * dt;
-
         const distanceToSun = Math.sqrt((x - sun.x) ** 2 + (y - sun.y) ** 2);
         if (distanceToSun < sun.radius || distanceToSun > Math.max(canvas.width, canvas.height)) {
-          break;
-        }
-
-        if (i > 10 && Math.abs(x - startX) < 10 && Math.abs(y - startY) < 1) {
           break;
         }
       }
@@ -207,68 +257,169 @@ for (let i = 0; i < starCount; i++) {
       return {
         x: x,
         y: y,
-        radius: mass * (sun.radius * 0.2 / 100), 
+        radius: mass * (sun.radius * 0.2 / 100),
         mass: mass,
         velocity: velocity,
-        isLaunched: true
+        isLaunched: true,
+        trail: [{
+          x: x,
+          y: y
+        }]
       };
     }
 
-    function drawSun() {
-      ctx.beginPath();
-      ctx.arc(sun.x, sun.y, sun.radius, 0, Math.PI * 2);
-      ctx.fillStyle = sun.color;
-      ctx.shadowColor = 'rgba(255, 165, 0, 0.9)';
-      ctx.shadowBlur = 40;
-      ctx.fill();
-      ctx.closePath();
-
-      const orbitGuides = [90, 110, ,140, 180, 230, 290, 380, 460, 550, 650, 760, 880, 1030];
-      ctx.setLineDash([7, 15]);
-      orbitGuides.forEach(radius => {
-        ctx.beginPath();
-        ctx.arc(sun.x, sun.y, radius, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-        ctx.stroke();
-        ctx.closePath();
+    function drawTrails() {
+      planets.forEach(planet => {
+        if (planet.trail.length > 1) {
+          ctx.beginPath();
+          ctx.moveTo(planet.trail[0].x, planet.trail[0].y);
+          planet.trail.forEach((pos, index) => {
+            const opacity = (index / planet.trail.length) * TRAIL_OPACITY;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+            ctx.lineWidth = 2;
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+          });
+        }
       });
-      ctx.setLineDash([]);
     }
 
-function drawStars() {
-    ctx.save();
-    
-    stars.forEach(star => {
+    function drawSun() {
+      sunTime += SUN_ANIMATION_SPEED;
+      const gradient1 = ctx.createRadialGradient(
+        sun.x, sun.y, 0,
+        sun.x, sun.y, sun.radius * 1.5
+      );
+      gradient1.addColorStop(0, 'rgba(255, 255, 255, 1)');
+      gradient1.addColorStop(0.2, 'rgba(255, 198, 50, 1)');
+      gradient1.addColorStop(0.45, 'rgba(255, 120, 0, 1)');
+      gradient1.addColorStop(1, 'rgba(255, 50, 0, 0)');
+      ctx.save();
+      for (let i = 0; i < 12; i++) {
+        ctx.beginPath();
+        ctx.translate(sun.x, sun.y);
+        ctx.rotate((Math.PI * 2 / 12) * i + sunTime);
+        ctx.translate(-sun.x, -sun.y);
+        const gradient2 = ctx.createRadialGradient(
+          sun.x, sun.y, sun.radius * 0.5,
+          sun.x, sun.y, sun.radius * 3
+        );
+        gradient2.addColorStop(0, 'rgba(255, 180, 0, 0.3)');
+        gradient2.addColorStop(0.15, 'rgba(255, 120, 0, 0.2)');
+        gradient2.addColorStop(1, 'rgba(255, 60, 0, 0)');
+        ctx.fillStyle = gradient2;
+        ctx.beginPath();
+        ctx.moveTo(sun.x, sun.y - sun.radius * 0.5);
+        ctx.quadraticCurveTo(
+          sun.x + sun.radius * 2, sun.y,
+          sun.x, sun.y + sun.radius * 0.5
+        );
+        ctx.quadraticCurveTo(
+          sun.x - sun.radius * 2, sun.y,
+          sun.x, sun.y - sun.radius * 0.5
+        );
+        ctx.fill();
+      }
+      ctx.restore();
+      ctx.beginPath();
+      ctx.arc(sun.x, sun.y, sun.radius, 0, Math.PI * 2);
+      ctx.fillStyle = gradient1;
+      ctx.fill();
+      for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2 + sunTime;
+        const x = sun.x + Math.cos(angle) * sun.radius * 0.7;
+        const y = sun.y + Math.sin(angle) * sun.radius * 0.7;
+        const surfaceGradient = ctx.createRadialGradient(
+          x, y, 0,
+          x, y, sun.radius * 0.4
+        );
+        surfaceGradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+        surfaceGradient.addColorStop(0.4, 'rgba(255, 200, 50, 0.1)');
+        surfaceGradient.addColorStop(1, 'rgba(255, 100, 0, 0)');
+        ctx.beginPath();
+        ctx.fillStyle = surfaceGradient;
+        ctx.arc(x, y, sun.radius * 0.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      const pulseSize = Math.sin(sunTime * 2) * 0.1 + 1.1;
+      const glowGradient = ctx.createRadialGradient(
+        sun.x, sun.y, sun.radius * 0.5,
+        sun.x, sun.y, sun.radius * pulseSize * 2
+      );
+      glowGradient.addColorStop(0, 'rgba(255, 150, 0, 0.2)');
+      glowGradient.addColorStop(0.5, 'rgba(255, 100, 0, 0.1)');
+      glowGradient.addColorStop(1, 'rgba(255, 50, 0, 0)');
+      ctx.beginPath();
+      ctx.arc(sun.x, sun.y, sun.radius * pulseSize * 2, 0, Math.PI * 2);
+      ctx.fillStyle = glowGradient;
+      ctx.fill();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.beginPath();
+      ctx.arc(sun.x + 2, sun.y + 2, sun.radius * 1.1, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 0, 0, 0.1)';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(sun.x - 2, sun.y - 2, sun.radius * 1.1, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 255, 255, 0.1)';
+      ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+      for (let i = 0; i < 5; i++) {
+        const flareAngle = (sunTime * (1 + i * 0.2)) % (Math.PI * 2);
+        const flareLength = sun.radius * (0.5 + Math.sin(sunTime * 3 + i) * 0.3);
+        ctx.beginPath();
+        ctx.moveTo(
+          sun.x + Math.cos(flareAngle) * sun.radius,
+          sun.y + Math.sin(flareAngle) * sun.radius
+        );
+        const controlX = sun.x + Math.cos(flareAngle) * (sun.radius + flareLength) * 1.5;
+        const controlY = sun.y + Math.sin(flareAngle) * (sun.radius + flareLength) * 1.5;
+        ctx.quadraticCurveTo(
+          controlX, controlY,
+          sun.x + Math.cos(flareAngle + 0.2) * sun.radius,
+          sun.y + Math.sin(flareAngle + 0.2) * sun.radius
+        );
+        const flareGradient = ctx.createLinearGradient(
+          sun.x + Math.cos(flareAngle) * sun.radius,
+          sun.y + Math.sin(flareAngle) * sun.radius,
+          controlX, controlY
+        );
+        flareGradient.addColorStop(0, 'rgba(255, 255, 200, 0.3)');
+        flareGradient.addColorStop(1, 'rgba(255, 150, 0, 0)');
+        ctx.strokeStyle = flareGradient;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+    }
 
-        star.distance += (maxSpeed * (star.z / 300)); 
+    function drawStars() {
+      ctx.save();
+      stars.forEach(star => {
+        star.distance += (maxSpeed * (star.z / 300));
         if (star.distance > Math.max(canvas.width, canvas.height)) {
-            star.distance = 0;
-            star.angle = Math.random() * Math.PI * 2;
+          star.distance = 0;
+          star.angle = Math.random() * Math.PI * 2;
         }
-        
         star.x = canvas.width / 2 + Math.cos(star.angle) * star.distance;
         star.y = canvas.height / 2 + Math.sin(star.angle) * star.distance;
-
         const baseOpacity = Math.min(1, (star.distance / 100));
-        
-
-        const flicker = Math.random() * 0.2; 
-        const opacity = Math.max(0, Math.min(1, baseOpacity + flicker - 0.1));        ctx.beginPath();
+        const flicker = Math.random() * 0.2;
+        const opacity = Math.max(0, Math.min(1, baseOpacity + flicker - 0.1));
+        ctx.beginPath();
         ctx.arc(
-            star.x,
-            star.y,
-            star.radius * (0.5 + star.distance / 90000), 
-            0,
-            Math.PI * 2
+          star.x,
+          star.y,
+          star.radius * (0.5 + star.distance / 90000),
+          0,
+          Math.PI * 2
         );
         ctx.fillStyle = `rgba(157, 157, 255, ${opacity})`;
         ctx.fill();
         ctx.closePath();
-    });
-    
-    ctx.restore();
-}
-
+      });
+      ctx.restore();
+    }
 
     function drawPlanets() {
       planets.forEach(planet => {
@@ -302,12 +453,11 @@ function drawStars() {
         const dx = launchStart.x - currentPosition.x;
         const dy = launchStart.y - currentPosition.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const power = Math.min(distance / 300, 1); // Reduced power scaling for finer control
+        const power = Math.min(distance / 300, 1);
         const velocity = {
-          x: dx * 0.03 * power, 
+          x: dx * 0.03 * power,
           y: dy * 0.03 * power
         };
-
         const trajectoryPoints = predictTrajectory(
           launchStart.x,
           launchStart.y,
@@ -315,7 +465,6 @@ function drawStars() {
           velocity.y,
           mass
         );
-
         if (trajectoryPoints.length > 1) {
           ctx.beginPath();
           ctx.moveTo(trajectoryPoints[0].x, trajectoryPoints[0].y);
@@ -333,8 +482,7 @@ function drawStars() {
       }
     }
 
-    function updatePlanets() {
-      const dt = 0.5;
+    function updatePlanets(timeStep) {
       planets.forEach((planet, index) => {
         if (planet.isLaunched) {
           let totalForceX = 0;
@@ -349,10 +497,18 @@ function drawStars() {
               totalForceY += planetForce.y;
             }
           });
-          planet.velocity.x += (totalForceX / planet.mass) * dt;
-          planet.velocity.y += (totalForceY / planet.mass) * dt;
-          planet.x += planet.velocity.x * dt;
-          planet.y += planet.velocity.y * dt;
+          planet.velocity.x += (totalForceX / planet.mass) * timeStep;
+          planet.velocity.y += (totalForceY / planet.mass) * timeStep;
+          planet.x += planet.velocity.x * timeStep;
+          planet.y += planet.velocity.y * timeStep;
+          // Update trail
+          planet.trail.push({
+            x: planet.x,
+            y: planet.y
+          });
+          if (planet.trail.length > TRAIL_LENGTH) {
+            planet.trail.shift();
+          }
           const distanceToSun = Math.sqrt((planet.x - sun.x) ** 2 + (planet.y - sun.y) ** 2);
           if (distanceToSun < sun.radius + planet.radius) {
             planets.splice(index, 1);
@@ -360,7 +516,6 @@ function drawStars() {
           }
         }
       });
-
       for (let i = 0; i < planets.length; i++) {
         for (let j = i + 1; j < planets.length; j++) {
           const dx = planets[j].x - planets[i].x;
@@ -368,14 +523,15 @@ function drawStars() {
           const distance = Math.sqrt(dx * dx + dy * dy);
           if (distance < planets[i].radius + planets[j].radius) {
             const newMass = planets[i].mass + planets[j].mass;
-            const totalMomentumX = planets[i].mass * planets[i].velocity.x +
-              planets[j].mass * planets[j].velocity.x;
-            const totalMomentumY = planets[i].mass * planets[i].velocity.y +
-              planets[j].mass * planets[j].velocity.y;
+            const newX = (planets[i].x * planets[i].mass + planets[j].x * planets[j].mass) / newMass;
+            const newY = (planets[i].y * planets[i].mass + planets[j].y * planets[j].mass) / newMass;
+            const totalMomentumX = planets[i].mass * planets[i].velocity.x + planets[j].mass * planets[j].velocity.x;
+            const totalMomentumY = planets[i].mass * planets[i].velocity.y + planets[j].mass * planets[j].velocity.y;
+
             const mergedPlanet = createPlanet(
               newMass,
-              (planets[i].x * planets[i].mass + planets[j].x * planets[j].mass) / newMass,
-              (planets[i].y * planets[i].mass + planets[j].y * planets[j].mass) / newMass, {
+              newX,
+              newY, {
                 x: totalMomentumX / newMass,
                 y: totalMomentumY / newMass
               }
@@ -389,31 +545,48 @@ function drawStars() {
       }
     }
 
-    function animate() {
+    function getCanvasCoordinates(event) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+      };
+    }
+
+    function animate(timestamp) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const deltaTime = timestamp - lastTimestamp;
+      lastTimestamp = timestamp;
       drawStars();
+      drawTrails();
       drawSun();
       drawPlanets();
       drawLaunchPreview();
-      updatePlanets();
+      if (!isGamePaused) {
+        const timeStep = baseTimeStep * gameSpeed;
+        updatePlanets(timeStep);
+      }
       requestAnimationFrame(animate);
     }
     canvas.addEventListener('mousedown', (event) => {
       isDragging = true;
+      const coords = getCanvasCoordinates(event);
       launchStart = {
-        x: event.clientX,
-        y: event.clientY
+        x: coords.x,
+        y: coords.y
       };
       currentPosition = {
-        x: event.clientX,
-        y: event.clientY
+        x: coords.x,
+        y: coords.y
       };
     });
     canvas.addEventListener('mousemove', (event) => {
       if (isDragging) {
+        const coords = getCanvasCoordinates(event);
         currentPosition = {
-          x: event.clientX,
-          y: event.clientY
+          x: coords.x,
+          y: coords.y
         };
       }
     });
@@ -438,21 +611,23 @@ function drawStars() {
     canvas.addEventListener('touchstart', (event) => {
       event.preventDefault();
       isDragging = true;
-      launchStart = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY
+      const rect = canvas.getBoundingClientRect();
+      const touch = event.touches[0];
+      const coords = {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top
       };
-      currentPosition = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY
-      };
+      launchStart = coords;
+      currentPosition = coords;
     });
     canvas.addEventListener('touchmove', (event) => {
       event.preventDefault();
       if (isDragging) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = event.touches[0];
         currentPosition = {
-          x: event.touches[0].clientX,
-          y: event.touches[0].clientY
+          x: touch.clientX - rect.left,
+          y: touch.clientY - rect.top
         };
       }
     });
@@ -462,10 +637,10 @@ function drawStars() {
         const dx = launchStart.x - currentPosition.x;
         const dy = launchStart.y - currentPosition.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const power = Math.min(distance / 200, 1);
+        const power = Math.min(distance / 300, 1);
         const velocity = {
-          x: dx * 0.05 * power,
-          y: dy * 0.05 * power
+          x: dx * 0.03 * power,
+          y: dy * 0.03 * power
         };
         const newPlanet = createPlanet(mass, launchStart.x, launchStart.y, velocity);
         planets.push(newPlanet);
@@ -477,6 +652,41 @@ function drawStars() {
     document.getElementById('resetButton').addEventListener('click', () => {
       planets.length = 0;
     });
+    animate();
+    document.getElementById('playButton').addEventListener('click', () => {
+      isGamePaused = false;
+      document.getElementById('playButton').style.backgroundColor = 'rgba(0, 255, 0, 0.5)';
+      document.getElementById('pauseButton').style.backgroundColor = 'rgba(100, 100, 100, 0.8)';
+    });
+    document.getElementById('pauseButton').addEventListener('click', () => {
+      isGamePaused = true;
+      document.getElementById('pauseButton').style.backgroundColor = 'rgba(255, 0, 0, 0.5)';
+      document.getElementById('playButton').style.backgroundColor = 'rgba(100, 100, 100, 0.8)';
+    });
+
+    const speeds = {
+      'speed1x': 1,
+      'speed2x': 2,
+      'speed5x': 5,
+      'speed10x': 10,
+      'speed50x': 50
+    };
+
+    function setSpeed(speedId) {
+      gameSpeed = speeds[speedId];
+
+      document.querySelectorAll('.speed-button').forEach(button => {
+        button.classList.remove('active');
+      });
+      document.getElementById(speedId).classList.add('active');
+    }
+
+    Object.keys(speeds).forEach(speedId => {
+      document.getElementById(speedId).addEventListener('click', () => {
+        setSpeed(speedId);
+      });
+    });
+
     animate();
   </script>
 </body>
