@@ -24,34 +24,83 @@
     }
 
     #controls {
-      margin: 10px;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 1;
       background-color: rgba(50, 50, 50, 0.8);
       padding: 15px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       gap: 10px;
+      max-width: 95vw;
+      backdrop-filter: blur(5px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #controls.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(-100%);
+    }
+
+    #toggleControls {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      background-color: rgba(50, 50, 50, 0.8);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s;
+      backdrop-filter: blur(5px);
+    }
+
+    #toggleControls:hover {
+      background-color: rgba(70, 70, 70, 0.9);
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: nowrap;
     }
 
     #controls label {
       display: flex;
       align-items: center;
-      margin-right: 10px;
-      font-size: 18px;
       color: orange;
+      font-size: 16px;
+      white-space: nowrap;
     }
 
     input[type="range"] {
       cursor: pointer;
       -webkit-appearance: none;
-      width: 200px;
+      width: 120px;
       height: 8px;
       border-radius: 5px;
       background: rgba(200, 200, 200, 0.5);
       outline: none;
       transition: background 0.3s;
+    }
+
+    @media (min-width: 768px) {
+      input[type="range"] {
+        width: 200px;
+      }
     }
 
     input[type="range"]::-webkit-slider-thumb {
@@ -71,9 +120,9 @@
 
     button {
       padding: 7px 10px;
-      font-size: 16px;
+      font-size: 14px;
       color: white;
-      background-color: rgba(255, 0, 0, 0.8);
+      background-color: rgba(100, 100, 100, 0.8);
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -81,75 +130,185 @@
       display: flex;
       align-items: center;
       gap: 5px;
+      min-width: 35px;
+      justify-content: center;
     }
 
     button:hover {
-      background-color: rgba(255, 0, 0, 1);
+      background-color: rgba(150, 150, 150, 1);
       transform: scale(1.05);
     }
 
-    button:focus {
-      outline: none;
-    }
-
-    .icon {
-      font-size: 20px;
-    }
-
-    .speed-controls {
+    .speed-controls,
+    .zoom-controls {
       display: flex;
       gap: 5px;
-      margin: 3px 10px;
-    }
-
-    .speed-button {
-      padding: 5px 10px;
-      background-color: rgba(100, 100, 100, 0.8);
-      margin-left: 2px;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
+      align-items: center;
     }
 
     .speed-button.active {
       background-color: rgba(0, 255, 0, 0.5);
     }
 
-    #playButton,
-    #pauseButton {
-      background-color: rgba(100, 100, 100, 0.8);
-      padding: 7px 15px;
+    #playButton.active {
+      background-color: rgba(0, 255, 0, 0.5);
     }
 
-    #playButton:hover,
-    #pauseButton:hover {
-      background-color: rgba(150, 150, 150, 0.8);
+    #pauseButton.active {
+      background-color: rgba(255, 0, 0, 0.5);
+    }
+
+    #resetButton {
+      background-color: rgba(255, 0, 0, 0.8);
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 767px) {
+      #controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+        gap: 8px;
+      }
+
+      .control-group {
+        justify-content: center;
+      }
+
+      .speed-controls,
+      .zoom-controls {
+        justify-content: center;
+      }
+
+      button {
+        padding: 10px;
+        /* Larger touch target */
+        min-height: 44px;
+        /* iOS minimum touch target size */
+      }
+
+      /* Show tooltips for mobile */
+      [data-tooltip] {
+        position: relative;
+      }
+
+      [data-tooltip]:after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      [data-tooltip]:active:after {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+
+    /* Additional responsive adjustments */
+    @media (max-width: 480px) {
+
+      .speed-controls button,
+      .zoom-controls button {
+        padding: 8px;
+        font-size: 12px;
+      }
+
+      #controls label {
+        font-size: 14px;
+      }
+    }
+
+    /* Landscape mode adjustments */
+    @media (max-height: 480px) and (orientation: landscape) {
+      #controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 90vw;
+      }
     }
   </style>
 </head>
 
 <body>
+  <button id="toggleControls" title="Toggle Controls">
+    <i class="fa-solid fa-bars"></i>
+  </button>
   <div id="controls">
-    <label for="massSlider">
-      <i class="fa-solid fa-meteor icon"></i>
-    </label>
-    <input type="range" id="massSlider" min="30" max="100" value="50">
-    <button id="playButton"><i class="fa-solid fa-play"></i></button>
-    <button id="pauseButton"><i class="fa-solid fa-pause"></i></button>
-    <div class="speed-controls">
-      <label for="speedControl"><i class="fa-solid fa-forward"></i></label>
-      <button id="speed1x" class="speed-button"><i class="fa-solid fa-1"></i></button>
-      <button id="speed2x" class="speed-button"><i class="fa-solid fa-2"></i></button>
-      <button id="speed5x" class="speed-button active"><i class="fa-solid fa-5"></i></button>
-      <button id="speed10x" class="speed-button"><i class="fa-solid fa-1"></i><i class="fa-solid fa-0"></i></button>
-      <button id="speed50x" class="speed-button"><i class="fa-solid fa-5"></i><i class="fa-solid fa-0"></i></button></button>
+    <div class="control-group">
+      <label for="massSlider" data-tooltip="Planet Mass">
+        <i class="fa-solid fa-meteor icon"></i>
+      </label>
+      <input type="range" id="massSlider" min="30" max="100" value="50">
     </div>
-    <button id="resetButton"><i class="fa-solid fa-redo-alt"></i></button>
+
+    <div class="control-group">
+      <div class="zoom-controls">
+        <label data-tooltip="Zoom Controls">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </label>
+        <button id="zoomInButton" class="zoom-button" data-tooltip="Zoom In">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+        <button id="zoomOutButton" class="zoom-button" data-tooltip="Zoom Out">
+          <i class="fa-solid fa-minus"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <button id="playButton" data-tooltip="Play">
+        <i class="fa-solid fa-play"></i>
+      </button>
+      <button id="pauseButton" data-tooltip="Pause">
+        <i class="fa-solid fa-pause"></i>
+      </button>
+    </div>
+
+    <div class="control-group">
+      <div class="speed-controls">
+        <label data-tooltip="Simulation Speed">
+          <i class="fa-solid fa-forward"></i>
+        </label>
+        <button id="speed1x" class="speed-button" data-tooltip="Normal Speed">1x</button>
+        <button id="speed2x" class="speed-button" data-tooltip="Double Speed">2x</button>
+        <button id="speed5x" class="speed-button active" data-tooltip="5x Speed">5x</button>
+        <button id="speed10x" class="speed-button" data-tooltip="10x Speed">10x</button>
+        <button id="speed50x" class="speed-button" data-tooltip="50x Speed">50x</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <button id="resetButton" data-tooltip="Reset Simulation">
+        <i class="fa-solid fa-redo-alt"></i>
+      </button>
+    </div>
   </div>
+
   <canvas id="spaceCanvas"></canvas>
+
   <script>
+    const toggleControlsBtn = document.getElementById('toggleControls');
+    const controlsPanel = document.getElementById('controls');
+    let isControlsVisible = true;
+    toggleControlsBtn.addEventListener('click', () => {
+      isControlsVisible = !isControlsVisible;
+      controlsPanel.classList.toggle('hidden');
+      toggleControlsBtn.innerHTML = isControlsVisible ?
+        '<i class="fa-solid fa-bars"></i>' :
+        '<i class="fa-solid fa-bars"></i>';
+    });
     let isGamePaused = false;
     let gameSpeed = 5;
     let lastTimestamp = 0;
@@ -158,8 +317,12 @@
     const TRAIL_OPACITY = 0.5;
     const canvas = document.getElementById('spaceCanvas');
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;    
+    canvas.height = window.innerHeight;
     const ctx = canvas.getContext('2d');
+    let zoomLevel = 1;
+    const MIN_ZOOM = 0.5;
+    const MAX_ZOOM = 2;
+    const ZOOM_STEP = 0.1;
     const stars = [];
     const starCount = 200;
     const starLayers = 3;
@@ -191,6 +354,37 @@
     const G = 0.05;
     const SUN_ANIMATION_SPEED = 0.005;
     let sunTime = 0;
+
+    function updateCanvasSize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx.setTransform(zoomLevel, 0, 0, zoomLevel, canvas.width * (1 - zoomLevel) / 2, canvas.height * (1 - zoomLevel) / 2);
+    }
+    window.addEventListener('resize', updateCanvasSize);
+    updateCanvasSize();
+    canvas.addEventListener('wheel', (event) => {
+      event.preventDefault();
+      const zoomIn = event.deltaY < 0;
+      if (zoomIn && zoomLevel < MAX_ZOOM) {
+        zoomLevel += ZOOM_STEP;
+      } else if (!zoomIn && zoomLevel > MIN_ZOOM) {
+        zoomLevel -= ZOOM_STEP;
+      }
+      zoomLevel = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomLevel));
+      updateCanvasSize();
+    });
+    document.getElementById('zoomInButton').addEventListener('click', () => {
+      if (zoomLevel < MAX_ZOOM) {
+        zoomLevel += ZOOM_STEP;
+        updateCanvasSize();
+      }
+    });
+    document.getElementById('zoomOutButton').addEventListener('click', () => {
+      if (zoomLevel > MIN_ZOOM) {
+        zoomLevel -= ZOOM_STEP;
+        updateCanvasSize();
+      }
+    });
 
     function calculateGravity(body1, body2) {
       const dx = body2.x - body1.x;
@@ -527,7 +721,6 @@
             const newY = (planets[i].y * planets[i].mass + planets[j].y * planets[j].mass) / newMass;
             const totalMomentumX = planets[i].mass * planets[i].velocity.x + planets[j].mass * planets[j].velocity.x;
             const totalMomentumY = planets[i].mass * planets[i].velocity.y + planets[j].mass * planets[j].velocity.y;
-
             const mergedPlanet = createPlanet(
               newMass,
               newX,
@@ -548,13 +741,16 @@
     function getCanvasCoordinates(event) {
       const rect = canvas.getBoundingClientRect();
       return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
+        x: (event.clientX - rect.left - canvas.width * (1 - zoomLevel) / 2) / zoomLevel,
+        y: (event.clientY - rect.top - canvas.height * (1 - zoomLevel) / 2) / zoomLevel
       };
     }
 
     function animate(timestamp) {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
       if (!lastTimestamp) lastTimestamp = timestamp;
       const deltaTime = timestamp - lastTimestamp;
       lastTimestamp = timestamp;
@@ -663,7 +859,6 @@
       document.getElementById('pauseButton').style.backgroundColor = 'rgba(255, 0, 0, 0.5)';
       document.getElementById('playButton').style.backgroundColor = 'rgba(100, 100, 100, 0.8)';
     });
-
     const speeds = {
       'speed1x': 1,
       'speed2x': 2,
@@ -674,19 +869,119 @@
 
     function setSpeed(speedId) {
       gameSpeed = speeds[speedId];
-
       document.querySelectorAll('.speed-button').forEach(button => {
         button.classList.remove('active');
       });
       document.getElementById(speedId).classList.add('active');
     }
-
     Object.keys(speeds).forEach(speedId => {
       document.getElementById(speedId).addEventListener('click', () => {
         setSpeed(speedId);
       });
     });
-
+    let touchStartX = 0;
+    let touchStartY = 0;
+    canvas.addEventListener('touchstart', (event) => {
+      event.preventDefault();
+      const touch = event.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      isDragging = true;
+      const coords = getCanvasCoordinates(touch);
+      launchStart = coords;
+      currentPosition = coords;
+    }, {
+      passive: false
+    });
+    canvas.addEventListener('touchmove', (event) => {
+      event.preventDefault();
+      if (isDragging) {
+        const touch = event.touches[0];
+        // Add some touch drag threshold to prevent accidental launches
+        const dragThreshold = 10;
+        const deltaX = Math.abs(touch.clientX - touchStartX);
+        const deltaY = Math.abs(touch.clientY - touchStartY);
+        if (deltaX > dragThreshold || deltaY > dragThreshold) {
+          currentPosition = getCanvasCoordinates(touch);
+        }
+      }
+    }, {
+      passive: false
+    });
+    // Add double-tap to zoom
+    let lastTap = 0;
+    canvas.addEventListener('touchend', (event) => {
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+      if (tapLength < 500 && tapLength > 0) {
+        // Double tap detected
+        if (zoomLevel < MAX_ZOOM) {
+          zoomLevel += ZOOM_STEP;
+        } else {
+          zoomLevel = MIN_ZOOM;
+        }
+        updateCanvasSize();
+        event.preventDefault();
+      }
+      lastTap = currentTime;
+      // Handle planet launch
+      if (isDragging && launchStart && currentPosition) {
+        const mass = parseInt(document.getElementById('massSlider').value);
+        const dx = launchStart.x - currentPosition.x;
+        const dy = launchStart.y - currentPosition.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        // Only launch if drag distance is significant
+        if (distance > 20) {
+          const power = Math.min(distance / 300, 1);
+          const velocity = {
+            x: dx * 0.03 * power,
+            y: dy * 0.03 * power
+          };
+          const newPlanet = createPlanet(mass, launchStart.x, launchStart.y, velocity);
+          planets.push(newPlanet);
+        }
+      }
+      isDragging = false;
+      launchStart = null;
+      currentPosition = null;
+    });
+    // Add pinch-to-zoom support
+    let initialPinchDistance = 0;
+    let initialZoom = 1;
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'h' || event.key === 'H') {
+        toggleControlsBtn.click();
+      }
+    });
+    canvas.addEventListener('touchstart', (event) => {
+      if (event.touches.length === 2) {
+        initialPinchDistance = Math.hypot(
+          event.touches[0].clientX - event.touches[1].clientX,
+          event.touches[0].clientY - event.touches[1].clientY
+        );
+        initialZoom = zoomLevel;
+      }
+    });
+    canvas.addEventListener('touchmove', (event) => {
+      if (event.touches.length === 2) {
+        const currentDistance = Math.hypot(
+          event.touches[0].clientX - event.touches[1].clientX,
+          event.touches[0].clientY - event.touches[1].clientY
+        );
+        const scale = currentDistance / initialPinchDistance;
+        zoomLevel = Math.min(Math.max(initialZoom * scale, MIN_ZOOM), MAX_ZOOM);
+        updateCanvasSize();
+        event.preventDefault();
+      }
+    });
+    // Update button states on window resize
+    window.addEventListener('resize', () => {
+      updateCanvasSize();
+      // Reset zoom level on extreme window size changes to prevent issues
+      if (window.innerWidth < 480) {
+        zoomLevel = Math.min(zoomLevel, 1.5);
+      }
+    });
     animate();
   </script>
 </body>
