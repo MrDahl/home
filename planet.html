@@ -13,9 +13,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: #0F0B1F;
-      color: white;
-      font-family: Arial, sans-serif;
+      background: #1A1B27;
+      color: #F3F4F6;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     canvas {
@@ -25,289 +25,198 @@
 
     #controls {
       position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 0;
+      left: 0;
+      width: 100%;
       z-index: 1;
-      background-color: rgba(50, 50, 50, 0.8);
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      background-color: #2B2D42;
+      box-shadow: 0 4px 10px rgba(15, 14, 20, 0.7);
+      padding: 10px 25px;
       display: flex;
-      flex-wrap: wrap;
+      justify-content: center;
       align-items: center;
-      gap: 10px;
-      max-width: 95vw;
-      backdrop-filter: blur(5px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      gap: 20px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(0);
     }
 
     #controls.hidden {
       opacity: 0;
       pointer-events: none;
-      transform: translateX(-50%) translateY(-100%);
+      transform: translateY(-100%);
     }
 
     #toggleControls {
       position: fixed;
       top: 10px;
       right: 10px;
-      z-index: 2;
-      background-color: rgba(50, 50, 50, 0.8);
-      color: white;
+      z-index: 1;
+      color: #F3F4F6;
       border: none;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
+      width: 45px;
+      height: 45px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background-color 0.3s;
-      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
 
     #toggleControls:hover {
-      background-color: rgba(70, 70, 70, 0.9);
+      color: orange;
     }
 
     .control-group {
       display: flex;
       align-items: center;
-      gap: 5px;
-      flex-wrap: nowrap;
+      gap: 15px;
     }
 
     #controls label {
+      color: #FFCC66;
+      font-size: 14px;
       display: flex;
       align-items: center;
-      color: orange;
-      font-size: 16px;
-      white-space: nowrap;
     }
 
     input[type="range"] {
-      cursor: pointer;
-      -webkit-appearance: none;
       width: 120px;
-      height: 8px;
+      background: #1F202D;
       border-radius: 5px;
-      background: rgba(200, 200, 200, 0.5);
       outline: none;
-      transition: background 0.3s;
-    }
-
-    @media (min-width: 768px) {
-      input[type="range"] {
-        width: 200px;
-      }
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      background: orange;
-      box-shadow: 1px 1px 10px #353535;
-      cursor: pointer;
-    }
-
-    input[type="range"]:hover {
-      background: orange;
+      background: #1F202D;
+      outline: none;
     }
 
     button {
-      padding: 7px 10px;
+      padding: 8px 12px;
       font-size: 14px;
-      color: white;
-      background-color: rgba(100, 100, 100, 0.8);
+      color: #F3F4F6;
+      background-color: transparent;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      min-width: 35px;
-      justify-content: center;
+      transition: color 0.3s ease, transform 0.3s ease;
     }
 
     button:hover {
-      background-color: rgba(150, 150, 150, 1);
+      color: #FFCC66;
       transform: scale(1.05);
     }
 
     .speed-controls,
     .zoom-controls {
       display: flex;
-      gap: 5px;
+      gap: 10px;
       align-items: center;
     }
 
-    .speed-button.active {
-      background-color: rgba(0, 255, 0, 0.5);
-    }
-
-    #playButton.active {
-      background-color: rgba(0, 255, 0, 0.5);
-    }
-
+    .speed-button.active,
+    #playButton.active,
     #pauseButton.active {
-      background-color: rgba(255, 0, 0, 0.5);
+      background-color: #3A3C53;
+      box-shadow: inset 3px 3px 6px #0F0E14, inset -3px -3px 6px #353549;
     }
 
     #resetButton {
-      background-color: rgba(255, 0, 0, 0.8);
+      background-color: #FF3B3B;
+      color: #FFFFFF;
+      border-radius: 5px;
     }
 
-    /* Mobile-specific styles */
-    @media (max-width: 767px) {
+    #resetButton:hover {
+      background-color: #FF1C1C;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1000px) {
       #controls {
         flex-direction: column;
         align-items: stretch;
-        padding: 10px;
-        gap: 8px;
+        padding: 15px;
+        gap: 12px;
       }
 
       .control-group {
         justify-content: center;
       }
 
-      .speed-controls,
-      .zoom-controls {
-        justify-content: center;
-      }
-
       button {
-        padding: 10px;
-        /* Larger touch target */
-        min-height: 44px;
-        /* iOS minimum touch target size */
-      }
-
-      /* Show tooltips for mobile */
-      [data-tooltip] {
-        position: relative;
-      }
-
-      [data-tooltip]:after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-        white-space: nowrap;
-        visibility: hidden;
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-
-      [data-tooltip]:active:after {
-        visibility: visible;
-        opacity: 1;
-      }
-    }
-
-    /* Additional responsive adjustments */
-    @media (max-width: 480px) {
-
-      .speed-controls button,
-      .zoom-controls button {
-        padding: 8px;
-        font-size: 12px;
-      }
-
-      #controls label {
-        font-size: 14px;
-      }
-    }
-
-    /* Landscape mode adjustments */
-    @media (max-height: 480px) and (orientation: landscape) {
-      #controls {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        max-width: 90vw;
+        padding: 12px;
       }
     }
   </style>
 </head>
 
 <body>
-  <button id="toggleControls" title="Toggle Controls">
-    <i class="fa-solid fa-bars"></i>
-  </button>
-  <div id="controls">
-    <div class="control-group">
-      <label for="massSlider" data-tooltip="Planet Mass">
-        <i class="fa-solid fa-meteor icon"></i>
-      </label>
-      <input type="range" id="massSlider" min="30" max="100" value="50">
-    </div>
 
+  <button id="toggleControls" title="Toggle Controls">
+    <i id="menuIcon" class="fa-solid fa-bars fa-lg"></i>
+  </button>
+
+  <div id="controls" class="hidden">
+
+    <div class="control-group">
+      <label for="massSlider">Mass</label>
+      <input type="range" id="massSlider" min="30" max="200" value="50">
+    </div>
     <div class="control-group">
       <div class="zoom-controls">
-        <label data-tooltip="Zoom Controls">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </label>
-        <button id="zoomInButton" class="zoom-button" data-tooltip="Zoom In">
-          <i class="fa-solid fa-plus"></i>
-        </button>
-        <button id="zoomOutButton" class="zoom-button" data-tooltip="Zoom Out">
-          <i class="fa-solid fa-minus"></i>
-        </button>
+        <label>Zoom</label>
+        <button id="zoomInButton"><i class="fa-solid fa-plus"></i></button>
+        <button id="zoomOutButton"><i class="fa-solid fa-minus"></i></button>
       </div>
     </div>
-
     <div class="control-group">
-      <button id="playButton" data-tooltip="Play">
-        <i class="fa-solid fa-play"></i>
-      </button>
-      <button id="pauseButton" data-tooltip="Pause">
-        <i class="fa-solid fa-pause"></i>
-      </button>
+      <button id="playButton"><i class="fa-solid fa-play"></i></button>
+      <button id="pauseButton"><i class="fa-solid fa-pause"></i></button>
     </div>
-
     <div class="control-group">
       <div class="speed-controls">
-        <label data-tooltip="Simulation Speed">
-          <i class="fa-solid fa-forward"></i>
-        </label>
-        <button id="speed1x" class="speed-button" data-tooltip="Normal Speed">1x</button>
-        <button id="speed2x" class="speed-button" data-tooltip="Double Speed">2x</button>
-        <button id="speed5x" class="speed-button active" data-tooltip="5x Speed">5x</button>
-        <button id="speed10x" class="speed-button" data-tooltip="10x Speed">10x</button>
-        <button id="speed50x" class="speed-button" data-tooltip="50x Speed">50x</button>
+        <label>Speed</label>
+        <button id="speed1x" class="speed-button">x1</button>
+        <button id="speed2x" class="speed-button">x2</button>
+        <button id="speed5x" class="speed-button active">x5</button>
+        <button id="speed10x" class="speed-button">x10</button>
+        <button id="speed50x" class="speed-button">x50</button>
       </div>
     </div>
-
     <div class="control-group">
-      <button id="resetButton" data-tooltip="Reset Simulation">
-        <i class="fa-solid fa-redo-alt"></i>
+      <button id="resetButton"><i class="fa-solid fa-redo-alt"></i> Reset</button>
+      <button id="closeControls" title="Close Controls">
+        Close <i class="fa-solid fa-xmark fa-lg"></i>
       </button>
     </div>
   </div>
 
   <canvas id="spaceCanvas"></canvas>
-
   <script>
-    const toggleControlsBtn = document.getElementById('toggleControls');
-    const controlsPanel = document.getElementById('controls');
-    let isControlsVisible = true;
-    toggleControlsBtn.addEventListener('click', () => {
-      isControlsVisible = !isControlsVisible;
-      controlsPanel.classList.toggle('hidden');
-      toggleControlsBtn.innerHTML = isControlsVisible ?
-        '<i class="fa-solid fa-bars"></i>' :
-        '<i class="fa-solid fa-bars"></i>';
+    const toggleButton = document.getElementById('toggleControls');
+    const controls = document.getElementById('controls');
+    const menuIcon = document.getElementById('menuIcon');
+    const closeButton = document.getElementById('closeControls');
+    // Toggle control bar visibility
+    toggleButton.addEventListener('click', () => {
+      controls.classList.toggle('hidden');
+      if (controls.classList.contains('hidden')) {
+        menuIcon.classList.replace('fa-xmark', 'fa-bars');
+      } else {
+        menuIcon.classList.replace('fa-bars', 'fa-xmark');
+      }
+    });
+    // Close control bar when close button is clicked
+    closeButton.addEventListener('click', () => {
+      controls.classList.add('hidden');
+      menuIcon.classList.replace('fa-xmark', 'fa-bars');
     });
     let isGamePaused = false;
     let gameSpeed = 5;
