@@ -1,0 +1,360 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Gates Assignments</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f8f9fa;
+            user-select: none;
+            color: #2d3436;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #2d3436;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(120deg, #00b894 0%, #00cec9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h3 {
+            color: #636e72;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        h4 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00b894;
+            display: inline-block;
+        }
+
+        h5 {
+            text-align: center;
+            color: #b2bec3;
+            margin-top: 40px;
+            font-style: italic;
+        }
+
+        p {
+            color: #636e72;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        button {
+            background: linear-gradient(120deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            width: 100%;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 184, 148, 0.2);
+        }
+
+        .solution-img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            display: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .task-number {
+            background: linear-gradient(120deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #dfe6e9;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .header {
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Assignments in Logic</h1>
+        <h3>Logic...</h3>
+        <div class="intro">
+            <p>Logic, Boolean algebra, logic gates, logic circuits...</p>
+            <p>...it's all the same, but if you know your logic, you can program just about anything you can dream of (almost).</p>
+        </div>
+        <h3>Assignments</h3>
+        <p>Logic tasks can be solved using the browser software Logic.ly (https://logic.ly/demo/), which can simulate the logic.</p>
+    </div>
+    <div class="section">
+        <span class="task-number">Task 1</span>
+    <h4>Traffic Lights</h4>
+    <p>
+      You have been asked to program traffic lights at an intersection.<br>
+
+      You need to program two traffic lights so that when one light turns green, the other will always be red, and vice versa.</p>
+    <button onclick="toggleSolution(1)">Solution</button>
+    <img src="https://lh5.googleusercontent.com/yuHFGpxXHkWv2aT7MJzGX3PzBJfIxC3W5Rv_59HuZ3IrtiG4swPIzLMsZMVKVNki_QUzja-r38mGObk_bj2LrmRufM8P-S9TpkYGqDrsIxj0cGfwGgpulhRbl_nHveyJig=w1280" alt="Solution 1" class="solution-img" id="solution1">
+  </div>
+
+    <div class="section">
+        <span class="task-number">Task 2</span>
+    <h4>Gate Control</h4>
+    <p>A customer wants a smart system for their garage.<br>
+
+      The customer has license plate recognition installed at the driveway entrance, which opens the garage door when they drive onto the property.<br>
+
+      The customer also wants a button inside the garage to open the door from the inside when they need to leave for work.<br>
+
+      You need to program a solution that opens the garage door whenever either the button inside the garage or the license plate recognition is activated.</p>
+    <button onclick="toggleSolution(2)">Solution</button>
+    <img src="https://lh3.googleusercontent.com/rOpo8yr7YYDqjnUrbdbwBOpy-MLZ5ujfT6ymuBZg90R4M5s01NYtYTrlj_DM8RAwtxrYQoF6B9_NKUm2VPCEhyJnJAAyAX8T7k0jwGcMyRhETVmTa6FYuZ3llqlywevG7A=w1280" alt="Solution 2" class="solution-img" id="solution2">
+  </div>
+
+    <div class="section">
+        <span class="task-number">Task 3</span>
+    <h4>Home Alarm System</h4>
+    <p>Your customer wants a simple alarm system for their home, with the ability to disable the alarm.<br>
+
+      The home has six windows, each equipped with a glass break detector, and one door with a door contact.<br>
+
+      If any of the glass break detectors is triggered, an alarm should sound.<br>
+
+      If the door contact is triggered, an alarm should also sound unless the alarm is disarmed using a code or a button.</p>
+    <button onclick="toggleSolution(3)">Solution</button>
+    <img src="https://lh4.googleusercontent.com/WRMi-9PlpTMxaq-T7hH0AjgEoBNwbHMnhuNHpv-qElAMl1PhShmR9K0gZrygBQs7YUV8nYG4XJenUMmVwWouzW2TZ_nsk8jb0K5wm5ikQ5q57PRu2zG9Ube-J5BmEYEGYA=w1280" alt="Solution 3" class="solution-img" id="solution3">
+  </div>
+
+    <div class="section">
+        <span class="task-number">Task 4</span>
+    <h4>Parking Garage</h4>
+    <p>A company has a parking garage where they issue two types of access cards: guest cards and employee cards.<br>
+
+      The company wants a system to open the gate for both their guests and employees.<br>
+
+      However, certain criteria must be met:<br>
+
+      Employees always have access to the parking garage, including on weekends, holidays, and outside of working hours.<br>
+
+      Guests have access to the parking garage only on weekdays, during working hours.</p>
+    <button onclick="toggleSolution(4)">Solution</button>
+    <img src="https://lh6.googleusercontent.com/y7Jd_ZZ5Pdm3ed6kicmEXJjiZn06lByaLUYQJS2ClHo5yq_Ln1fYzCjcuXv3vriQ-YansKfD5FYH4VSz3Cqq4g_xk0O0euPC-gL9Ikpp2ayuFUzmSzOs3fbIA2SvvpFv2w=w1280" alt="Solution 4" class="solution-img" id="solution4">
+  </div>
+
+    <div class="section">
+        <span class="task-number">Task 5</span>
+    <h4>Outdoor Lighting</h4>
+    <p>The customer wants to increase energy savings and daily comfort.<br>
+
+      They want to automate their outdoor lighting and have a garden gate that remains unlocked since they receive many deliveries at all hours.<br>
+
+      You need to create a solution for the customer based on the following criteria:<br>
+
+      Outdoor lights should turn on automatically at dusk.<br>
+
+      Outdoor lights should turn off automatically after midnight.<br>
+
+      Outdoor lights should turn on if it’s dark and the garden gate is opened.<br>
+
+      Outdoor lights should not turn on if it’s daylight, even when the garden gate is opened.</p>
+    <button onclick="toggleSolution(5)">Solution</button>
+    <img src="https://lh6.googleusercontent.com/b5Mo0l_WCji1l4C-LBRAjFloU728lpTkAhLOs46DB2NyoBUP2E6c2ZnLMyo9ss1lD3TiRQ6eMm2sdP4sF_DPLiV_76wBl62VntALqcXDMtT4wvECaVg45FCf2-_QKdOVVw=w1280" alt="Solution 5" class="solution-img" id="solution5">
+  </div>
+
+    <div class="section">
+        <span class="task-number">Task 6</span>
+    <h4>Building Automation</h4>
+    <p>Your customer has a large building with fire alarm (ABA), intrusion alarm (AIA), and KNX installations, all integrated into a single Building Management System (BMS) based on the Niagara platform.<br>
+
+      The customer wants the building automation programmed according to the following criteria:<br>
+
+      In case of fire, all doors and grilles in the building should open completely to allow maximum evacuation and give the fire department access to the building.<br>
+
+      In case of an alarm, such as a break-in, the building should go into lockdown—meaning all doors and grilles should lock to make it harder for intruders to exit.<br>
+
+      The fire department should be notified in the event of a fire.<br>
+
+      G4S should be alerted in the event of a break-in.<br>
+
+      In case of a false alarm on either the fire (ABA) or intrusion (AIA) system, a technician should be called.</p>
+    <button onclick="toggleSolution(6)">Solution</button>
+    <img src="https://lh5.googleusercontent.com/eCDPaLcZKlFBpWMnd27puUS8RwBYk8MQnojVOhYMBszV_Hp2j2UPsQJO9GPo1PONVnyZTwUGZOURURpxTQBhYeqFghweaDI03TYJ7Xwy28CcvLo7Mw7QiRZY8PqDsE8AyA=w1280" alt="Solution 6" class="solution-img" id="solution6">
+  </div>
+
+    <div class="section">
+        <span class="task-number">Task 7</span>
+    <h4>Folding Walls in Conference Room</h4>
+    <p>Your customer is a large hotel that hosts conferences and large gatherings. The hotel has a large hall with three lighting zones, each controlled by its own switch in a three-way configuration.<br>
+
+      The hotel recently installed two new folding walls, allowing the large hall to be divided into three separate rooms. They now want an automated system that also splits the lighting controls, so each switch controls its respective lighting zone.<br>
+
+      Additionally, the system should allow for flexibility in configurations, so that the space can also be divided with a single folding wall, creating one large room and one smaller room as needed. This would involve adjusting the lighting control accordingly to match the chosen layout.</p>
+    <button onclick="toggleSolution(7)">Solution</button>
+    <img src="https://lh5.googleusercontent.com/50z9AgQkcu3GOnZjGhguBtqLQOWJ2URXUfl87CaCcNnZn7n8R7gt4oNFGFS-edsTDpE7GoBqfvlyTdXgkJGd81Zd2XHs-23NeM2U6Fenk00fiDkG0gKZuqjWNSTcifSang=w1280" alt="Solution 7" class="solution-img" id="solution7">
+  </div>
+
+    <div class="section">
+        <span class="task-number">Task 8</span>
+    <h4>Smart Home Automation</h4></br>
+    <p>A family wants to automate the control of their smart home. They have various devices, including lights, a thermostat, and security cameras, which they would like to integrate. The task is to develop a logic circuit that controls the following functions:<br>
+      <br>
+      When no one is home:<br>
+      <br>
+      All lights should turn off.<br>
+      The thermostat should turn off.<br>
+      Security cameras should activate.<br>
+      When at least one person is home:<br>
+      <br>
+      The lights should turn on.<br>
+      The thermostat should adjust according to preset preferences.<br>
+      Security cameras should turn off.<br>
+      If a break-in alarm is triggered:<br>
+      <br>
+      All lights should turn on.<br>
+      The thermostat should turn off.<br>
+      Security cameras should activate.<br>
+      This setup should provide both energy efficiency and security based on occupancy and security conditions.
+    </p>
+    <button onclick="toggleSolution(8)">Solution</button>
+    <img src="https://lh4.googleusercontent.com/VFMkHDRQBs-EMgWbCoS2wWPps-FUbowV8v4fFVtRO-SSQmvzxWP5HunwY2UfZzeJTiA-FDhZ-0hBQ7hPzFCHQBvrTGwOR9t9uvTdilzSHOk1qCxwrTWsjnsm7YuJGRAhBQ=w1280" alt="Solution 8" class="solution-img" id="solution8">
+  </div>
+
+    <div class="section">
+        <span class="task-number">Task 9</span>
+    <h4>Access Control for Laboratory</h4>
+    <p>A laboratory wants to implement an access control mechanism for their facilities. <br>They have three access levels: regular employees, managers, and technicians.<br>
+
+      Each employee has an access card. The task is to develop a logic circuit that controls access to the laboratory based on the following requirements:<br>
+      <br>
+      Regular employees have access to the laboratory during their working hours (from 07:00 to 16:00).<br>
+      Managers have access to the laboratory on weekdays, at any time of the day (but not on weekends or holidays).<br><br>
+      Technicians always have access to the laboratory (24/7/365).<br>
+      If a person without an access card attempts to enter the laboratory, an alarm should be triggered.<br><br>
+      This system will ensure that each person only has access during their designated time slots and prevent unauthorized access.
+    </p>
+    <button onclick="toggleSolution(9)">Solution</button>
+    <img src="https://lh3.googleusercontent.com/m3S9ahFyI1YMvIJnd_IuwIJFzhE9eKNCxIsfQAmyzdIRkKEF-Xko-1ZbyHYcHHvq0uaVMHux0JbHxNor_Qv6s3bYV1pcphKLH8Wv1JlO3bJU2hAsNRReJ9WhTVfJk0nurQ=w1280" alt="Solution 9" class="solution-img" id="solution9">
+  </div>
+
+    <div class="section">
+        <span class="task-number">Task 10</span>
+    <h4>Intelligent Lighting Control for Office Building</h4>
+    <p>
+      A office building wants to optimize energy consumption by implementing intelligent lighting control. The task is to develop a logic circuit that controls the lighting in office spaces based on the following requirements:<br><br>
+
+      When no one is present in the office:<br>
+      The lights should automatically turn off to save energy.<br><br>
+
+      If motion is detected in the office:<br>
+      The lights should automatically turn on when movement is sensed, ensuring illumination when needed.<br><br>
+
+      If there is enough natural daylight to maintain the desired lighting level:<br>
+      The lights should turn off, regardless of motion detection, to avoid unnecessary energy consumption.<br><br>
+
+      Lights should automatically turn on/off based on office building working hours:<br>
+      The lights should be scheduled to turn on before the workday begins and off after working hours, ensuring the office is lit only during the workday.<br><br>
+
+      This system will combine occupancy sensing with natural light detection and time scheduling to reduce energy waste while maintaining proper lighting when needed.</p>
+    <button onclick="toggleSolution(10)">Solution</button>
+    <img src="https://lh3.googleusercontent.com/3tdf2afmlW5BY_3KyVrcqyEggHkUbvd85VASTeWux5B-tcyL2DnzvLg6cI5qbtADHU1PbFzj-H5S9QnBtP2u6kLDXzH1ul43JmPAIlAPw63eIeDNylMgZDyzlDjDKoAt7g=w1280" alt="Solution 10" class="solution-img" id="solution10">
+  </div>
+    <div class="footer">
+        <h5>Logic Assignments and solutions are made by Marc Sonne Dahl</h5>
+    </div>
+    <script>
+        function toggleSolution(id) {
+            const solution = document.getElementById('solution' + id);
+            const allSolutions = document.querySelectorAll('.solution-img');
+            
+            // Close all other solutions first
+            allSolutions.forEach(sol => {
+                if (sol.id !== 'solution' + id && sol.style.display === 'block') {
+                    sol.style.display = 'none';
+                }
+            });
+
+            // Toggle the clicked solution
+            if (solution.style.display === 'block') {
+                solution.style.display = 'none';
+            } else {
+                solution.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
