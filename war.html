@@ -11,30 +11,33 @@
       --secondary-color: #ffa500;
       --background-light: #f5f5f5;
       --background-dark: #1a1a1a;
-      --card-background-light: #ffffff;
+      --card-background-light: #EDFFF7;
       --card-background-dark: #333333;
       --text-light: #333333;
       --text-dark: #f5f5f5;
       --transition-duration: 0.3s;
     }
 
+    html {
+      height: 100%;
+    }
+
     body {
-      font-family: 'Arial', sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: var(--background-light);
-      color: var(--text-light);
+      font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-      transition: background-color var(--transition-duration), color var(--transition-duration);
+      height: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+      background: linear-gradient(90deg, #C4F0DB, #9CD8BC);
       user-select: none;
     }
 
     h1 {
-      font-size: 2.5em;
+      font-size: 3em;
       font-weight: bold;
       color: var(--primary-color);
       margin-bottom: 0px;
@@ -54,10 +57,11 @@
     .paragraph {
       font-family: Arial;
       margin-top: -20px;
-      font-size: 0.7em;
+      font-size: 0.8em;
       text-align: center;
       color: grey;
     }
+
     .score {
       font-size: 1em;
       font-weight: bold;
@@ -66,6 +70,7 @@
       text-align: center;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     }
+
     .game-container {
       display: flex;
       flex-direction: column;
@@ -79,7 +84,7 @@
       display: flex;
       justify-content: space-between;
       gap: 20px;
-      width: 100%;
+      width: auto;
       transition: gap var(--transition-duration);
     }
 
@@ -88,7 +93,7 @@
       padding: 20px;
       border-radius: 10px;
       text-align: center;
-      background-color: var(--card-background-light);
+      background: rgba(255, 255, 255, .3);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
       transition: background-color var(--transition-duration);
     }
@@ -158,9 +163,24 @@
       color: var(--primary-color);
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 560px) {
+      button {
+        width: 100%;
+      }
+
+      .card {
+        width: 120px;
+        height: 160px;
+      }
+    }
+
+    @media (max-width: 380px) {
       .play-area {
         flex-direction: column;
+      }
+
+      button {
+        width: 100%;
       }
 
       .card {
