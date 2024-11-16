@@ -1,0 +1,532 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>War Card Game</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #2e8b57;
+      --secondary-color: #ffa500;
+      --background-light: #f5f5f5;
+      --background-dark: #1a1a1a;
+      --card-background-light: #ffffff;
+      --card-background-dark: #333333;
+      --text-light: #333333;
+      --text-dark: #f5f5f5;
+      --transition-duration: 0.3s;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-light);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      transition: background-color var(--transition-duration), color var(--transition-duration);
+      user-select: none;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 0px;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      font-size: 1.8em;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .paragraph {
+      font-family: Arial;
+      margin-top: -20px;
+      font-size: 0.7em;
+      text-align: center;
+      color: grey;
+    }
+    .score {
+      font-size: 1em;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 0px;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .play-area {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      width: 100%;
+      transition: gap var(--transition-duration);
+    }
+
+    .player-section {
+      flex: 1;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      background-color: var(--card-background-light);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      transition: background-color var(--transition-duration);
+    }
+
+    .card {
+      width: 140px;
+      height: 190px;
+      margin: 10px auto;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8em;
+      font-weight: bold;
+      color: var(--primary-color);
+      background: linear-gradient(to bottom, var(--card-background-light), #f0f0f0);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: transform var(--transition-duration), background var(--transition-duration);
+    }
+
+    .card-value.bottom {
+      bottom: 10px;
+      right: 10px;
+      top: auto;
+      left: auto;
+      transform: rotate(180deg);
+    }
+
+    .card-suit {
+      font-size: 2em;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--primary-color);
+      color: #fff;
+      cursor: pointer;
+      transition: background-color var(--transition-duration), transform var(--transition-duration);
+    }
+
+    button:hover:not(:disabled) {
+      background-color: var(--secondary-color);
+      transform: translateY(-3px);
+    }
+
+    button:disabled {
+      background-color: #a9a9a9;
+      cursor: not-allowed;
+    }
+
+    .message {
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: center;
+      margin: 10px 0;
+      color: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+      .play-area {
+        flex-direction: column;
+      }
+
+      .card {
+        width: 120px;
+        height: 160px;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="game-container">
+    <h1><i class="fa-solid fa-person-military-rifle"></i></h1>
+    <p class="paragraph">WAR GAME</p>
+    <div class="message" id="message">Press "Start" to begin!</div>
+    <div class="play-area">
+      <div class="player-section">
+        <h2><i class="fa-solid fa-user"></i></h2>
+        <div class="war-cards" id="playerWarCards"></div>
+        <div class="card" id="playerCard">
+          <div class="card-value"><i class="fa-solid fa-person-military-rifle"></i></div>
+          <div class="card-suit"></div>
+          <div class="card-value bottom"></div>
+        </div>
+        <div class="score"><i class="fa-solid fa-layer-group"></i>: <span id="playerScore">26</span></div>
+      </div>
+      <div class="player-section">
+        <h2><i class="fa-solid fa-robot"></i></h2>
+        <div class="war-cards" id="aiWarCards"></div>
+        <div class="card" id="aiCard">
+          <div class="card-value"><i class="fa-solid fa-person-military-rifle"></i></div>
+          <div class="card-suit"></div>
+          <div class="card-value bottom"></div>
+        </div>
+        <div class="score"><i class="fa-solid fa-layer-group"></i>: <span id="aiScore">26</span></div>
+      </div>
+    </div>
+    <div class="button-group">
+      <button id="startBtn" class="primary-btn"><i class="fa-solid fa-play"></i>&ensp;Start</button>
+      <button id="playBtn" class="primary-btn" disabled><i class="fa-solid fa-hand-pointer"></i>&ensp;Draw</button>
+      <button id="reshuffleBtn" class="secondary-btn" disabled><i class="fa-solid fa-shuffle"></i>&ensp;Shuffle</button>
+      <button id="resetBtn" class="danger-btn"><i class="fa-solid fa-trash-can"></i>&ensp;Reset Game</button>
+    </div>
+  </div>
+
+  <script>
+    class Card {
+      constructor(value, suit) {
+        this.value = value;
+        this.suit = suit;
+        this.display = this.getDisplay();
+        this.suitSymbol = this.getSuitSymbol();
+        this.color = (suit === 'hearts' || suit === 'diamonds') ? 'red' : 'black';
+      }
+      getDisplay() {
+        switch (this.value) {
+          case 14:
+            return 'A';
+          case 13:
+            return 'K';
+          case 12:
+            return 'Q';
+          case 11:
+            return 'J';
+          default:
+            return this.value.toString();
+        }
+      }
+      getSuitSymbol() {
+        switch (this.suit) {
+          case 'hearts':
+            return '♥';
+          case 'diamonds':
+            return '♦';
+          case 'clubs':
+            return '♣';
+          case 'spades':
+            return '♠';
+        }
+      }
+    }
+    class Game {
+      constructor() {
+        this.deck = [];
+        this.playerDeck = [];
+        this.aiDeck = [];
+        this.warPile = [];
+        this.isWarMode = false;
+        this.suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+      }
+      initializeDeck() {
+        this.deck = [];
+        for (let suit of this.suits) {
+          for (let value = 2; value <= 14; value++) {
+            this.deck.push(new Card(value, suit));
+          }
+        }
+      }
+      shuffle(deck) {
+        for (let i = deck.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        return deck;
+      }
+      reshuffleDecks() {
+        this.playerDeck = this.shuffle([...this.playerDeck]);
+        this.aiDeck = this.shuffle([...this.aiDeck]);
+      }
+      deal() {
+        this.playerDeck = this.deck.slice(0, 26);
+        this.aiDeck = this.deck.slice(26);
+      }
+      compareCards(playerCard, aiCard) {
+        if (playerCard.value === 2 && aiCard.value === 14) return 1;
+        if (playerCard.value === 14 && aiCard.value === 2) return -1;
+        return playerCard.value - aiCard.value;
+      }
+      playWar() {
+        if (this.playerDeck.length < 2 || this.aiDeck.length < 2) {
+          return this.endGameDueToInsufficientCards();
+        }
+        this.warPile.push(this.playerDeck.shift());
+        this.warPile.push(this.aiDeck.shift());
+        const playerCard = this.playerDeck.shift();
+        const aiCard = this.aiDeck.shift();
+        this.warPile.push(playerCard, aiCard);
+        const result = this.compareCards(playerCard, aiCard);
+        if (result > 0) {
+          this.playerDeck.push(...this.warPile);
+          const warResult = {
+            winner: 'player',
+            playerCard,
+            aiCard,
+            isWar: true
+          };
+          this.warPile = [];
+          this.isWarMode = false;
+          return warResult;
+        } else if (result < 0) {
+          this.aiDeck.push(...this.warPile);
+          const warResult = {
+            winner: 'ai',
+            playerCard,
+            aiCard,
+            isWar: true
+          };
+          this.warPile = [];
+          this.isWarMode = false;
+          return warResult;
+        } else {
+          this.isWarMode = true;
+          return {
+            winner: 'war',
+            playerCard,
+            aiCard,
+            isWar: true
+          };
+        }
+      }
+      endGameDueToInsufficientCards() {
+        if (this.playerDeck.length > this.aiDeck.length) {
+          this.playerDeck.push(...this.warPile);
+        } else {
+          this.aiDeck.push(...this.warPile);
+        }
+        this.warPile = [];
+        this.isWarMode = false;
+        return {
+          winner: 'insufficient',
+          playerCard: null,
+          aiCard: null
+        };
+      }
+      playRound() {
+        if (this.isWarMode) {
+          return this.playWar();
+        }
+        if (this.playerDeck.length === 0 || this.aiDeck.length === 0) {
+          return null;
+        }
+        const playerCard = this.playerDeck.shift();
+        const aiCard = this.aiDeck.shift();
+        this.warPile = [playerCard, aiCard];
+        const result = this.compareCards(playerCard, aiCard);
+        if (result > 0) {
+          this.playerDeck.push(...this.warPile);
+          this.warPile = [];
+          return {
+            winner: 'player',
+            playerCard,
+            aiCard
+          };
+        } else if (result < 0) {
+          this.aiDeck.push(...this.warPile);
+          this.warPile = [];
+          return {
+            winner: 'ai',
+            playerCard,
+            aiCard
+          };
+        } else {
+          this.isWarMode = true;
+          return {
+            winner: 'war',
+            playerCard,
+            aiCard
+          };
+        }
+      }
+      reset() {
+        this.deck = [];
+        this.playerDeck = [];
+        this.aiDeck = [];
+        this.warPile = [];
+        this.isWarMode = false;
+      }
+    }
+    // Game UI Management
+    const game = new Game();
+    const startBtn = document.getElementById('startBtn');
+    const playBtn = document.getElementById('playBtn');
+    const reshuffleBtn = document.getElementById('reshuffleBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const message = document.getElementById('message');
+    const playerCard = document.getElementById('playerCard');
+    const aiCard = document.getElementById('aiCard');
+    const playerScore = document.getElementById('playerScore');
+    const aiScore = document.getElementById('aiScore');
+    const playerWarCards = document.getElementById('playerWarCards');
+    const aiWarCards = document.getElementById('aiWarCards');
+
+    function updateCardDisplay(cardElement, card) {
+      if (!card) {
+        cardElement.innerHTML = `
+                    <div class="card-value"><i class="fa-solid fa-person-military-rifle"></i></div>
+                    <div class="card-suit"></div>
+                    <div class="card-value bottom"></div>
+                `;
+        cardElement.className = 'card';
+        return;
+      }
+      cardElement.innerHTML = `
+                <div class="card-value">${card.display}</div>
+                <div class="card-suit">${card.suitSymbol}</div>
+                <div class="card-value bottom">${card.display}</div>
+            `;
+      cardElement.className = `card ${card.suit}`;
+    }
+
+    function createWarCard() {
+      const warCard = document.createElement('div');
+      warCard.className = 'war-card';
+      return warCard;
+    }
+    startBtn.addEventListener('click', () => {
+      game.initializeDeck();
+      game.shuffle(game.deck);
+      game.deal();
+      updateScores();
+      resetDisplay();
+      message.textContent = 'Game started! Press "Draw Card" to play.';
+      startBtn.disabled = true;
+      playBtn.disabled = false;
+      reshuffleBtn.disabled = false;
+    });
+    playBtn.addEventListener('click', () => {
+      const result = game.playRound();
+      if (!result) {
+        endGame();
+        return;
+      }
+      updateDisplay(result);
+      updateScores();
+      if (game.playerDeck.length === 0 || game.aiDeck.length === 0) {
+        endGame();
+      }
+    });
+    reshuffleBtn.addEventListener('click', () => {
+      game.reshuffleDecks();
+      resetDisplay();
+      message.textContent = 'Decks reshuffled! Press "Draw Card" to continue.';
+      updateScores();
+    });
+    resetBtn.addEventListener('click', () => {
+      game.reset();
+      resetDisplay();
+      message.textContent = 'Game reset! Press "Start Game" to begin a new game.';
+      startBtn.disabled = false;
+      playBtn.disabled = true;
+      reshuffleBtn.disabled = true;
+      updateScores();
+    });
+
+    function updateDisplay(result) {
+      if (result.playerCard && result.aiCard) {
+        updateCardDisplay(playerCard, result.playerCard);
+        updateCardDisplay(aiCard, result.aiCard);
+      }
+      if (result.winner === 'war') {
+        message.innerHTML = '<span class="war-alert">WAR!</span> Draw again for the battle!';
+        // Clear previous war cards
+        playerWarCards.innerHTML = '';
+        aiWarCards.innerHTML = '';
+        // Add new war cards
+        for (let i = 0; i < game.warPile.length / 2; i++) {
+          playerWarCards.appendChild(createWarCard());
+          aiWarCards.appendChild(createWarCard());
+        }
+      } else if (result.winner === 'insufficient') {
+        message.textContent = 'Not enough cards for war! Game Over!';
+        endGame();
+      } else {
+        const warText = result.isWar ? ' wins the war and takes all cards!' : ' wins this round!';
+        message.textContent = result.winner.charAt(0).toUpperCase() + result.winner.slice(1) + warText;
+        playerWarCards.innerHTML = '';
+        aiWarCards.innerHTML = '';
+      }
+    }
+
+    function updateScores() {
+      playerScore.textContent = game.playerDeck.length;
+      aiScore.textContent = game.aiDeck.length;
+      // Add visual feedback for score changes
+      const playerScoreElement = playerScore.parentElement;
+      const aiScoreElement = aiScore.parentElement;
+      playerScoreElement.style.transform = 'scale(1.1)';
+      aiScoreElement.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        playerScoreElement.style.transform = 'scale(1)';
+        aiScoreElement.style.transform = 'scale(1)';
+      }, 300);
+    }
+
+    function resetDisplay() {
+      updateCardDisplay(playerCard, null);
+      updateCardDisplay(aiCard, null);
+      playerWarCards.innerHTML = '';
+      aiWarCards.innerHTML = '';
+    }
+
+    function endGame() {
+      playBtn.disabled = true;
+      reshuffleBtn.disabled = true;
+      let endMessage = '';
+      if (game.playerDeck.length > game.aiDeck.length) {
+        endMessage = '🎉 Game Over - Player Wins! 🏆';
+      } else if (game.aiDeck.length > game.playerDeck.length) {
+        endMessage = '🤖 Game Over - AI Wins! 🏆';
+      } else {
+        endMessage = '🤝 Game Over - It\'s a Tie! 🤝';
+      }
+      message.innerHTML = `<span style="font-size: 1.2em; font-weight: bold;">${endMessage}</span>`;
+      // Add end game animation
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.style.transition = 'transform 0.5s ease';
+        card.style.transform = 'scale(0.9) rotate(360deg)';
+        setTimeout(() => {
+          card.style.transform = 'scale(1) rotate(0deg)';
+        }, 500);
+      });
+    }
+    // Initialize game
+    resetDisplay();
+  </script>
+
+</html>
