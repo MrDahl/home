@@ -1,0 +1,571 @@
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DGNB Certificeringsberegner</title>
+    <style>
+        :root {
+            --primary: #2b7d2b;
+            --secondary: #4CAF50;
+            --light: #f5f5f5;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--light);
+        }
+
+        .category {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .category-header {
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .criteria {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .criteria label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .result-panel {
+            position: sticky;
+            top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .certificate {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .bronze { background-color: #cd7f32; }
+        .silver { background-color: #c0c0c0; }
+        .gold { background-color: #ffd700; }
+        .platinum { background-color: #e5e4e2; }
+
+        .category-score {
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .subcategory-header {
+            background: #4a4a4a;
+            color: white;
+            padding: 8px;
+            margin: 15px -10px;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: var(--secondary);
+        }
+
+        .print-section {
+            margin-top: 10px;
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="result-panel no-print">
+        <h2>Samlet DGNB Score: <span id="totalScore">0</span>%</h2>
+        <div class="progress-bar">
+            <div id="progressBar" class="progress" style="width: 0%"></div>
+        </div>
+        <div>
+            Certificering: <span id="certification" class="certificate">Ikke kvalificeret</span>
+        </div>
+        <div class="print-section">
+            <button onclick="window.print()">Udskriv rapport</button>
+            <button onclick="resetForm()">Nulstil beregner</button>
+        </div>
+    </div>
+
+    <!-- MILJØ (ENV) -->
+    <div class="category" id="env">
+        <div class="category-header">
+            <h2>MILJØ (ENV)</h2>
+            <span class="category-score">Score: <span id="envScore">0</span>%</span>
+        </div>
+        <div class="subcategory-header">Global og lokal miljøpåvirkning</div>
+        <div class="criteria">
+            <label class="tooltip">
+                ENV 1.1 Livscyklusvurdering (9.5%)
+                <span class="tooltiptext">Vurderer bygningens miljøpåvirkning gennem hele dens levetid</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="9.5" data-category="env" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                ENV 1.2 Miljøfarlige stoffer (4.7%)
+                <span class="tooltiptext">Vurdering af brugen af miljøfarlige stoffer i byggeriet</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="4.7" data-category="env" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                ENV 1.3 Ansvarsbevidst ressourceindvinding (2.4%)
+                <span class="tooltiptext">Vurdering af bæredygtig ressourceudvinding</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.4" data-category="env" oninput="calculateScore()">
+        </div>
+
+        <div class="subcategory-header">Ressourceforbrug og affald</div>
+        <div class="criteria">
+            <label class="tooltip">
+                ENV 2.2 Drikkevandsforbrug og spildevandsudledning (2.4%)
+                <span class="tooltiptext">Vurdering af vandforbrug og håndtering af spildevand</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.4" data-category="env" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                ENV 2.3 Arealanvendelse (1.2%)
+                <span class="tooltiptext">Vurdering af effektiv udnyttelse af byggegrunden</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.2" data-category="env" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                ENV 2.4 Biodiversitet (2.4%)
+                <span class="tooltiptext">Vurdering af bygningens påvirkning på biodiversitet</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.4" data-category="env" oninput="calculateScore()">
+        </div>
+    </div>
+
+    <!-- SOCIAL (SOC) -->
+    <div class="category" id="soc">
+        <div class="category-header">
+            <h2>SOCIAL (SOC)</h2>
+            <span class="category-score">Score: <span id="socScore">0</span>%</span>
+        </div>
+        <div class="subcategory-header">Sundhed, komfort og brugertilfredshed</div>
+        <div class="criteria">
+            <label class="tooltip">
+                SOC 1.1 Termisk komfort (9.6%)
+                <span class="tooltiptext">Vurdering af indeklimaet og temperaturforhold</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="9.6" data-category="soc" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                SOC 1.2 Indendørs luftkvalitet (6.4%)
+                <span class="tooltiptext">Vurdering af luftkvalitet og ventilation</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="6.4" data-category="soc" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                SOC 1.3 Akustisk indeklima (6.4%)
+                <span class="tooltiptext">Vurdering af lydforhold og akustik</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="6.4" data-category="soc" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                SOC 1.4 Visuel komfort (3.4%)
+                <span class="tooltiptext">Vurdering af dagslys og belysning</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="3.4" data-category="soc" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                SOC 1.6 Kvalitet af udearealer (3.4%)
+                <span class="tooltiptext">Vurdering af udendørs faciliteter og områder</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="3.4" data-category="soc" oninput="calculateScore()">
+        </div>
+
+        <div class="subcategory-header">Funktionalitet</div>
+        <div class="criteria">
+            <label class="tooltip">
+                SOC 2.1 Universelt design (1.9%)
+                <span class="tooltiptext">Vurdering af tilgængelighed for alle brugergrupper</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.9" data-category="soc" oninput="calculateScore()">
+        </div>
+
+        <div class="subcategory-header">Æstetik</div>
+        <div class="criteria">
+            <label class="tooltip">
+                SOC 3.2 Bygningsintegreret kunst (3.4%)
+                <span class="tooltiptext">Vurdering af kunstnerisk udsmykning</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="3.4" data-category="soc" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                SOC 3.3 Plandisponering (3.4%)
+                <span class="tooltiptext">Vurdering af bygningens rumlige organisering</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="3.4" data-category="soc" oninput="calculateScore()">
+        </div>
+    </div>
+
+    <!-- TEKNISK (TEC) -->
+    <div class="category" id="tec">
+        <div class="category-header">
+            <h2>TEKNISK (TEC)</h2>
+            <span class="category-score">Score: <span id="tecScore">0</span>%</span>
+        </div>
+        <div class="subcategory-header">Teknisk udførelse</div>
+        <div class="criteria">
+            <label class="tooltip">
+                TEC 1.1 Brandsikring og sikkerhed (2.8%)
+                <span class="tooltiptext">Vurdering af bygningens brandsikkerhed</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.8" data-category="tec" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                TEC 1.3 Klimaskærmens kvalitet (1.9%)
+                <span class="tooltiptext">Vurdering af bygningens klimaskærm</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.9" data-category="tec" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                TEC 1.4 Tekniske systemers tilpasningsevne (0.9%)
+                <span class="tooltiptext">Vurdering af fleksibilitet i tekniske installationer</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="0.9" data-category="tec" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                TEC 1.5 Design for vedligehold og rengøring (1.9%)
+                <span class="tooltiptext">Vurdering af vedligeholdelsesvenligt design</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.9" data-category="tec" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                TEC 1.6 Nedtagning og genanvendelse (1.3%)
+                <span class="tooltiptext">Vurdering af muligheder for demontering og genbrug</span>
+            </label>
+<input type="number" min="0" max="100" value="0" data-weight="1.3" data-category="tec" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                TEC 1.8 Dokumentation ved miljøvaredeklarationer (1.3%)
+                <span class="tooltiptext">Vurdering af materialers miljøpåvirkning gennem EPD'er</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.3" data-category="tec" oninput="calculateScore()">
+        </div>
+        
+        <div class="subcategory-header">Mobilitet</div>
+        <div class="criteria">
+            <label class="tooltip">
+                TEC 3.1 Mobilitetsinfrastruktur (1.3%)
+                <span class="tooltiptext">Vurdering af transportmuligheder og parkering</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.3" data-category="tec" oninput="calculateScore()">
+        </div>
+    </div>
+
+    <!-- OMRÅDE (SITE) -->
+    <div class="category" id="site">
+        <div class="category-header">
+            <h2>OMRÅDE (SITE)</h2>
+            <span class="category-score">Score: <span id="siteScore">0</span>%</span>
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                SITE 1.1 Lokalmiljø (2.8%)
+                <span class="tooltiptext">Vurdering af bygningens påvirkning på lokalmiljøet</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.8" data-category="site" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                SITE 1.2 Indflydelse på området (2.3%)
+                <span class="tooltiptext">Vurdering af bygningens integration i området</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.3" data-category="site" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                SITE 1.3 Trafikforbindelser (1.1%)
+                <span class="tooltiptext">Vurdering af tilgængelighed via offentlig transport</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.1" data-category="site" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                SITE 1.4 Adgang til faciliteter i nærområdet (2.8%)
+                <span class="tooltiptext">Vurdering af nærhed til services og faciliteter</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.8" data-category="site" oninput="calculateScore()">
+        </div>
+    </div>
+
+    <!-- ØKONOMI (ECO) -->
+    <div class="category" id="eco">
+        <div class="category-header">
+            <h2>ØKONOMI (ECO)</h2>
+            <span class="category-score">Score: <span id="ecoScore">0</span>%</span>
+        </div>
+        <div class="subcategory-header">Totaløkonomi</div>
+        <div class="criteria">
+            <label class="tooltip">
+                ECO 1.1 Totaløkonomi (2.8%)
+                <span class="tooltiptext">Vurdering af bygningens livscyklusomkostninger</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.8" data-category="eco" oninput="calculateScore()">
+        </div>
+
+        <div class="subcategory-header">Økonomisk fremtidssikring</div>
+        <div class="criteria">
+            <label class="tooltip">
+                ECO 2.1 Fleksibilitet og tilpasningsevne (2.3%)
+                <span class="tooltiptext">Vurdering af bygningens tilpasningsevne over tid</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.3" data-category="eco" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                ECO 2.2 Robusthed (1.1%)
+                <span class="tooltiptext">Vurdering af bygningens holdbarhed og vedligeholdelse</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.1" data-category="eco" oninput="calculateScore()">
+        </div>
+    </div>
+
+    <!-- PROCES (PRO) -->
+    <div class="category" id="pro">
+        <div class="category-header">
+            <h2>PROCES (PRO)</h2>
+            <span class="category-score">Score: <span id="proScore">0</span>%</span>
+        </div>
+        <div class="subcategory-header">Planlægning</div>
+        <div class="criteria">
+            <label class="tooltip">
+                PRO 1.1 Kvalitet i forberedelsen af projektet (1.9%)
+                <span class="tooltiptext">Vurdering af projektets forberedelsesfase</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.9" data-category="pro" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                PRO 1.4 Bæredygtighed i entrepriseudbud (1.9%)
+                <span class="tooltiptext">Vurdering af bæredygtighedskrav i udbudsmaterialet</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.9" data-category="pro" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                PRO 1.5 Vejledning om vedligehold og brug af bygningen (1.3%)
+                <span class="tooltiptext">Vurdering af dokumentation og brugervejledning</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.3" data-category="pro" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                PRO 1.6 Proces for arkitektonisk kvalitet (2.5%)
+                <span class="tooltiptext">Vurdering af den arkitektoniske kvalitetssikring</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="2.5" data-category="pro" oninput="calculateScore()">
+        </div>
+
+        <div class="subcategory-header">Udførelse</div>
+        <div class="criteria">
+            <label class="tooltip">
+                PRO 2.1 Byggeplads/byggeproces (1.3%)
+                <span class="tooltiptext">Vurdering af byggepladsens miljøpåvirkning</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.3" data-category="pro" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                PRO 2.2 Dokumentation af kvalitet i udførelsen (1.3%)
+                <span class="tooltiptext">Vurdering af kvalitetssikring under udførelsen</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.3" data-category="pro" oninput="calculateScore()">
+        </div>
+        <div class="criteria">
+            <label class="tooltip">
+                PRO 2.3 Commissioning (1.9%)
+                <span class="tooltiptext">Vurdering af idriftsættelse og performancetest</span>
+            </label>
+            <input type="number" min="0" max="100" value="0" data-weight="1.9" data-category="pro" oninput="calculateScore()">
+        </div>
+    </div>
+
+    <script>
+        function calculateScore() {
+            const categories = {
+                env: { total: 0, weight: 0 },
+                soc: { total: 0, weight: 0 },
+                tec: { total: 0, weight: 0 },
+                site: { total: 0, weight: 0 },
+                eco: { total: 0, weight: 0 },
+                pro: { total: 0, weight: 0 }
+            };
+            
+            let totalScore = 0;
+            let totalWeight = 0;
+
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                const weight = parseFloat(input.dataset.weight);
+                const category = input.dataset.category;
+                
+                if (categories[category]) {
+                    categories[category].total += (value * weight);
+                    categories[category].weight += weight;
+                }
+                
+                totalScore += (value * weight);
+                totalWeight += weight;
+            });
+
+            // Beregn kategori scores
+            Object.keys(categories).forEach(category => {
+                const score = categories[category].weight > 0 
+                    ? (categories[category].total / categories[category].weight).toFixed(1)
+                    : 0;
+                document.getElementById(`${category}Score`).textContent = score;
+            });
+
+            // Beregn total score
+            const finalScore = totalWeight > 0 ? (totalScore / totalWeight).toFixed(1) : 0;
+            document.getElementById('totalScore').textContent = finalScore;
+            document.getElementById('progressBar').style.width = `${finalScore}%`;
+
+            // Opdater certificering
+            let certification = 'Ikke kvalificeret';
+            let certificationClass = '';
+            
+            if (finalScore >= 50) {
+                certification = 'Bronze';
+                certificationClass = 'bronze';
+            }
+            if (finalScore >= 65) {
+                certification = 'Sølv';
+                certificationClass = 'silver';
+            }
+            if (finalScore >= 80) {
+                certification = 'Guld';
+                certificationClass = 'gold';
+            }
+            if (finalScore >= 85) {
+                certification = 'Platin';
+                certificationClass = 'platinum';
+            }
+
+            const certSpan = document.getElementById('certification');
+            certSpan.textContent = certification;
+            certSpan.className = `certificate ${certificationClass}`;
+        }
+
+        function resetForm() {
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.value = 0;
+            });
+            calculateScore();
+        }
+
+        // Initial calculation
+        calculateScore();
+    </script>
+</body>
+</html>
