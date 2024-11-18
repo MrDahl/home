@@ -17,7 +17,10 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
-      background-color: var(--light);
+      background-color: #108b00;
+      opacity: 1;
+      background: rgb(12, 8, 83);
+      background: linear-gradient(140deg, rgba(12, 8, 83, 1) 0%, rgba(9, 121, 13, 1) 35%, rgba(3, 183, 25, 1) 58%, rgba(0, 212, 255, 1) 100%);
       user-select: none;
     }
 
@@ -96,6 +99,7 @@
       position: sticky;
       top: 20px;
       background: white;
+      opacity: 1;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -106,7 +110,7 @@
     .progress-bar {
       width: 100%;
       height: 20px;
-      background-color: #f0f0f0;
+      background-color: #F0F0F0;
       border-radius: 10px;
       overflow: hidden;
       margin: 10px 0;
@@ -245,12 +249,43 @@
       margin-top: 30px;
       text-align: center;
       font-size: 0.8rem;
-      color: #888;
+      color: #FFF;
+      text-shadow: 2px 2px 5px black;
+      background: var(--primary);
+      opacity: 0.4;
+      padding: 10px;
     }
 
     @media print {
-      .no-print {
+      body {
+        background: none;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+      }
+
+      .category {
+        page-break-before: always;
+        /* Starter hver kategori på en ny side */
+      }
+
+      .result-panel {
+        page-break-after: always;
+        /* Sørger for, at scoren kommer på sin egen side */
+      }
+
+      .radar-chart {
+        page-break-before: always;
+        /* Visualiseringen starter på en ny side */
+      }
+
+      button {
         display: none;
+        /* Skjuler knapper under udskrift */
+      }
+
+      .tooltip .tooltiptext {
+        display: none;
+        /* Skjuler tooltips i udskriften */
       }
     }
 
@@ -268,7 +303,7 @@
 </head>
 
 <body>
-  <div class="result-panel no-print">
+  <div class="result-panel">
     <h2><i class="fa-solid fa-medal"></i> Samlet DGNB Score: <span id="totalScore">0</span>%</h2>
     <div class="progress-bar">
       <div id="progressBar" class="progress" style="width: 0%"></div>
