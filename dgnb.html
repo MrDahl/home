@@ -18,6 +18,7 @@
       margin: 0 auto;
       padding: 20px;
       background-color: var(--light);
+      user-select: none;
     }
 
     .category {
@@ -29,7 +30,7 @@
     }
 
     .category-header {
-      background: var(--primary);
+      background-image: linear-gradient(to right, #051937, #004d7a, #008793, #00bf72, #a8eb12);
       color: white;
       padding: 10px;
       margin: -20px -20px 20px -20px;
@@ -42,7 +43,7 @@
     .criteria {
       margin: 10px 0;
       padding: 10px;
-      background: #f9f9f9;
+      background: #F9F9F9;
       border-radius: 4px;
       display: flex;
       align-items: center;
@@ -147,7 +148,11 @@
     }
 
     .category-score {
-      background: var(--primary);
+      background: linear-gradient(45deg, rgba(245, 246, 246, 0.5) 0%, rgba(219, 220, 226, 0.5) 21%, rgba(184, 186, 198, 0.5) 49%, rgba(221, 223, 227, 0.3) 80%, rgba(245, 246, 246, 0.3) 100%);
+      box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.32);
+      -webkit-box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.32);
+      -moz-box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.32);
+      color: white;
       padding: 5px 10px;
       border-radius: 4px;
       font-size: 1.2em;
@@ -183,7 +188,7 @@
     }
 
     .subcategory-header {
-      background: #4a4a4a;
+      background: linear-gradient(45deg, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%);
       color: white;
       padding: 8px;
       margin: 15px -10px;
