@@ -24,6 +24,38 @@
       user-select: none;
     }
 
+    .introduction {
+      background-color: #ecf0f1;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: left;
+      font-family: 'Arial', sans-serif;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .introduction h1 {
+      color: #2980b9;
+      margin-bottom: 10px;
+      font-size: 1.4em;
+    }
+
+    .introduction p {
+      color: #34495e;
+      font-size: 1em;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    .introduction i {
+      margin-right: 10px;
+      font-size: 1.8em;
+      /* Gør ikonerne større */
+      color: #16a085;
+    }
+
     .category {
       background: #F0F0F0;
       padding: 20px;
@@ -98,6 +130,7 @@
     .result-panel {
       position: sticky;
       top: 20px;
+      color: #2980b9;
       background: white;
       opacity: 1;
       padding: 20px;
@@ -251,9 +284,9 @@
       text-align: center;
       font-size: 0.8rem;
       color: #FFF;
-      text-shadow: 2px 2px 5px black;
       background: var(--primary);
       opacity: 0.4;
+      border-radius: 10px;
       padding: 10px;
     }
 
@@ -340,6 +373,10 @@
         color-adjust: exact;
       }
 
+      .introduction {
+        display: none;
+      }
+
       .result-panel {
         position: relative;
         page-break-before: avoid;
@@ -412,6 +449,15 @@
       <button onclick="resetForm()"><i class="fa-solid fa-trash-can"></i> &nbsp;Nulstil beregner</button>
     </div>
   </div>
+
+  <!-- Introduktion til DGNB -->
+  <div class="introduction">
+    <h1>Velkommen til DGNB Calculator</h1>
+    <p><i class="fas fa-info-circle"></i> DGNB (Deutsche Gesellschaft für Nachhaltiges Bauen) er en international standard for bæredygtigt byggeri, der vurderer bygningers miljømæssige, økonomiske og sociale performance.</p>
+    <p><i class="fas fa-mobile-screen-button"></i>Denne app hjælper dig med at beregne og vurdere bæredygtighedsfaktorer i dine projekter, baseret på DGNB-kriterierne.</p>
+    <p><i class="fas fa-check-circle"></i> Brug værktøjet til at indtaste relevante data og få en vurdering, der kan hjælpe dig med at forbedre dit projekts bæredygtighed.</p>
+  </div>
+
   <!-- Informationer om Projektet -->
   <div class="project-info-panel">
     <div class="info-section">
@@ -888,6 +934,7 @@
   </div>
   <div id="footer" class="footer">
     <p>Lavet af Marc Sonne Dahl (c) 2024</p>
+    <p id="social"><a href="https://www.linkedin.com/in/marcdahl/" target="_blank"><i class="fa-brands fa-3x fa-linkedin-in"></i></a>&nbsp; <a href="https://mrdahl.github.io/home/" target="_blank"><i class="fa-brands fa-3x fa-github"></i></a></p>
   </div>
 
   <script>
