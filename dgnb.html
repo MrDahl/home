@@ -102,9 +102,10 @@
       opacity: 1;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0px 5px 1px rgba(60, 179, 113, 0.8);
       margin-bottom: 20px;
       z-index: 1000;
+      top: -30px;
     }
 
     .progress-bar {
@@ -256,6 +257,82 @@
       padding: 10px;
     }
 
+    .project-info-panel {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .info-section {
+      margin-bottom: 15px;
+    }
+
+    .info-section h3 {
+      color: var(--primary);
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--secondary);
+      padding-bottom: 5px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .input-group label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .input-group input,
+    .input-group textarea {
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .input-group textarea {
+      resize: none;
+      width: 98.5%;
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(43, 125, 43, 0.1);
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-evenly;
+      /* Fordeler elementerne med plads imellem */
+      align-items: center;
+      /* Justerer dem lodret på linje */
+      margin-bottom: 0px;
+      /* Lidt afstand mellem rækker */
+    }
+
+    .row label {
+      flex: 1;
+      /* Teksten får fleksibel plads til venstre */
+      text-align: left;
+      /* Sørger for, at teksten er venstrestillet */
+    }
+
+    .row input {
+      flex: 2;
+      /* Input-feltet får lidt mere plads til højre */
+      max-width: auto;
+      /* Begræns bredden af input-feltet, hvis nødvendigt */
+    }
+
     @media print {
       body {
         background: none;
@@ -263,14 +340,19 @@
         color-adjust: exact;
       }
 
+      .result-panel {
+        position: relative;
+        page-break-before: avoid;
+      }
+
+      .project-info-panel {
+        break-inside: avoid;
+        page-break-before: avoid;
+      }
+
       .category {
         page-break-before: always;
         /* Starter hver kategori på en ny side */
-      }
-
-      .result-panel {
-        page-break-after: always;
-        /* Sørger for, at scoren kommer på sin egen side */
       }
 
       .radar-chart {
@@ -298,6 +380,20 @@
       .slider-container {
         width: 100%;
       }
+
+      .info-section {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .info-section h3 {
+        grid-column: 1 / -1;
+      }
+
+      .input-group:last-child {
+        grid-column: 1 / -1;
+      }
     }
   </style>
 </head>
@@ -316,7 +412,48 @@
       <button onclick="resetForm()"><i class="fa-solid fa-trash-can"></i> &nbsp;Nulstil beregner</button>
     </div>
   </div>
+  <!-- Informationer om Projektet -->
+  <div class="project-info-panel">
+    <div class="info-section">
+      <h3><i class="fa-solid fa-building"></i> Projektoplysninger</h3>
+      <div class="input-group">
+        <div class="row">
+          <label for="calc-date">Beregningsdato:</label>
+          <input type="date" id="calc-date" name="calc-date">
+        </div>
+        <div class="row">
+          <label for="project-address">Adresse:</label>
+          <input type="text" id="project-address" name="project-address" placeholder="Indtast projektets adresse">
+        </div>
+      </div>
+    </div>
 
+    <div class="info-section">
+      <h3><i class="fa-solid fa-user"></i> Beregnerens informationer</h3>
+
+      <div class="input-group">
+
+        <div class="row"> <label for="calculator-name">Navn:</label>
+          <input type="text" id="calculator-name" name="calculator-name" placeholder="Indtast dit navn">
+        </div>
+
+        <div class="input-group">
+          <div class="row"> <label for="calculator-company">Firma:</label>
+            <input type="text" id="calculator-company" name="calculator-company" placeholder="Indtast firmanavn">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3><i class="fa-solid fa-circle-info"></i> Andre oplysninger</h3>
+      <div class="input-group">
+        <label for="additional-info">Relevante informationer:</label>
+        <textarea id="additional-info" name="additional-info" rows="4" placeholder="Indtast eventuelle bemærkninger eller andre relevante oplysninger"></textarea>
+      </div>
+    </div>
+  </div>
   <!-- MILJØ (ENV) -->
   <div class="category" id="env">
     <div class="category-header">
