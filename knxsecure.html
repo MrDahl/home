@@ -1,19 +1,20 @@
 <html lang="en">
-
+<!-- Created by Marc Sonne Dahl (C) 2024 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KNX Security Checklist</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      line-height: 1.7;
+      line-height: 1.3;
       max-width: 900px;
+      font-size: 0.9em;
       margin: 0 auto;
       padding: 20px;
-      background-color: #f4f6f9;
+      background-color: none;
       color: #2c3e50;
       user-select: none;
     }
@@ -24,6 +25,7 @@
       border-bottom: 3px solid #1a5f7a;
       padding-bottom: 10px;
       margin-bottom: 30px;
+      font-size: 0.9em;
     }
 
     h2 {
@@ -31,18 +33,21 @@
       border-left: 4px solid #2980b9;
       padding-left: 15px;
       margin-top: 30px;
+      font-size: 1.2em;
     }
 
     h4 {
       color: #2980b9;
       margin-top: 20px;
+      font-size: 1em;
     }
-    
+
     h5 {
       color: #77b8e7;
       margin-top: 15px;
       text-align: center;
       text-shadow: 1px 2px 2px #fff;
+      font-size: 0.7em;
     }
 
     .grid {
@@ -120,54 +125,53 @@
       color: #77b8e7;
       text-shadow: 1px 2px 2px #fff;
     }
+
     @media print {
-  .question {
-    page-break-inside: avoid;
-    margin-bottom: 20px;
-  }
-  
-  .print-button {
-    display: none !important;
-  }
-  
-  .headline {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  body {
-    margin: 0;
-    padding: 10px;
-  }
-}
+      .question {
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+      }
+
+      .print-button {
+        display: none !important;
+      }
+
+      .headline {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      body {
+        margin: 0;
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <header>
-    <h1><i class="fa-solid fa-shield-halved"></i> KNX Security Checklist</h1>
-    <h2>Increased security and privacy in KNX installations</h2>
+    <h1><i class="fa-solid fa-shield-halved"></i> KNX Security Checklist</br>
+      Increased security and privacy in KNX installations</h1>
   </header>
 
   <main>
     <section>
-      <h2>General Information</h2>
       <div>
         <label for="integrator-credentials">
-          <h4>System Integrator Credentials:</h4>
+          <h4><i class="fa-solid fa-user"></i> &nbsp System Integrator Credentials:</h4>
         </label>
         <input type="text" id="integrator-credentials" name="integrator-credentials" required>
       </div>
       <div>
         <label for="project-info">
-          <h4>Project Information:</h4>
+          <h4><i class="fa-solid fa-info"></i> &nbsp Project Information:</h4>
         </label>
         <textarea id="project-info" name="project-info"></textarea>
       </div>
     </section>
 
     <section id="checklist">
-      <h2>Checklist</h2>
 
       <!-- Section 1 -->
       <div class="question">
@@ -525,16 +529,18 @@
 
       </div>
       </div>
-  <h5><p>By Marc Sonne Dahl © 2024</p>
-    <p>For Modul 2.6 - Bygningsautomatik og Design af enkle Brugerflader</p>
-    <p>Roskilde Tekniske Skole</p></h5>
-  <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Create print button
-  const printButton = document.createElement('button');
-  printButton.textContent = 'Print / Save as PDF';
-  printButton.classList.add('print-button');
-  printButton.style.cssText = `
+      <h5>
+        <p>By Marc Sonne Dahl © 2024</p>
+        <p>For Modul 2.6 - Bygningsautomatik og Design af enkle Brugerflader</p>
+        <p>Roskilde Tekniske Skole</p>
+      </h5>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Create print button
+          const printButton = document.createElement('button');
+          printButton.textContent = 'Print / Save as PDF';
+          printButton.classList.add('print-button');
+          printButton.style.cssText = `
     display: block;
     margin: 20px auto;
     padding: 10px 20px;
@@ -545,19 +551,15 @@ document.addEventListener('DOMContentLoaded', function() {
     cursor: pointer;
     font-family: 'Inter', sans-serif;
   `;
-  
-  // Add button before the footer
-  const footer = document.querySelector('h5');
-  footer.parentNode.insertBefore(printButton, footer);
-
-  // Add print event listener
-  printButton.addEventListener('click', function() {
-    window.print();
-  });
-});
-</script>
-
-<style>
-</body>
-
-</html>
+          // Add button before the footer
+          const footer = document.querySelector('h5');
+          footer.parentNode.insertBefore(printButton, footer);
+          // Add print event listener
+          printButton.addEventListener('click', function() {
+            window.print();
+          });
+        });
+      </script>
+<!-- Created by Marc Sonne Dahl (C) 2024 -->
+      <style>
+        </body></html>
