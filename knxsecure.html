@@ -1,0 +1,563 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KNX Security Checklist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.7;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f6f9;
+      color: #2c3e50;
+      user-select: none;
+    }
+
+    h1 {
+      color: #1a5f7a;
+      text-align: center;
+      border-bottom: 3px solid #1a5f7a;
+      padding-bottom: 10px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      color: #2980b9;
+      border-left: 4px solid #2980b9;
+      padding-left: 15px;
+      margin-top: 30px;
+    }
+
+    h4 {
+      color: #2980b9;
+      margin-top: 20px;
+    }
+    
+    h5 {
+      color: #77b8e7;
+      margin-top: 15px;
+      text-align: center;
+      text-shadow: 1px 2px 2px #fff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"],
+    textarea {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #bdc3c7;
+      border-radius: 4px;
+      transition: border-color 0.3s ease;
+    }
+
+    textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+
+    .question {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .headline {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #1a5f7a;
+      margin-bottom: 15px;
+    }
+
+    .detail-question {
+      display: flex;
+      align-items: right;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid #ecf0f1;
+    }
+
+    .detail-question:last-child {
+      border-bottom: none;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: grid;
+      align-items: center;
+      justify-content: center;
+      gap: 15%;
+    }
+
+    .radio-group label {
+      display: grid;
+      align-items: center;
+      cursor: pointer;
+      color: #77b8e7;
+      text-shadow: 1px 2px 2px #fff;
+    }
+    @media print {
+  .question {
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+  }
+  
+  .print-button {
+    display: none !important;
+  }
+  
+  .headline {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  body {
+    margin: 0;
+    padding: 10px;
+  }
+}
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1><i class="fa-solid fa-shield-halved"></i> KNX Security Checklist</h1>
+    <h2>Increased security and privacy in KNX installations</h2>
+  </header>
+
+  <main>
+    <section>
+      <h2>General Information</h2>
+      <div>
+        <label for="integrator-credentials">
+          <h4>System Integrator Credentials:</h4>
+        </label>
+        <input type="text" id="integrator-credentials" name="integrator-credentials" required>
+      </div>
+      <div>
+        <label for="project-info">
+          <h4>Project Information:</h4>
+        </label>
+        <textarea id="project-info" name="project-info"></textarea>
+      </div>
+    </section>
+
+    <section id="checklist">
+      <h2>Checklist</h2>
+
+      <!-- Section 1 -->
+      <div class="question">
+        <div class="headline">1. Were the following measures taken into
+          account during installation?</div>
+        <div class="detail-question">
+          <div>Are devices and applications fixed mounted? Is it ensured that devices are properly protected against dismounting
+            <br>(e. g. use of anti-theft protection measures)?
+          </div>
+          <div class="radio-group">
+            <label><input type="radio" name="q1-1" value="YES"> YES</label>
+            <label><input type="radio" name="q1-1" value="NO"> NO</label>
+            <label><input type="radio" name="q1-1" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Is it ensured that unauthorized persons have limited access to distribution boards with mounted KNX installations
+            <br>(e. g. always locked or located in locked rooms)?
+          </div>
+          <div class="radio-group">
+            <label><input type="radio" name="q1-2" value="YES"> YES</label>
+            <label><input type="radio" name="q1-2" value="NO"> NO</label>
+            <label><input type="radio" name="q1-2" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Is it difficult to access devices in external areas?
+            <br>(e. g. mounted at a sufficient height)?
+          </div>
+          <div class="radio-group">
+            <label><input type="radio" name="q1-3" value="YES"> YES</label>
+            <label><input type="radio" name="q1-3" value="NO"> NO</label>
+            <label><input type="radio" name="q1-3" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>In case the KNX installation can be operated from areas in buildings that are public and not surveilled, did you contemplate the use of binary inputs <br>(mounted in distribution boards) or push button interfaces?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q1-4" value="YES"> YES</label>
+            <label><input type="radio" name="q1-4" value="NO"> NO</label>
+            <label><input type="radio" name="q1-4" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Are KNX Touch panels password protected <br>(user, group or guest mode)?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q1-5" value="YES"> YES</label>
+            <label><input type="radio" name="q1-5" value="NO"> NO</label>
+            <label><input type="radio" name="q1-5" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="question">
+        <div class="headline">2. Is Twisted Pair used as communication medium?</div>
+        <div class="detail-question">
+          <div>Is the cable anywhere in- or outside the home or the building protected against unauthorized access?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q2-1" value="YES"> YES</label>
+            <label><input type="radio" name="q2-1" value="NO"> NO</label>
+            <label><input type="radio" name="q2-1" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>In case the twisted pair cable is used in areas requiring extra protection measures, have you taken the measures as given in item 6?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q2-2" value="YES"> YES</label>
+            <label><input type="radio" name="q2-2" alue="NO"> NO</label>
+            <label><input type="radio" name="q2-2" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="question">
+        <div class="headline">3. Is Powerline used as communication medium?</div>
+        <div class="detail-question">
+          <div>Have band stop filters been installed?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q3-1" value="YES"> YES</label>
+            <label><input type="radio" name="q3-1" value="NO"> NO</label>
+            <label><input type="radio" name="q3-1" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>If Powerline is also used outside the building, have you taken the same measures for the media coupler as given in item 6?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q3-2" value="YES"> YES</label>
+            <label><input type="radio" name="q3-2" value="NO"> NO</label>
+            <label><input type="radio" name="q3-2" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4 -->
+      <div class="question">
+        <div class="headline">4. Is IP used as communication medium?</div>
+        <div class="detail-question">
+          <div>Have the network settings been documented and handed over to the home owner or the LAN administrator?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q4-1" value="YES"> YES</label>
+            <label><input type="radio" name="q4-1" value="NO"> NO</label>
+            <label><input type="radio" name="q4-1" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Have switches and routers been set in such a way that only known MAC addresses are able to access the communication medium?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q4-2" value="YES"> YES</label>
+            <label><input type="radio" name="q4-2" value="NO"> NO</label>
+            <label><input type="radio" name="q4-2" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Is a separate LAN or WLAN network with own hardware used for KNX communication?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q4-3" value="YES"> YES</label>
+            <label><input type="radio" name="q4-3" value="NO"> NO</label>
+            <label><input type="radio" name="q4-3" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Is access to the (KNX) IP networks limited to authorized persons via appropriate user names and strong passwords?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q4-4" value="YES"> YES</label>
+            <label><input type="radio" name="q4-4" value="NO"> NO</label>
+            <label><input type="radio" name="q4-4" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>For KNX IP Multicast communication another IP address as the default address should be used <br>(normally 224.0.23.12). Was this IP multicast address changed?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q4-5" value="YES"> YES</label>
+            <label><input type="radio" name="q4-5" value="NO"> NO</label>
+            <label><input type="radio" name="q4-5" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Was the default SSID of the wireless access point changed? Was the periodic transmission of the SSID after installation deactivated?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q4-6" value="YES"> YES</label>
+            <label><input type="radio" name="q4-6" value="NO"> NO</label>
+            <label><input type="radio" name="q4-6" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Have ports of routers for KNX been closed towards the internet and was the default gateway of the used KNXnet / IP router set to 0? Was the (W)LAN installation protected by an
+            appropriate firewall?
+            <br>If internet access to a KNX installation is needed, check the possibility to implement:
+            <br>1. Establishing a VPN connection to the Internet Router
+            <br>2. Use of manufacturer specific KNX Object Servers
+          </div>
+          <div class="radio-group">
+            <label><input type="radio" name="q4-7" value="YES"> YES</label>
+            <label><input type="radio" name="q4-7" value="NO"> NO</label>
+            <label><input type="radio" name="q4-7" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5 -->
+      <div class="question">
+        <div class="headline">5. Is Radio Frequency used as communication medium?</div>
+        <div class="detail-question">
+          <div>Have you taken the same measures for the media coupler as given in item 6?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q5-1" value="YES"> YES</label>
+            <label><input type="radio" name="q5-1" value="NO"> NO</label>
+            <label><input type="radio" name="q5-1" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Does each RF domain have a different domain address?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q5-2" value="YES"> YES</label>
+            <label><input type="radio" name="q5-2" value="NO"> NO</label>
+            <label><input type="radio" name="q5-2" value="NA"> N/A</label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Section 6 -->
+      <div class="question">
+        <div class="headline">6. Have you used couplers in the installation?</div>
+        <div class="detail-question">
+          <div>Were individual addresses of devices assigned according to their place in the topology?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q6-1" value="YES"> YES</label>
+            <label><input type="radio" name="q6-1" value="NO"> NO</label>
+            <label><input type="radio" name="q6-1" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Do you prevent via the setting of appropriate parameters in the couplers that incorrect source addresses are not forwarded outside the line?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q6-2" value="YES"> YES</label>
+            <label><input type="radio" name="q6-2" value="NO"> NO</label>
+            <label><input type="radio" name="q6-2" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Do you block Point-to-Point and Broadcast communication across couplers?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q6-3" value="YES"> YES</label>
+            <label><input type="radio" name="q6-3" value="NO"> NO</label>
+            <label><input type="radio" name="q6-3" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Have the filter tables been loaded correctly and have settings been made in such a way that filter tables are taken into account by the couplers?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q6-4" value="YES"> YES</label>
+            <label><input type="radio" name="q6-4" value="NO"> NO</label>
+            <label><input type="radio" name="q6-4" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Have you considered the measures as given under item 7 for the couplers?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q6-5" value="YES"> YES</label>
+            <label><input type="radio" name="q6-5" value="NO"> NO</label>
+            <label><input type="radio" name="q6-5" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 7 -->
+      <div class="question">
+        <div class="headline">7. Have devices been locked against re-configuration?</div>
+        <div class="detail-question">
+          <div>If not, enter a BCU key
+            in the ETS Project.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q7-1" value="YES"> YES</label>
+            <label><input type="radio" name="q7-1" value="NO"> NO</label>
+            <label><input type="radio" name="q7-1" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 8 -->
+      <div class="question">
+        <div class="headline">8. Do you use KNX Secure2 devices?</div>
+        <div class="detail-question">
+          <div>For group communication that needs to be secured, use the foreseen authentication and encryption mechanisms of the device.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q8-1" value="YES"> YES</label>
+            <label><input type="radio" name="q8-1" value="NO"> NO</label>
+            <label><input type="radio" name="q8-1" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 9 -->
+      <div class="question">
+        <div class="headline">9. Do you suspect unauthorized access to the bus?</div>
+        <div class="detail-question">
+          <div>Record telegram traffic and analyse it. In the case of KNX Secure devices, read the Failure Logs.
+            <br>Document the time and observed effects (what happens, what does not happen, why
+            and when)?
+            <br>Disable the internet connection of the KNX system and check, whether the effects disappear or not.
+            <br>Contact the hotline of the manufacturer: are the effects or security
+            problems known at the manufacturer, are updates available?
+          </div>
+          <div class="radio-group">
+            <label><input type="radio" name="q9-1" value="YES"> YES</label>
+            <label><input type="radio" name="q9-1" value="NO"> NO</label>
+            <label><input type="radio" name="q9-1" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Read the PID_Device_Control3 from devices and check whether devices are sending using the same Individual Address.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q9-2" value="YES"> YES</label>
+            <label><input type="radio" name="q9-2" value="NO"> NO</label>
+            <label><input type="radio" name="q9-2" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Read the PID_Download_Counter3 from devices and check whether the device was downloaded again after your configuration.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q9-3" value="YES"> YES</label>
+            <label><input type="radio" name="q9-3" value="NO"> NO</label>
+            <label><input type="radio" name="q9-3" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 10 -->
+      <div class="question">
+        <div class="headline">10. Have devices been locked against re-configuration?</div>
+        <div class="detail-question">
+          <div>When KNX is coupled to security installations, was this realized in any of the following ways?
+            <br>1. Via KNX devices or gateways certified by national loss insurers?
+            <br>2. Via potential free contacts (binary inputs, push button interfaces, ...)?
+            <br>3. Via appropriate interfaces (RS232, ...) or gateways: was it ensured that KNX communication is unable to trigger security relevant functions in the security part of the installation?
+          </div>
+          <div class="radio-group">
+            <label><input type="radio" name="q10-1" value="YES"> YES</label>
+            <label><input type="radio" name="q10-1" value="NO"> NO</label>
+            <label><input type="radio" name="q10-1" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 11 -->
+      <div class="question">
+        <div class="headline">11. General Security Measures</div>
+        <div class="detail-question">
+          <div>Is ETS up to date?
+            <br>1. Is the PC, on which the ETS is installed, secure (up to date virus scan, newest operating system update)? It is recommended, to use a dedicated device for KNX design and commissioning.
+            <br>2. During the installation, it shall be avoided to hook other untrusted data storage devices
+            up to the PC (USB, external hard drive, …).
+            <br>3. ETS Plug-ins and Apps shall preferably be installed prior to the installation
+            <br>4. Backup the project file after the installation (ideally on a secured USB stick, which is stored safely) and delete the project from the PC.
+          </div>
+          <div class="radio-group">
+            <label><input type="radio" name="q11-1" value="YES"> YES</label>
+            <label><input type="radio" name="q11-1" value="NO"> NO</label>
+            <label><input type="radio" name="q11-1" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>Is the firmware of the used devices up to date?</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q11-2" value="YES"> YES</label>
+            <label><input type="radio" name="q11-2" value="NO"> NO</label>
+            <label><input type="radio" name="q11-2" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 12 -->
+      <div class="question">
+        <div class="headline">12. Further Privacy measures (GDPR)</div>
+        <div class="detail-question">
+          <div>Installer and customer shall sign a privacy declaration.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q12-1" value="YES"> YES</label>
+            <label><input type="radio" name="q12-1" value="NO"> NO</label>
+            <label><input type="radio" name="q12-1" value="NA"> N/A</label>
+          </div>
+        </div>
+        <div class="detail-question">
+          <div>In order to fulfil the GDPR regulations, the installer shall hand over a copy of the ETS project file to the customer.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="q12-2" value="YES"> YES</label>
+            <label><input type="radio" name="q12-2" value="NO"> NO</label>
+            <label><input type="radio" name="q12-2" value="NA"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      </div>
+      </div>
+  <h5><p>By Marc Sonne Dahl © 2024</p>
+    <p>For Modul 2.6 - Bygningsautomatik og Design af enkle Brugerflader</p>
+    <p>Roskilde Tekniske Skole</p></h5>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Create print button
+  const printButton = document.createElement('button');
+  printButton.textContent = 'Print / Save as PDF';
+  printButton.classList.add('print-button');
+  printButton.style.cssText = `
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  `;
+  
+  // Add button before the footer
+  const footer = document.querySelector('h5');
+  footer.parentNode.insertBefore(printButton, footer);
+
+  // Add print event listener
+  printButton.addEventListener('click', function() {
+    window.print();
+  });
+});
+</script>
+
+<style>
+</body>
+
+</html>
