@@ -1,0 +1,271 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cryptex: Code Breaker</title>
+  <style>
+    :root {
+      --bg-color: #f5f5f5;
+      --primary-color: #2b2d42;
+      --accent-color: #8d99ae;
+      --highlight-color: #2b2d42;
+      --text-color: #2b2d42;
+      --button-bg: #edf2f4;
+      --button-hover: #8d99ae;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--text-color);
+    }
+
+    .cryptex-container {
+      background-color: var(--button-bg);
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+    }
+
+    .tries-display {
+      font-size: 1rem;
+      margin-bottom: 20px;
+      color: var(--accent-color);
+    }
+
+    .cylinder-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .cylinder {
+      background-color: var(--bg-color);
+      border: 2px solid var(--accent-color);
+      border-radius: 8px;
+      width: 50px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 0;
+    }
+
+    .digit {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    button {
+      background-color: var(--button-bg);
+      border: none;
+      border-radius: 8px;
+      padding: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: var(--button-hover);
+      color: var(--bg-color);
+    }
+
+    #submit-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.1rem;
+      background-color: var(--highlight-color);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    #submit-btn:hover {
+      background-color: #d90429;
+    }
+
+    #result,
+    #secret-reveal {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: var(--primary-color);
+    }
+
+    #secret-reveal {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--highlight-color);
+    }
+
+    .play-again-btn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.1rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .play-again-btn:hover {
+      background-color: var(--accent-color);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cryptex-container">
+    <div class="title">Cryptex</div>
+    <div class="tries-display" id="tries-display">Tries: 0</div>
+    <div class="cylinder-row" id="cylinder-row">
+      <!-- Cylinders will be dynamically added -->
+    </div>
+    <button id="submit-btn">Decode</button>
+    <div id="result">Can you open the cryptex?</div>
+    <div id="secret-reveal"></div>
+    <button id="play-again-btn" class="play-again-btn">Play Again</button>
+  </div>
+
+  <script>
+    const secretCode = Array.from({
+      length: 5
+    }, () => Math.floor(Math.random() * 10));
+    let totalTries = 0;
+
+    function createCylinders() {
+      const row = document.getElementById('cylinder-row');
+      for (let i = 0; i < 5; i++) {
+        const cylinder = document.createElement('div');
+        cylinder.className = 'cylinder';
+        const digit = document.createElement('div');
+        digit.className = 'digit';
+        digit.textContent = '0';
+        digit.dataset.value = '0';
+        const upButton = document.createElement('button');
+        upButton.className = 'up';
+        upButton.textContent = '▲';
+        upButton.onclick = () => rotateDigit(digit, 1);
+        const downButton = document.createElement('button');
+        downButton.className = 'down';
+        downButton.textContent = '▼';
+        downButton.onclick = () => rotateDigit(digit, -1);
+        cylinder.appendChild(upButton);
+        cylinder.appendChild(digit);
+        cylinder.appendChild(downButton);
+        row.appendChild(cylinder);
+      }
+    }
+
+    function rotateDigit(digit, direction) {
+      let value = parseInt(digit.dataset.value);
+      value = (value + direction + 10) % 10;
+      digit.dataset.value = value;
+      digit.textContent = value;
+    }
+
+    function checkGuess() {
+      const digits = document.querySelectorAll('.digit');
+      const guess = Array.from(digits).map(d => parseInt(d.dataset.value));
+      let correctCount = 0;
+      let partialCount = 0;
+      const tempSecret = [...secretCode];
+      const tempGuess = [...guess];
+      for (let i = 0; i < 5; i++) {
+        if (tempGuess[i] === tempSecret[i]) {
+          correctCount++;
+          tempSecret[i] = null;
+          tempGuess[i] = null;
+        }
+      }
+      for (let i = 0; i < 5; i++) {
+        if (tempGuess[i] !== null) {
+          const index = tempSecret.indexOf(tempGuess[i]);
+          if (index !== -1) {
+            partialCount++;
+            tempSecret[index] = null;
+          }
+        }
+      }
+      totalTries++;
+      document.getElementById('tries-display').textContent = `Tries: ${totalTries}`;
+      document.getElementById('result').textContent = `Exact Matches: ${correctCount}, Partial Matches: ${partialCount}`;
+      if (correctCount === 5) {
+        displayCongratulations();
+      }
+    }
+
+    function displayCongratulations() {
+      document.getElementById('result').textContent = '';
+      let congratsMessage = '';
+      if (totalTries <= 3) {
+        congratsMessage = 'Wow, Master Cryptographer! You cracked the code with lightning speed!';
+      } else if (totalTries <= 6) {
+        congratsMessage = 'Excellent Work! You solved the cryptex like a true code breaker!';
+      } else {
+        congratsMessage = 'Congratulations! You persevered and finally cracked the code!';
+      }
+      document.getElementById('secret-reveal').innerHTML = `
+        ${congratsMessage}<br>
+        Code Solved in ${totalTries} tries!
+      `;
+      // Disable decode button
+      document.getElementById('submit-btn').disabled = true;
+      // Show play again button
+      const playAgainBtn = document.getElementById('play-again-btn');
+      playAgainBtn.style.display = 'inline-block';
+      playAgainBtn.onclick = resetGame;
+    }
+
+    function resetGame() {
+      // Generate new secret code
+      secretCode.forEach((_, i) => (secretCode[i] = Math.floor(Math.random() * 10)));
+      // Reset digits
+      const digits = document.querySelectorAll('.digit');
+      digits.forEach(digit => {
+        digit.textContent = '0';
+        digit.dataset.value = '0';
+      });
+      // Reset tries and displays
+      totalTries = 0;
+      document.getElementById('tries-display').textContent = 'Tries: 0';
+      document.getElementById('result').textContent = 'Can you open the cryptex?';
+      document.getElementById('secret-reveal').textContent = '';
+      // Re-enable decode button and hide play again button
+      document.getElementById('submit-btn').disabled = false;
+      document.getElementById('play-again-btn').style.display = 'none';
+    }
+    document.getElementById('submit-btn').addEventListener('click', checkGuess);
+    createCylinders();
+  </script>
+</body>
+
+</html>
