@@ -1,5 +1,5 @@
 <html lang="en">
-<!-- Copyright 2024 © Marc Sonne Dahl -->
+<!-- Copyright 2025 © Marc Sonne Dahl -->
 
 <head>
   <meta charset="UTF-8">
@@ -7,84 +7,171 @@
   <title>KNX TP Telegram Visualizer</title>
   <style>
     :root {
-      --primary-color: #3498db;
-      --secondary-color: #2ecc71;
-      --background-color: #f5f7fa;
-      --text-color: #2c3e50;
-      --border-color: #e0e0e0;
-      --hover-color: #2980b9;
+      --primary-color: #00ff00;
+      --secondary-color: #003300;
+      --background-color: #000000;
+      --text-color: #00ff00;
+      --border-color: #008800;
+      --hover-color: #00aa00;
+      --select-border: #777;
+      --select-focus: blue;
+      --select-arrow: var(--select-border);
+    }
+
+    ::selection {
+      color: var(--background-color);
+      background: var(--text-color);
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
       background-color: var(--background-color);
       color: var(--text-color);
       line-height: 1.6;
       margin: 0;
       padding: 0;
+      background-image: linear-gradient(rgba(0, 255, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 0, 0.08) 1px, transparent 1px);
+      background-size: 20px 20px, 20px 20px, 100px 100px;
+    }
+
+    option {
+      background-color: var(--background-color);
+      color: var(--text-color);
     }
 
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 2rem auto;
-      background-color: #ffffff;
+      background-color: rgba(0, 0, 0, 0.8);
       padding: 2rem;
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(8px);
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      display: block;
+      padding: 15px;
+      font-size: 16px;
+      border: 2px solid transparent;
+      border-color: #008800;
+      border-radius: 10px;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    ::placeholder {
+      color: #00ff00;
+      backdrop-filter: blur(8px);
+    }
+
+    input:focus {
+      border-color: #008800;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .graph-container {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 20px;
+      border: 1px solid #15630A;
+      border-radius: 10px;
+    }
+
+    #graph {
+      display: block;
+    }
+
+    .description {
+      margin-top: 30px;
+      padding: 15px;
+      border-radius: 10px;
+      line-height: 1.8;
+    }
+
+    .description h2 {
+      margin-bottom: 15px;
+    }
+
+    .description p,
+    .description ul {
+      margin-bottom: 10px;
+    }
+
+    .description ul {
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+    .description li {
+      margin-bottom: 5px;
     }
 
     h1 {
       color: var(--primary-color);
       text-align: center;
-      margin-bottom: auto;
-      font-size: 1.4rem;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      text-shadow: 0 0 10px var(--primary-color);
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       margin-top: 20px;
     }
 
     th,
     td {
-      border: 1px solid #ddd;
-      padding: 8px;
+      border: 1px solid var(--border-color);
+      padding: 12px;
       text-align: center;
     }
 
     th {
-      background-color: #f2f2f2;
-      color: #333;
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
     }
 
     .highlight {
-      background-color: #e7f1ff;
+      background-color: rgba(0, 255, 0, 0.1);
     }
 
     .block {
       margin: 1.5rem 0;
       padding: 1.5rem;
-      background-color: #f8f9fa;
+      background-color: rgba(0, 51, 0, 0.3);
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
       transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
     }
 
     .block:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
     }
 
     .telegram {
       font-family: 'Courier New', monospace;
-      background-color: #f1f3f5;
+      background-color: rgba(0, 51, 0, 0.3);
       padding: 1.5rem;
       border-radius: 8px;
       overflow-x: auto;
       margin-top: 1.5rem;
       margin-bottom: 1.5rem;
-      word-wrap: break-all;
+      word-wrap: break-word;
+      border: 1px solid var(--border-color);
     }
 
     .binary-block {
@@ -92,18 +179,18 @@
       padding: 0.75rem;
       margin: 0.5rem;
       border: 1px solid var(--border-color);
-      background-color: #ffffff;
+      background-color: rgba(0, 51, 0, 0.3);
       border-radius: 6px;
       transition: all 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
       word-wrap: break-word;
       max-width: 90%;
     }
 
     .binary-block:hover {
-      background-color: #f8f9fa;
+      background-color: rgba(0, 51, 0, 0.5);
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
     }
 
     label {
@@ -119,31 +206,33 @@
       font-weight: bold;
       color: var(--primary-color);
       font-size: 1.5rem;
+      text-shadow: 0 0 10px var(--primary-color);
     }
 
     input[type="number"],
     select {
-      background-color: #ffffff;
+      
+      background-color: rgba(0, 51, 0, 0.3);
       border: 1px solid var(--border-color);
       color: var(--text-color);
       padding: 0.5rem;
       border-radius: 4px;
       margin: 0.5rem 0;
       transition: all 0.3s ease;
-      width: calc(100% - 1rem);
+      width: 100%;
     }
 
     input[type="number"]:focus,
     select:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
     }
 
     button {
-      background-color: var(--primary-color);
-      color: #ffffff;
-      border: none;
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
+      border: 1px solid var(--border-color);
       padding: 0.75rem 1.5rem;
       border-radius: 4px;
       cursor: pointer;
@@ -158,15 +247,16 @@
     button:hover {
       background-color: var(--hover-color);
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
     }
 
     #timingInfo {
       margin-top: 1.5rem;
-      background-color: #f8f9fa;
+      background-color: rgba(0, 51, 0, 0.3);
       padding: 1.5rem;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+      border: 1px solid var(--border-color);
     }
 
     #timingInfo div {
@@ -184,7 +274,7 @@
       width: 18px;
       height: 18px;
       background-color: var(--primary-color);
-      color: #ffffff;
+      color: var(--background-color);
       border-radius: 50%;
       font-size: 12px;
       font-weight: bold;
@@ -200,8 +290,8 @@
     .tooltip .tooltiptext {
       visibility: hidden;
       width: 200px;
-      background-color: #34495e;
-      color: #ffffff;
+      background-color: rgba(0, 51, 0, 0.9);
+      color: var(--primary-color);
       text-align: center;
       border-radius: 4px;
       padding: 0.5rem;
@@ -213,6 +303,7 @@
       opacity: 0;
       transition: opacity 0.3s;
       font-size: 0.875rem;
+      border: 1px solid var(--border-color);
     }
 
     .tooltip:hover .tooltiptext {
@@ -242,18 +333,18 @@
     }
 
     .telegram-bit:hover {
-      transform: scale(1);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
     }
 
     .bit-1 {
-      background-color: var(--secondary-color);
-      color: #ffffff;
+      background-color: var(--primary-color);
+      color: var(--background-color);
     }
 
     .bit-0 {
-      background-color: #ecf0f1;
-      color: var(--text-color);
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
     }
 
     .form-group {
@@ -272,7 +363,7 @@
       padding: 0.5rem;
       border: 1px solid var(--border-color);
       border-radius: 4px;
-      background-color: #ffffff;
+      background-color: rgba(0, 51, 0, 0.3);
       color: var(--text-color);
       transition: all 0.3s ease;
     }
@@ -280,7 +371,7 @@
     .form-group select:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
     }
 
     footer {
@@ -290,6 +381,32 @@
       align-items: center;
       flex-direction: column;
       font-size: 0.9em;
+      margin-top: 2rem;
+      color: var(--primary-color);
+      text-shadow: 0 0 5px var(--primary-color);
+    }
+
+    @keyframes matrixRain {
+      0% {
+        background-position: 0% 0%;
+      }
+
+      100% {
+        background-position: 0% 100%;
+      }
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: linear-gradient(to bottom, transparent, rgba(0, 255, 0, 0.05));
+      animation: matrixRain 20s linear infinite;
+      z-index: -1;
     }
 
     @media (max-width: 600px) {
@@ -298,7 +415,7 @@
       }
 
       h1 {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
 
       .block {
@@ -315,6 +432,7 @@
       .telegram-bit {
         width: 20px;
         height: 20px;
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -421,6 +539,32 @@
 
     <div><strong>T2 Pause:</strong> The time after the telegram is sent, during which devices verify reception.</div>
     <div><strong>Acknowledgment:</strong> Devices acknowledge receipt of the telegram.</div>
+
+    <div class="block">
+      <input type="text" id="binaryInput" placeholder="Enter binary code here (0s and 1s)" onkeyup="updateGraph()" />
+      <div class="graph-container">
+        <svg id="graph" width="800" height="200"></svg>
+      </div>
+      <div class="description">
+        <h2>KNX Power Supply and Its Integrated Choke</h2>
+        <p>
+          In a KNX system, the power supply is essential for delivering both the operating voltage and communication signals across the bus. A key component of this is the <strong>integrated choke</strong>, which ensures that the system works efficiently for both powering devices and transmitting data.
+        </p>
+        <p>
+          The KNX bus sends data as logical <strong>1</strong>s and <strong>0</strong>s:
+        </p>
+        <ul>
+          <li>A <strong>logical 1</strong> is represented by a steady bus voltage of approximately <strong>30V DC</strong>.</li>
+          <li>A <strong>logical 0</strong> causes the bus voltage to drop temporarily by about <strong>5 volts</strong>.</li>
+        </ul>
+        <p>
+          The choke reacts to these voltage drops almost instantaneously. It uses its inductive properties to quickly correct the drop and restore the voltage back to 30V DC, ensuring smooth communication on the bus.
+        </p>
+        <p>
+          With a communication rate of <strong>9600 bits per second</strong>, the choke must stabilize the voltage within <strong>104 microseconds</strong> for each bit. This clever design allows KNX systems to reliably handle both power delivery and data transmission on the same wires.
+        </p>
+      </div>
+    </div>
     <h2 class="section-title">Timing Information</h2>
     <div id="timingInfo"></div>
   </div>
@@ -528,11 +672,15 @@
     }
 
     function generateDummyData(dptSize) {
-      // Create a dummy data value corresponding to the DPT size.
       if (dptSize === 1) {
-        return '1'; // Simple binary value for 1-bit DPT
+        // For 1-bit, randomly return either '0' or '1'
+        return Math.random() < 0.5 ? '0' : '1';
       } else {
-        return '1'.repeat(dptSize).substr(0, dptSize); // Repeat '1' for other sizes
+        // For other sizes, generate a string of random 1's and 0's
+        return Array(dptSize)
+          .fill()
+          .map(() => Math.random() < 0.5 ? '0' : '1')
+          .join('');
       }
     }
 
@@ -643,8 +791,25 @@
         <div class="binary-block"><strong>Frame Checksum:</strong><br> ${checksum} ${parityChecksum}</div>
         <div class="binary-block"><strong>Stop Bit:</strong><br> 1</div>
       `;
+      const binarySequence = [
+        "1", // Start bit
+        controlField,
+        sourceArea + sourceLine + sourceDevice,
+        destinationMainGroup + destinationMiddleGroup + destinationGroupAddress,
+        routingCounter,
+        priority,
+        repeatFlag,
+        targetType,
+        npci,
+        apci + dataField,
+        checksum,
+        "1" // Stop bit
+      ].join("");
       document.getElementById("telegramOutput").innerHTML = telegram;
       // Calculate total number of bits including start, stop, and parity bits
+      const binaryInput = document.getElementById("binaryInput");
+      binaryInput.value = binarySequence;
+      updateGraph(); // Trigger the graph update
       const totalBits = controlField.length + sourceAddress.replace(/\s/g, '').length + destinationAddress.replace(/\s/g, '').length +
         routingCounter.length + priority.length + npci.length + apci.length + dataField.length +
         checksum.length + 2 * (1 + 1); // Adding start and stop bits
@@ -672,9 +837,89 @@
       <div><strong>ACK:</strong> Acknowledge Signal Received</div>
     `;
     }
+
+    function updateGraph() {
+      const input = document.getElementById('binaryInput').value;
+      const svg = document.getElementById('graph');
+      svg.innerHTML = ''; // Clear previous graph
+      // Validate input
+      if (!/^[01]*$/.test(input)) {
+        return; // Only allow 0s and 1s
+      }
+      const bitWidth = 36; // Fixed width for each bit (6 points * 12 pixels)
+      const totalWidth = Math.max(800, input.length * bitWidth);
+      svg.setAttribute('width', totalWidth);
+      const height = 200;
+      const baselineY = height / 2;
+      const pointsPerBit = 6;
+      const pointSpacing = bitWidth / pointsPerBit;
+      const amplitude = 20;
+      // Draw base lines
+      const topLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      topLine.setAttribute("x1", 0);
+      topLine.setAttribute("y1", baselineY - amplitude);
+      topLine.setAttribute("x2", totalWidth * 2);
+      topLine.setAttribute("y2", baselineY - amplitude);
+      topLine.setAttribute("stroke", "#184412");
+      topLine.setAttribute("stroke-dasharray", "2,2");
+      svg.appendChild(topLine);
+      // Draw bit separators
+      for (let i = 0; i <= input.length; i++) {
+        const x = i * bitWidth;
+        const separator = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        separator.setAttribute("x1", x);
+        separator.setAttribute("y1", baselineY - amplitude - 100);
+        separator.setAttribute("x2", x);
+        separator.setAttribute("y2", baselineY + amplitude + 200);
+        separator.setAttribute("stroke", "#184412");
+        separator.setAttribute("stroke-width", "1");
+        separator.setAttribute("stroke-dasharray", "2,2");
+        svg.appendChild(separator);
+        // Add bit number
+        if (i < input.length) {
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          text.setAttribute("x", x + (bitWidth / 2));
+          text.setAttribute("y", baselineY + amplitude + 70);
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("font-size", "0.7em");
+          text.setAttribute("fill", "#00ff00");
+          text.textContent = input[i];
+          svg.appendChild(text);
+        }
+      }
+      // Create path for the signal
+      let path = `M 0 ${baselineY - amplitude}`;
+      let currentX = 0;
+      for (let i = 0; i < input.length; i++) {
+        if (input[i] === '0') {
+          path += ` L ${currentX} ${baselineY + amplitude}`;
+          const climbEndX = currentX + (3 * pointSpacing);
+          const climbEndY = baselineY + (amplitude / 1.5);
+          path += ` L ${climbEndX} ${climbEndY}`;
+          currentX = climbEndX;
+          path += ` L ${currentX} ${baselineY - amplitude - 50}`;
+          const decayEnd = currentX + (3 * pointSpacing);
+          const cp1x = currentX + pointSpacing;
+          const cp1y = baselineY - amplitude - 20;
+          const cp2x = currentX + (2 * pointSpacing);
+          const cp2y = baselineY - amplitude - 6;
+          path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${decayEnd} ${baselineY - amplitude}`;
+          currentX = decayEnd;
+        } else {
+          currentX += (pointsPerBit * pointSpacing);
+          path += ` L ${currentX} ${baselineY - amplitude}`;
+        }
+      }
+      const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      pathElement.setAttribute("d", path);
+      pathElement.setAttribute("fill", "none");
+      pathElement.setAttribute("stroke", "#008800");
+      pathElement.setAttribute("stroke-width", "2");
+      svg.appendChild(pathElement);
+    }
   </script>
 
 </body>
-<!-- Copyright 2024 © Marc Sonne Dahl -->
+<!-- Copyright 2025 © Marc Sonne Dahl -->
 
 </html>
