@@ -1,0 +1,499 @@
+<!-- Copyright © 2025 - Marc Sonne Dahl -->
+<html lang="da">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <title>Marcs Indeklima Beregner</title>
+  <!-- Copyright © 2025 - Marc Sonne Dahl -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1,
+    h2 {
+      text-align: center;
+      color: #005f99;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    form {
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .info-icon {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      background: #005f99;
+      color: white;
+      text-align: center;
+      border-radius: 50%;
+      cursor: help;
+      font-size: 12px;
+      line-height: 16px;
+      margin-left: 5px;
+    }
+
+    .tooltip {
+      display: none;
+      position: absolute;
+      background: #333;
+      color: white;
+      padding: 5px;
+      border-radius: 4px;
+      font-size: 12px;
+      max-width: 200px;
+      z-index: 100;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #005f99;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #004266;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .result-section {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #e8f4fa;
+      border-radius: 4px;
+    }
+
+    .warning {
+      color: #d63031;
+      font-weight: bold;
+    }
+
+    .good {
+      color: #00b894;
+      font-weight: bold;
+    }
+
+    .chart-container {
+      margin-top: 20px;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .help-text {
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      padding-left: 5px;
+      border-left: 3px solid #005f99;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #005f99;
+      opacity: 0.4;
+      border-radius: 10px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<!-- Copyright © 2025 - Marc Sonne Dahl -->
+
+<body>
+  <div class="container">
+    <h1>Indeklima <i class="fa-solid fa-person-shelter"></i> Beregner </h1>
+    <form id="indeklimaForm">
+      <h2>Grundlæggende parametre</h2>
+      <div class="form-group">
+        <label for="temperatur">Operativ temperatur (°C):</label>
+        <div class="help-text">
+          Den operative temperatur er gennemsnittet af lufttemperaturen og den strålende temperatur fra overflader. Dette er den temperatur, som mennesker faktisk oplever. Typisk mellem 20-26°C for indendørs komfort.
+        </div>
+        <input type="number" id="temperatur" name="temperatur" step="0.1" min="10" max="35" required>
+      </div>
+
+      <div class="form-group">
+        <label for="lufttemperatur">Lufttemperatur (°C):</label>
+        <div class="help-text">
+          Den almindelige lufttemperatur målt med et termometer. Dette er temperaturen af den luft, der omgiver os. Bør normalt ligge mellem 20-24°C om vinteren og 23-26°C om sommeren.
+        </div>
+        <input type="number" id="lufttemperatur" name="lufttemperatur" step="0.1" min="10" max="35" required>
+      </div>
+
+      <div class="form-group">
+        <label for="straaletemperatur">Middel strålingstemperatur (°C):</label>
+        <div class="help-text">
+          Den gennemsnitlige temperatur af alle overflader i rummet (vægge, loft, gulv, vinduer). Kan måles med en globetermometer eller estimeres. Stor forskel mellem denne og lufttemperaturen kan føre til ubehag.
+        </div>
+        <input type="number" id="straaletemperatur" name="straaletemperatur" step="0.1" min="10" max="35" required>
+      </div>
+
+      <div class="form-group">
+        <label for="fugtighed">Relativ luftfugtighed (%):</label>
+        <div class="help-text">
+          Mængden af vanddamp i luften i forhold til den maksimale mængde luften kan indeholde ved den givne temperatur. Optimal comfort ligger mellem 30-60%. Under 30% kan give tør luft, over 60% kan føre til fugtproblemer.
+        </div>
+        <input type="number" id="fugtighed" name="fugtighed" step="1" min="0" max="100" required>
+      </div>
+
+      <div class="form-group">
+        <label for="lufthastighed">Lufthastighed (m/s):</label>
+        <div class="help-text">
+          Hastigheden af luftbevægelser i rummet. For høj lufthastighed kan føles som træk. Bør normalt være under 0,15 m/s i opholdszonen ved stillesiddende arbejde. Højere værdier kan accepteres om sommeren.
+        </div>
+        <input type="number" id="lufthastighed" name="lufthastighed" step="0.01" min="0" max="2" required>
+      </div>
+
+      <h2>Personlige faktorer</h2>
+      <div class="form-group">
+        <label for="paaklaedning">Påklædning (Clo):</label>
+        <div class="help-text">
+          Måleenheden 'clo' beskriver isoleringsværdien af tøj. 0.3 clo: Let sommertøj, 0.5 clo: Let indendørstøj, 1.0 clo: Almindelig vinterbeklædning, 1.5 clo: Tung vinterbeklædning.
+        </div>
+        <select id="paaklaedning" name="paaklaedning">
+          <option value="0.3">Let sommerbeklædning (0.3 Clo)</option>
+          <option value="0.5">Almindelig indendørsbeklædning (0.5 Clo)</option>
+          <option value="0.7">Let vinterbeklædning (0.7 Clo)</option>
+          <option value="1.0">Vinterbeklædning (1.0 Clo)</option>
+          <option value="1.5">Tung vinterbeklædning (1.5 Clo)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="aktivitet">Aktivitetsniveau (Met):</label>
+        <div class="help-text">
+          Met-værdien beskriver menneskers aktivitetsniveau. 1.0 Met: Stillesiddende, 1.2 Met: Stående arbejde, 1.5 Met: Let aktivitet, 2.0 Met: Moderat aktivitet, 3.0 Met: Høj aktivitet.
+        </div>
+        <select id="aktivitet" name="aktivitet">
+          <option value="0.8">Hvilende (0.8 Met)</option>
+          <option value="1.0">Stillesiddende (1.0 Met)</option>
+          <option value="1.2">Stående, afslappet (1.2 Met)</option>
+          <option value="1.5">Let aktivitet (1.5 Met)</option>
+          <option value="2.0">Moderat aktivitet (2.0 Met)</option>
+          <option value="3.0">Høj aktivitet (3.0 Met)</option>
+        </select>
+      </div>
+
+      <h2>Luftkvalitet</h2>
+      <div class="form-group">
+        <label for="co2">CO₂-niveau (ppm):</label>
+        <div class="help-text">
+          Mængden af kuldioxid i luften målt i parts per million (ppm). Udenluft har typisk 400 ppm. God indendørs luftkvalitet er under 1000 ppm. Værdier over 1500 ppm indikerer utilstrækkelig ventilation.
+        </div>
+        <input type="number" id="co2" name="co2" min="300" max="5000" required>
+      </div>
+
+      <div class="form-group">
+        <label for="ventilation">Ventilationsrate (l/s per person):</label>
+        <div class="help-text">
+          Mængden af frisk luft der tilføres per person. Bygningsreglementet kræver minimum 5 l/s per person plus 0,35 l/s per m² gulvareal. Højere værdier giver bedre luftkvalitet.
+        </div>
+        <input type="number" id="ventilation" name="ventilation" step="0.1" min="0" required>
+      </div>
+
+      <h2>Lysforhold</h2>
+      <div class="form-group">
+        <label for="belysning">Belysningsstyrke (lux):</label>
+        <div class="help-text">
+          Mængden af lys der rammer en overflade. Typiske krav: Kontorarbejde: 500 lux, Klasselokaler: 300 lux, Gangarealer: 100 lux. Måles med et luxmeter i arbejdshøjde.
+        </div>
+        <input type="number" id="belysning" name="belysning" min="0" required>
+      </div>
+
+      <div class="form-group">
+        <label for="dagslys">Dagslysfaktor (%):</label>
+        <div class="help-text">
+          Forholdet mellem lysniveauet inde i rummet og ude i det fri (uden direkte sol). En dagslysfaktor på 2% eller højere anbefales for arbejdspladser. Højere værdier giver bedre dagslysforhold.
+        </div>
+        <input type="number" id="dagslys" name="dagslys" step="0.1" min="0" required>
+      </div>
+
+      <h2>Rumforhold</h2>
+      <div class="form-group">
+        <label for="lokale">Lokaletype:</label>
+        <select id="lokale" name="lokale">
+          <option value="kontor">Kontor</option>
+          <option value="klassevaerelse">Klasselokale</option>
+          <option value="modesal">Mødesal</option>
+          <option value="andet">Andet</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="personer">Antal personer:</label>
+        <input type="number" id="personer" name="personer" min="1" required>
+      </div>
+
+      <div class="form-group">
+        <label for="stoerrelse">Lokale størrelse (m²):</label>
+        <div class="help-text">
+          Rummets gulvareal i kvadratmeter. Bruges til at beregne personbelastning og ventilationsbehov. Minimum 4 m² per person anbefales for kontorarbejdspladser.
+        </div>
+        <input type="number" id="stoerrelse" name="stoerrelse" min="1" required>
+      </div>
+
+      <div class="form-group">
+        <label for="rumhoejde">Rumhøjde (m):</label>
+        <div class="help-text">
+          Den gennemsnitlige højde fra gulv til loft. Minimum 2.5m for arbejdsrum. Bruges til at beregne rumvolumen og luftskifte. Højere rum giver mere luftvolumen per person.
+        </div>
+        <input type="number" id="rumhoejde" name="rumhoejde" step="0.1" min="2" required>
+      </div>
+
+      <button type="button" onclick="beregnIndeklima()">Beregn indeklima</button>
+    </form>
+
+    <div id="result" class="output" style="display: none;"></div>
+  </div>
+    <div id="footer" class="footer">
+    <p>Lavet af Marc Sonne Dahl (c) 2025</p>
+    <p id="social"><a href="https://www.linkedin.com/in/marcdahl/" target="_blank"><i class="fa-brands fa-3x fa-linkedin-in"></i></a>&nbsp; <a href="https://mrdahl.github.io/home/" target="_blank"><i class="fa-brands fa-3x fa-github"></i></a></p>
+  </div>
+  <!-- Copyright © 2025 - Marc Sonne Dahl -->
+  <script>
+    function beregnPMV(ta, tr, vel, rh, met, clo) {
+      // Forenklet PMV beregning baseret på Fanger's ligning
+      const pa = (rh * 10 * Math.exp(16.6536 - 4030.183 / (ta + 235))) / 100;
+      const icl = 0.155 * clo;
+      const m = met * 58.15;
+      const w = 0;
+      const mw = m - w;
+      // Beregn varmeoverførsel gennem tøj
+      const fcl = clo <= 0.5 ? 1 + 0.2 * clo : 1.05 + 0.1 * clo;
+      // Beregn overfladetemperatur for tøj gennem iteration
+      let tcl = ta;
+      let hc = 0; // Definer hc udenfor loop
+      for (let i = 0; i < 20; i++) {
+        hc = 2.38 * Math.pow(Math.abs(tcl - ta), 0.25);
+        const tclNew = (35.7 - 0.028 * mw - icl * (3.96 * Math.pow(10, -8) * fcl * (Math.pow(tcl + 273, 4) - Math.pow(tr + 273, 4)) + fcl * hc * (tcl - ta))) / (1 + icl * fcl * hc);
+        tcl = tclNew;
+      }
+      // Beregn PMV
+      const term1 = 0.303 * Math.exp(-0.036 * m) + 0.028;
+      const term2 = mw - 3.05 * 0.001 * (5733 - 6.99 * mw - pa);
+      const term3 = -0.42 * (mw - 58.15);
+      const term4 = -1.7 * 0.00001 * m * (5867 - pa);
+      const term5 = -0.0014 * m * (34 - ta);
+      const term6 = -3.96 * Math.pow(10, -8) * fcl * (Math.pow(tcl + 273, 4) - Math.pow(tr + 273, 4));
+      const term7 = -fcl * hc * (tcl - ta);
+      const pmv = term1 * (term2 + term3 + term4 + term5 + term6 + term7);
+      return pmv;
+    }
+
+    function beregnPPD(pmv) {
+      return 100 - 95 * Math.exp(-0.03353 * Math.pow(pmv, 4) - 0.2179 * Math.pow(pmv, 2));
+    }
+
+    function vurderCO2(co2) {
+      if (co2 <= 800) return {
+        status: 'god',
+        text: 'God luftkvalitet'
+      };
+      if (co2 <= 1000) return {
+        status: 'acceptabel',
+        text: 'Acceptabel luftkvalitet'
+      };
+      if (co2 <= 1500) return {
+        status: 'moderat',
+        text: 'Moderat luftkvalitet - overvej ventilation'
+      };
+      return {
+        status: 'daarlig',
+        text: 'Dårlig luftkvalitet - øget ventilation nødvendig'
+      };
+    }
+
+    function vurderBelysning(belysning, lokaletype) {
+      const krav = {
+        kontor: {
+          min: 500,
+          optimal: 750
+        },
+        klassevaerelse: {
+          min: 300,
+          optimal: 500
+        },
+        modesal: {
+          min: 200,
+          optimal: 400
+        },
+        andet: {
+          min: 200,
+          optimal: 400
+        }
+      };
+      const graenser = krav[lokaletype] || krav.andet;
+      if (belysning < graenser.min) {
+        return {
+          status: 'utilstraekkelig',
+          text: 'Utilstrækkelig belysning'
+        };
+      } else if (belysning >= graenser.optimal) {
+        return {
+          status: 'optimal',
+          text: 'Optimal belysning'
+        };
+      } else {
+        return {
+          status: 'acceptabel',
+          text: 'Acceptabel belysning'
+        };
+      }
+    }
+
+    function beregnIndeklima() {
+      // Hent input værdier
+      const temperatur = parseFloat(document.getElementById('temperatur').value);
+      const lufttemperatur = parseFloat(document.getElementById('lufttemperatur').value);
+      const straaletemperatur = parseFloat(document.getElementById('straaletemperatur').value);
+      const fugtighed = parseFloat(document.getElementById('fugtighed').value);
+      const lufthastighed = parseFloat(document.getElementById('lufthastighed').value);
+      const paaklaedning = parseFloat(document.getElementById('paaklaedning').value);
+      const aktivitet = parseFloat(document.getElementById('aktivitet').value);
+      const co2 = parseFloat(document.getElementById('co2').value);
+      const belysning = parseFloat(document.getElementById('belysning').value);
+      const ventilation = parseFloat(document.getElementById('ventilation').value);
+      const dagslys = parseFloat(document.getElementById('dagslys').value);
+      const lokale = document.getElementById('lokale').value;
+      const personer = parseInt(document.getElementById('personer').value);
+      const stoerrelse = parseFloat(document.getElementById('stoerrelse').value);
+      const rumhoejde = parseFloat(document.getElementById('rumhoejde').value);
+      // Beregn termisk komfort
+      const pmv = beregnPMV(lufttemperatur, straaletemperatur, lufthastighed, fugtighed, aktivitet, paaklaedning);
+      const ppd = beregnPPD(pmv);
+      // Vurder luftkvalitet
+      const co2Vurdering = vurderCO2(co2);
+      const belysningVurdering = vurderBelysning(belysning, lokale);
+      // Beregn luftrum pr. person
+      const luftrumPerPerson = (stoerrelse * rumhoejde) / personer;
+      const friskluftPerPerson = ventilation * 3.6; // Konverter l/s til m³/h
+      // Beregn termisk komfort kategori (EN 15251)
+      function getTermiskKategori(ppd) {
+        if (ppd <= 6) return {
+          kategori: 'I',
+          beskrivelse: 'Høj forventet komfort'
+        };
+        if (ppd <= 10) return {
+          kategori: 'II',
+          beskrivelse: 'Normal forventet komfort'
+        };
+        if (ppd <= 15) return {
+          kategori: 'III',
+          beskrivelse: 'Moderat forventet komfort'
+        };
+        return {
+          kategori: 'IV',
+          beskrivelse: 'Værdier uden for kriterierne'
+        };
+      }
+      const termiskKategori = getTermiskKategori(ppd);
+      // Formatér resultater
+      const resultElement = document.getElementById('result');
+      resultElement.style.display = 'block';
+      resultElement.innerHTML = `
+                <h2>Indeklima Analyse</h2>
+                
+                <div class="result-section">
+                    <h3>Termisk Komfort</h3>
+                    <p>PMV (Predicted Mean Vote): <strong>${pmv.toFixed(2)}</strong></p>
+                    <p>PPD (Predicted Percentage Dissatisfied): <strong>${ppd.toFixed(1)}%</strong></p>
+                    <p>Komfort Kategori: <strong>${termiskKategori.kategori}</strong> - ${termiskKategori.beskrivelse}</p>
+                    <p>Operativ temperatur: ${temperatur}°C</p>
+                    ${Math.abs(pmv) > 0.7 ? '<p class="warning">Bemærk: PMV ligger uden for det anbefalede interval (-0.7 til +0.7)</p>' : ''}
+                </div>
+
+                <div class="result-section">
+                    <h3>Luftkvalitet</h3>
+                    <p>CO₂-niveau: <strong>${co2} ppm</strong> (${co2Vurdering.text})</p>
+                    <p>Friskluft per person: <strong>${friskluftPerPerson.toFixed(1)} m³/h</strong></p>
+                    <p>Luftrum per person: <strong>${luftrumPerPerson.toFixed(1)} m³</strong></p>
+                    ${co2 > 1000 ? '<p class="warning">CO₂-niveau overstiger anbefalet grænse på 1000 ppm</p>' : ''}
+                    ${friskluftPerPerson < 25 ? '<p class="warning">Friskluftmængden er under minimumskravet på 25 m³/h per person</p>' : ''}
+                </div>
+
+                <div class="result-section">
+                    <h3>Lysforhold</h3>
+                    <p>Belysningsstyrke: <strong>${belysning} lux</strong> (${belysningVurdering.text})</p>
+                    <p>Dagslysfaktor: <strong>${dagslys}%</strong></p>
+                    ${dagslys < 2 ? '<p class="warning">Dagslysfaktoren er under den anbefalede minimumsværdi på 2%</p>' : ''}
+                </div>
+
+                <div class="result-section">
+                    <h3>Rumforhold</h3>
+                    <p>Lokaletype: ${lokale}</p>
+                    <p>Areal: ${stoerrelse} m²</p>
+                    <p>Rumhøjde: ${rumhoejde} m</p>
+                    <p>Antal personer: ${personer}</p>
+                    ${(stoerrelse / personer) < 4 ? '<p class="warning">Mindre end 4 m² per person - overvej persontætheden</p>' : ''}
+                </div>
+
+                <div class="result-section">
+                    <h3>Anbefalinger</h3>
+                    <ul>
+                        ${Math.abs(pmv) > 0.7 ? '<li>Juster temperatur eller påklædning for bedre termisk komfort</li>' : ''}
+                        ${co2 > 1000 ? '<li>Øg ventilationen eller reducer personbelastningen</li>' : ''}
+                        ${belysningVurdering.status === 'utilstraekkelig' ? '<li>Suppler med mere belysning</li>' : ''}
+                        ${dagslys < 2 ? '<li>Overvej at forbedre dagslysforholdene</li>' : ''}
+                        ${luftrumPerPerson < 12 ? '<li>Vær opmærksom på den høje persontæthed</li>' : ''}
+                    </ul>
+                </div>
+            `;
+    }
+  </script>
+</body>
+<!-- Copyright © 2025 - Marc Sonne Dahl -->
+
+</html>
