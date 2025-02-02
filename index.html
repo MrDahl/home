@@ -70,11 +70,24 @@
       color: #888;
     }
 
+    .categories {
+      margin: 2rem 0;
+    }
+
+    .category {
+      margin-bottom: 2rem;
+    }
+
+    .category h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 2rem;
-      padding: 2rem 0;
     }
 
     .project-card {
@@ -165,8 +178,8 @@
       <i class="fas fa-search search-icon"></i>
     </div>
 
-    <div class="projects-grid" id="projects-grid">
-      <!-- Project cards will be dynamically inserted here -->
+    <div class="categories" id="categories">
+      <!-- Categories will be dynamically inserted here -->
     </div>
   </main>
 
@@ -183,262 +196,300 @@
         url: "https://mrdahl.github.io/home/dgnb.html",
         description: "Værktøj til beregning af DGNB certificering for bygninger",
         icon: "fa-solid fa-medal",
-        color: "#FFD700"
+        color: "#FFD700",
+        category: "Byggeri"
       },
       {
         name: "Indeklima Beregner",
         url: "https://mrdahl.github.io/home/indeklima.html",
         description: "Værktøj til beregning af indeklima i rummet",
         icon: "fa-solid fa-person-shelter",
-        color: "#FF5733"
-      }, 
+        color: "#FF5733",
+        category: "Byggeri"
+      },
       {
         name: "Skema planlægger",
         url: "https://mrdahl.github.io/home/examinator.html",
         description: "Værktøj til planlægning af tider til overhøringer, med eksport/import",
         icon: "fa-solid fa-calendar-days",
-        color: "#2EB82E"
-      },      
+        color: "#2EB82E",
+        category: "Planlægning"
+      },
       {
         name: "Faktura generator",
         url: "https://mrdahl.github.io/home/faktura.html",
         description: "Værktøj til Fakturering og Tilbud med mulighed for print",
         icon: "fa-solid fa-file-invoice-dollar",
-        color: "#4CAF50"
+        color: "#4CAF50",
+        category: "Økonomi"
       },
       {
         name: "KNX Secure",
         url: "https://mrdahl.github.io/home/knxsecure.html",
         description: "KNX Secure Checklist report tool",
         icon: "fa-solid fa-shield",
-        color: "#3295dd"
+        color: "#3295dd",
+        category: "Automation"
       },
       {
         name: "Choice Forge",
         url: "https://mrdahl.github.io/home/choice.html",
         description: "Beslutnings Værktøj, med tilfældigheds faktor",
         icon: "fa-solid fa-ranking-star",
-        color: "#2196F3"
+        color: "#2196F3",
+        category: "Planlægning"
       },
       {
         name: "Space Simulator",
         url: "https://mrdahl.github.io/home/planet.html",
         description: "Launch planets around the Sun",
         icon: "fa-solid fa-meteor",
-        color: "#374e9a"
+        color: "#374e9a",
+        category: "Simulering"
       },
       {
         name: "Voronoi Diagram Generator",
         url: "https://mrdahl.github.io/home/voronoi.html",
         description: "Værktøj til segmentering af flader i 2D",
         icon: "fa-solid fa-arrows-to-circle",
-        color: "#444fa6"
+        color: "#444fa6",
+        category: "Simulering"
       },
       {
         name: "Mesh Generator",
         url: "https://mrdahl.github.io/home/mesh.html",
         description: "Værktøj til visualisering og forståelse af mesh-netværk",
         icon: "fa-solid fa-network-wired",
-        color: "#9C27B0"
+        color: "#9C27B0",
+        category: "Simulering"
       },
-   {
+      {
         name: "Buffons Needle Simulation",
         url: "https://mrdahl.github.io/home/buffon.html",
         description: "Simulering af Buffons nåle problem, for udregnelse af Pi",
         icon: "fa-solid fa-map-pin",
-        color: "#00AB66"
+        color: "#00AB66",
+        category: "Simulering"
       },
       {
         name: "KNX in binary",
         url: "https://mrdahl.github.io/home/knx.html",
         description: "Visualisering og tidsberegner for KNX TP Telegrammer",
         icon: "fa-solid fa-building-shield",
-        color: "#FF9800"
+        color: "#FF9800",
+        category: "Automation"
       },
       {
         name: "Tag Filtering",
         url: "https://mrdahl.github.io/home/tagfilter.html",
         description: "Værktøj til filtrering og tag management med Export og Import",
         icon: "fa-solid fa-tags",
-        color: "#E91E63"
+        color: "#E91E63",
+        category: "Planlægning"
       },
       {
         name: "Pixel Chess",
         url: "https://mrdahl.github.io/home/pixelchess.html",
         description: "Proof of concept for minimizing the chess board to the absolute limits",
         icon: "fa-solid fa-chess",
-        color: "#02A659"
+        color: "#02A659",
+        category: "Spil"
       },
       {
         name: "VTV",
         url: "https://mrdahl.github.io/home/vtv.html",
         description: "Velfærdsteknologisk matrix generator, med PDF rapport download",
         icon: "fa-solid fa-th",
-        color: "#3F51B5"
+        color: "#3F51B5",
+        category: "Planlægning"
       },
       {
         name: "Logic Gates",
         url: "https://mrdahl.github.io/home/logic.html",
         description: "Assignments in Logic Gates with solutions",
         icon: "fa-solid fa-brain",
-        color: "#c439ca"
+        color: "#c439ca",
+        category: "Simulering"
       },
       {
         name: "Beregnings forudsætninger",
         url: "https://mrdahl.github.io/home/lighttool.html",
         description: "Beregningsforudsætninger ud fra DCL Brancevejledninger og generering af rapport før lysberegning",
         icon: "fa-solid fa-lightbulb",
-        color: "#FFC107"
+        color: "#FFC107",
+        category: "Byggeri"
       },
       {
         name: "Modul App",
         url: "https://mrdahl.github.io/home/modul.html",
         description: "Modulvælger til EL-uddannelsen, med målepinde og forudsætninger",
         icon: "fa-solid fa-graduation-cap",
-        color: "#795548"
+        color: "#795548",
+        category: "Uddannelse"
       },
       {
         name: "MF Calculator",
         url: "https://mrdahl.github.io/home/mf.html",
         description: "Beregner af vedligeholdelsefaktor til indendør LED",
         icon: "fa-solid fa-calculator",
-        color: "#607D8B"
+        color: "#607D8B",
+        category: "Byggeri"
       },
       {
         name: "The Game of Life",
         url: "https://mrdahl.github.io/home/gameoflife.html",
         description: "Simpel simulering af tanke eksperimentet Game of Life",
         icon: "fa-solid fa-dna",
-        color: "#0072BB"
+        color: "#0072BB",
+        category: "Simulering"
       },
       {
         name: "Music Control",
         url: "https://mrdahl.github.io/home/music.html",
         description: "Mock-up af musikkontrol app med 7 forskellige farvetemaer",
         icon: "fa-solid fa-music",
-        color: "#F44336"
+        color: "#F44336",
+        category: "Design"
       },
       {
         name: "DnD Dice",
         url: "https://mrdahl.github.io/home/dnd.html",
         description: "D2 til D100 terninger til alle slags brætspil",
         icon: "fa-solid fa-dungeon",
-        color: "#673AB7"
+        color: "#673AB7",
+        category: "Spil"
       },
       {
         name: "TSP Solver",
         url: "https://mrdahl.github.io/home/tsp.html",
         description: "Traveling Salesman problem løser med baggrund upload funktion",
         icon: "fa-solid fa-route",
-        color: "#009688"
+        color: "#009688",
+        category: "Simulering"
       },
       {
         name: "Snail Game",
         url: "https://mrdahl.github.io/home/snails.html",
         description: "Sneglespil baseret på spillet 'Turbo' til børn",
         icon: "fa-solid fa-hat-wizard",
-        color: "#8BC34A"
+        color: "#8BC34A",
+        category: "Spil"
       },
       {
         name: "Snake",
         url: "https://mrdahl.github.io/home/snake.html",
         description: "Klassisk Snake spil i ny design med forhindringer og power-ups",
         icon: "fa-solid fa-worm",
-        color: "#00BCD4"
+        color: "#00BCD4",
+        category: "Spil"
       },
       {
         name: "Cryptex",
         url: "https://mrdahl.github.io/home/cryptex.html",
         description: "Knæk koden til en cryptex",
         icon: "fa-solid fa-unlock-keyhole",
-        color: "#DFAD11"
+        color: "#DFAD11",
+        category: "Spil"
       },
       {
         name: "AIvengers",
         url: "https://mrdahl.github.io/home/avengers.html",
         description: "Responsive og letvægts CSS billed galleri",
         icon: "fa-solid fa-spider",
-        color: "#FF5722"
+        color: "#FF5722",
+        category: "Design"
       },
       {
         name: "Voodoo Rush",
         url: "https://mrdahl.github.io/home/voodoo.html",
         description: "Trænings Værktøj med progress bar, score udregner og tilpasning af øvelser",
         icon: "fa-solid fa-dumbbell",
-        color: "#CDDC39"
+        color: "#CDDC39",
+        category: "Fitness"
       },
       {
         name: "Rock Paper Scissors",
         url: "https://mrdahl.github.io/home/rockpaper.html",
         description: "Sten, Saks, Papir, Øgle, Spock spil imod computeren",
         icon: "fa-solid fa-hand-spock",
-        color: "#03A9F4"
+        color: "#03A9F4",
+        category: "Spil"
       },
       {
         name: "Wolf vs. Sheeps",
         url: "https://mrdahl.github.io/home/wolfsheep.html",
         description: "Brætspil hvor man spiller som enten Ulv eller Får imod computer opponent",
         icon: "fa-solid fa-chess-knight",
-        color: "#9E9E9E"
+        color: "#9E9E9E",
+        category: "Spil"
       },
       {
         name: "Yatzy!",
         url: "https://mrdahl.github.io/home/yatzy.html",
         description: "Yatzy! spil med mulighed for flere samtidige spillere",
         icon: "fa-solid fa-dice",
-        color: "#FF4081"
+        color: "#FF4081",
+        category: "Spil"
       },
       {
         name: "Pascals Probability Triangle",
         url: "https://mrdahl.github.io/home/pascal.html",
         description: "Plinko Pyramide baseret på Pascals sandsynligheds trekanten",
         icon: "fa-solid fa-shapes",
-        color: "#7C4DFF"
+        color: "#7C4DFF",
+        category: "Simulering"
       },
       {
         name: "Time Traveller's Dilemmas",
         url: "https://mrdahl.github.io/home/timeless.html",
         description: "RPG Spil hvor du spiller som en tidsrejsende og alle dine valg har direkte konsekvenser for verdenen",
         icon: "fa-solid fa-clock",
-        color: "#FFD54F"
+        color: "#FFD54F",
+        category: "Spil"
       },
       {
         name: "S.P.E.C.I.A.L Duels",
         url: "https://mrdahl.github.io/home/duels.html",
         description: "Fallout baseret tekst RPG spil, hvor du duellerer imod computer opponenter",
         icon: "fa-solid fa-circle-radiation",
-        color: "#76FF03"
+        color: "#76FF03",
+        category: "Spil"
       },
       {
         name: "Arkanoid",
         url: "https://mrdahl.github.io/home/arkanoid.html",
         description: "Arkanoid spil i Neumorphic design, med 3 niveauer",
         icon: "fa-solid fa-gamepad",
-        color: "#FF6E40"
+        color: "#FF6E40",
+        category: "Spil"
       },
       {
         name: "Slot Machine",
         url: "https://mrdahl.github.io/home/slots.html",
         description: "En-armed bandit type spil, hvor casinoen altid vinder",
         icon: "fa-solid fa-circle-dollar-to-slot",
-        color: "#1DE9B6"
+        color: "#1DE9B6",
+        category: "Spil"
       },
       {
         name: "Emoji Match",
         url: "https://mrdahl.github.io/home/emojimatch.html",
         description: "Huske spil med emojier, med forskellige sværhedsgrader og scoring",
         icon: "fa-solid fa-smile",
-        color: "#FFAB00"
+        color: "#FFAB00",
+        category: "Spil"
       },
       {
         name: "Krig",
         url: "https://mrdahl.github.io/home/war.html",
         description: "Kortspil 'Krig' imod computeren",
         icon: "fa-solid fa-person-military-rifle",
-        color: "#DA3022"
+        color: "#DA3022",
+        category: "Spil"
       },
     ];
-    const projectsGrid = document.getElementById('projects-grid');
+
+    const categoriesContainer = document.getElementById('categories');
     const searchInput = document.getElementById('search-input');
 
     function createProjectCard(project) {
@@ -451,13 +502,32 @@
                         <h3>${project.name}</h3>
                         <p>${project.description}</p>
                     </div>
-                    <a href="${project.url}" class="project-link">Abn Projekt</a>
+                    <a href="${project.url}" class="project-link">Åbn Projekt</a>
                 </div>
             `;
     }
 
-    function renderProjects(projectsToRender) {
-      projectsGrid.innerHTML = projectsToRender.map(createProjectCard).join('');
+    function groupProjectsByCategory(projects) {
+      return projects.reduce((acc, project) => {
+        if (!acc[project.category]) {
+          acc[project.category] = [];
+        }
+        acc[project.category].push(project);
+        return acc;
+      }, {});
+    }
+
+    function renderCategories(projectsByCategory) {
+      categoriesContainer.innerHTML = Object.keys(projectsByCategory)
+        .map(category => `
+                <div class="category">
+                    <h2>${category}</h2>
+                    <div class="projects-grid">
+                        ${projectsByCategory[category].map(createProjectCard).join('')}
+                    </div>
+                </div>
+            `)
+        .join('');
     }
 
     function filterProjects() {
@@ -466,11 +536,15 @@
         project.name.toLowerCase().includes(searchTerm) ||
         project.description.toLowerCase().includes(searchTerm)
       );
-      renderProjects(filteredProjects);
+      const filteredProjectsByCategory = groupProjectsByCategory(filteredProjects);
+      renderCategories(filteredProjectsByCategory);
     }
+
     searchInput.addEventListener('input', filterProjects);
+
     // Initial render
-    renderProjects(projects);
+    const projectsByCategory = groupProjectsByCategory(projects);
+    renderCategories(projectsByCategory);
   </script>
 </body>
 
